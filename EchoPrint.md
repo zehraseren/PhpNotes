@@ -12,9 +12,10 @@
       ~~~~~~~
       $name = "Zehra";
       echo "Hello ", $name, "!";
-      
-      Output: Hello Zehra!  
       ~~~~~~~
+      
+      > Output: Hello Zehra!  
+      
     - Kullanım için parantezler kullanılabilir ancak gerekli değildir. Çünkü ```echo``` bir dil yapısı olduğundan, parantez kullanımı daha az yaygındır:
       ~~~~~~~
       echo("Hello World!")
@@ -25,7 +26,7 @@
       <?= "Hello world" ?>
       ~~~~~~~
       
-    - HTML İÇerisinde Kullanım: Kısa echo etiketi genellikle HTML içerisinde PHP çıktısı almak için kullanılır. Böylece PHP kodunu iç içe yazarken kodun temiz ve okunabilir olması sağlanır.
+    - HTML İçerisinde Kullanım: Kısa echo etiketi genellikle HTML içerisinde PHP çıktısı almak için kullanılır. Böylece PHP kodunu iç içe yazarken kodun temiz ve okunabilir olması sağlanır.
       ~~~~~~~
       <!DOCTYPE html>
       <html lang="en">
@@ -50,7 +51,7 @@
       <p>Hello, <?= $isim ?>!</p>
       ~~~~~~~
 
-      > Output: <p>Hello Zehra!</p>
+      > Output: Hello Zehra!
       
     - Koşullu İfadelerle Kullanımı: Kısa echo etiketi koşullu ifadelerle de kullanılabilir.
       ~~~~~~~
