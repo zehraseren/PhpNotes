@@ -68,3 +68,63 @@ echo $firstName;
   echo "File path: ".__FILE__;
   ~~~~~~~
   > Output: File path: /path/to/your/file.php
+
++ Constant'lar, bir kez tanımlandıktan sonra isimleri ve değerleri sabit kalır. Ancak, constant'ların isimlerini dinamik olarak oluşturmak veya erişmek için bazı teknikler kullanılabilir.
+    - ```Sabit Tanımlama (Dil seçimi örneği)```
+    ~~~~~~~
+    define("GREETING_EN", "Hello");
+    define("GREETING_FR", "Bonjour");
+    define("GREETING_ES", "Hola");
+    ~~~~~~~
+    
+    - ```constant() Fonksiyonu ile Dinamik Sabit Kullanımı:```
+    ~~~~~~~
+    $lang = "EN";
+    $constantName = "GREETING".$lang;
+    echo constant($constantName);
+    ~~~~~~~
+    > Output: Hello
+    
+    ~~~~~~~
+    $lang = "FR";
+    $constantName = "GREETING".$lang;
+    echo constant($constantName);
+    ~~~~~~~
+    > Output: Bonjour
+    
+    - Başka bir örnek:
+    ~~~~~~~
+    function getGreeting($language) {
+        $constantName = "GREETING_".strtoupper($language);
+        if(defined($constantName)) {
+            return constant($constantName);
+        } else {
+            return "Language not supported."
+        }
+    }
+
+    echo getGreeting("ES");
+    echo getGreeting("DE");
+    ~~~~~~~
+    > Output: Hola
+    
+    > Output: Language not supported.
+
+    > ```strtoupper``` fonksiyonu, bir string'in tüm karakterlerini büyük harfe dönüştürmek için kullanılır. Bu fonksiyon, string manipülasyonları ve karşılaştırmaları için güçlü ve kullanışlı bir araçtır. Özellikle kullanıcı girdileri, sabit tanımlamaları ve büyük/küçük harf duyarsız işlemler için sıkça kullanılır.
+
++ Bazen constant'ların belirli koşullara göre tanımlanması gerekebilir. Bu durumda, defined() fonksiyonunu kullanarak bir constant'ın tanımlı olup olmadığını kontrol edebilir ve tanımlı değilse tanımlanabilir.
+~~~~~~~
+if (!defined("GREETING_IT")) {
+    define("GREETING_IT", "Ciao");
+}
+
+echo GREETING_IT;
+~~~~~~~
+> Output: Ciao
+
+***
+#### Dikkat edilmesi gerekenler
+***
++ ```Performans:```
++ ```Hata Kontrolü:```
++ ```Güvenlik:```
