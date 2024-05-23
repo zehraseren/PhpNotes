@@ -136,3 +136,70 @@ echo GREETING_IT;
 + ```Performans:``` constant() fonksiyonu her çağırıldığımda sabitin ismini çözümlemesi gerekitğinden, sabit ismine doğrudan erişimden biraz daha yavaştır. Ancak bu fark genellikle ihmal edilebilir düzeydedir.
 + ```Hata Kontrolü:``` Dinamik sabit isimleri oluşturulurken hatalara karşı dikkatli olunmalıdır. Sabit ismi yanlış oluşturulursa, ```constant()``` fonksiyonu bir hata döndürür.
 + ```Güvenlik:``` Kullanıcı girdilerine dayalı olarak dinamik sabit isimleri oluşturulurken dikkatli olunmalıdır. Kullanıcı girdilerinin doğruluğunu ve güvenliğini sağlamak önemlidir.
+
+***
+### Constant'lar ne zaman kullanılır?
+***
++ Sabitler, belirli değerlerin sabit kalmasını sağlamak ve kodun okunabilirliğini, bakımını ve güvenliğini artırmak için kullanılır. İşte sabitlerin ne zaman ve neden kullanılacağına dair bazı durumlar:
+    - ```Konfigürasyon Ayarları:``` Uygulamanın yapılandırma ayarlarını sağlamak için kullanılabilir. Özellikle database bağlantı bilgileri, API anahtarları ve diğer yapıladırma parametreleri için yararlıdır.
+      ~~~~~~~
+      define("DB_HOST", "localhost");
+      define("DB_USER", "username");
+      define("DB_PASS", "password");
+      define("DB_NAME", "my_database");
+      ~~~~~~~
+      
+    - ```Sabit Değerler:``` Uygulama boyunca değişmeyen sabit değerleri saklamak için kulanılabilir. Örneğin, matematiksel sabitler veya uygulamanın iş mantığıyla ilgili sabitler.
+      ~~~~~~~
+      define("PI", "3.14159");
+      define("EARTH_GRAVITY", "9.81");
+      ~~~~~~~
+      
+    - ```Durum ve Rol Tanımları:``` Uygulamanın belirli durumlarını veya rolleri tanımlamak için kullanılabilir. Kodun okunabilirliğini artırır ve hata yapma olasılığını azaltır.
+      ~~~~~~~
+      define("STATUS_ACTIVE", 1);
+      define("STATUS_INACTIVE", 0);
+      define("ROLE_ADMIN", "admin");
+      define("ROLE_USER", "user");
+      define("ROLE_GUEST", "guest");
+      ~~~~~~~
+      
+    - ```Dosya Yolları:``` Dosya ve dizin yollarını saklamak için kullanılabilir. Özellikle dosya işlemlerinde ve include/require işlemlerinde faydalıdır.
+      ~~~~~~~
+      define("UPLOAD_DIR", "/var/www/uploads/");
+      define("LOG_DIR", "/var/log/myapp/");
+      ~~~~~~~
+      
+    - ```Sürüm Bilgileri:``` Uygulamanın sürüm bilgilerini saklamak için kullanılabilir. Uygulamanın farklı sürümlerinde kullanılabilir ve versiyon yönetimini kolaylaştırır. 
+      ~~~~~~~
+      define("APP_VERSION", "1.0.0");
+      ~~~~~~~
+      
+    - ```Magic Constants:``` PHP'de tanımlanmış bazı sabitler (magic constants) vardır. Bunlar, dosya yolu, satır numarası, fonksiyon adı gibi dinamik bilgileri sağlar ve genellikle hata ayıklama veya loglama amacıyla kullanılır.
+      ~~~~~~~
+      echo "Bu satır numarası: ".__LINE__;
+      ~~~~~~~
+      > Output: Mevcut satır numarasını verir.
+      
+      ~~~~~~~
+      echo "Bu dosya: ".__FILE__;
+      ~~~~~~~
+      > Output: Mevcut dosyanın tam yolunu verir.
+      
+    - ```Güvenlik:``` Sabitlerü güvenlik açısından önemli bilgileri saklamak için kullanılabilir. Örneğin, ```sabitler kullanılarak kritik değerlerin yanlışlıkla değiştirilmesi önlenir.```
+    
+    - ```Çok Dilde Destek:``` Dil bağımsız mesajlar veya sabit metinler için kullanılabilir. Uygulamanın farklı dillerde desteklenmesini kolaylaştırır.
+      ~~~~~~~
+      define("GREETING_EN", "Hello");
+      define("GREETING_FR", "Bonjour");
+      define("GREETING_ES", "Hola");
+      ~~~~~~~
+
+***
+#### Peki avantajları nelerdir?
+***
++ ```Değişmezlik:``` Bir kez tanımlandığında, değeri değiştirilemez, bu da tutarlılığı sağlar.
++ ```Global Erişim:``` Tanımlandıkları yerden bağımsız olarak tüm uygulama boyunca erişilebilir.
++ ```Perfomans:``` Değişkenlerden biraz daha hızlıdır çünkü OHO, sabitleri doğrudan bellekte saklar.
++ ```Okunabilirlik:``` Anlamlı isimlerle tanımlanan sabitler, kodun okunabilirliği ve anlaşılabilirliğini artırır.
++ ```Hata Azaltma:``` Sabit değerler kullanmak, kodun çeşitli yerlerinde aynı değeri tekrar tekrar yazmaktan kaynaklanan hataları azaltır.
