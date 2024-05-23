@@ -203,3 +203,74 @@ echo GREETING_IT;
 + ```Perfomans:``` Değişkenlerden biraz daha hızlıdır çünkü OHO, sabitleri doğrudan bellekte saklar.
 + ```Okunabilirlik:``` Anlamlı isimlerle tanımlanan sabitler, kodun okunabilirliği ve anlaşılabilirliğini artırır.
 + ```Hata Azaltma:``` Sabit değerler kullanmak, kodun çeşitli yerlerinde aynı değeri tekrar tekrar yazmaktan kaynaklanan hataları azaltır.
+
+***
+### Variable variables (değişken değişkenler) nedir?
+***
++ Değişken değişkenler, bir değişkenin ismini dinamik olarak başka bir değişkenden türetme yöntemidir. Bu yöntem, programın çalışma zamanında değişken isimlerinin belirlenmesi gerektiği durumlarda kullanılır.
+~~~~~~~
+$varName = "example";
+$$varName = "This is a test.";
+
+echo $example;
+~~~~~~~
+> Output: This is a test.
+> + ```$varName``` değişkeni ```example``` değerine sahiptir.
+> + ```$$varName``` ifadesi, ```$example``` değişkenine dönüşür ve ```This is a test.``` değerini alır.
+> + Sonuç olarak, ```$example``` değişkeninin değeri ```This is a test``` olur ve ```echo $example;``` ifadesi bu değeri ekrana yazdırır.
+
++ Daha karmaşık bir örnek
+~~~~~~~
+$a = "hello";
+$$a = "world";
+$$$a = "PHP";
+~~~~~~~
+~~~~~~~
+echo $a;
+~~~~~~~
+> Output: hello
+> + ```$a``` değişkeni, ```hello``` değerine sahiptir.
+
+~~~~~~~
+echo $$a;
+~~~~~~~
+> Output: world
+> + ```$$a``` değişkeni, ```$hello``` değişkenine dönüşür ve ```world``` değerinin alır.
+
+~~~~~~~
+echo $$$a;
+~~~~~~~
+> Output: PHP
+> + ```$$$a``` değişkeni, ```$$hello``` yani ```$world``` değişkenine dönüşür ve ```PHP``` değerini alır.
+
++ Dinamik değişken kullanımı
+~~~~~~~
+#prefix = "user";
+for ($i = 1; $i <=3; $i++) {
+    ${$prefix.$i} = "Value ".$i;
+}
+
+echo $user1;
+echo $user2;
+echo $user3;
+~~~~~~~
+> Outputs:
+> + Value 1
+> + Value 2
+> + Value 3
+>    - ````$prefix``` değişkeni ```user``` değerine sahiptir.
+>    - Döngü içinde ```${$prefix.$i}``` ifadesi, sırasıyla ```$user1```, ```$user2``` ve ```$user3``` değişkenlerini oluşturur ve bunlara değer atar.
+
+***
+#### Kullanım durumları:
+***
++ ```Dinamik Form İşleme:``` Form alanlarının isimleri dinamik olarak belirleniyorsa ve bu alanlara göre değişkenler oluşturulması gerekiyorsa kullanışlıdır.
++ ```Dinamik Veri Yapıları:``` Veri yapılarının dinamik olarak oluşturulması ve yönetilmesi gerektiğinde kullanılır.
++ ```Çok Boyutlu Veriler:``` Dinamik olarak çok boyutlu veri yapıları oluşturmak ve bu yapılara erişmek için kullanılabilir.
+
+***
+#### Dikkat edilmedi gerekenler
+***
++ ```Okunabilirlik:``` Değişken değişkenler, kodun okuabilirliğini ve anlaşılabilirliğini zorlaştırabilir. Bu nedenle dikkatli kullanılmalıdır.
++ ```Hata Ayıklama:``` Hataların ayıklanması zor olabilir çünkü değişken isimleri dinamik olarak oluşturulduğu için, hataları izlemek zorlaşabilir.
++ ```Güvenlik:``` Kullanıcı girdileriyle değişken değişkenler oluşturmak güvenlik açıklarına neden olabilir. Kullanıcı girdilerinin doğruluğunu ve güvenliğini sağlamak önemlidir.
