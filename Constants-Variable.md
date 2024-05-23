@@ -122,9 +122,17 @@ echo GREETING_IT;
 ~~~~~~~
 > Output: Ciao
 
+> Yukarıdaki örnekte dikkat edilmesi noktalar:
+> + ```defined()``` fonksiyonu, belirtilen sabit tanımlıysa ```true```, tanımlı dğeilse ```false``` döner.
+> + Buradaki ```!``` operatörü, mantıksal ```NOT``` operatörüdür ve ```defined()``` fonksiyonunun sonucunu tersine çevirir.
+>     - Eğer ```GREETING_IT``` sabiti tanımlı değilse, ```!defined(GREETING_IT)``` ifadesi ```true``` döner ve ```if``` bloğu içindeki kod çalır.
+>     - Eğer ```GREETING_IT``` sabiti tanımlıysa, ```!defined(GREETING_IT)``` ifadesi ```false``` döner ve ```if``` bloğu içindeki kod çalışmaz (yukarıdaki örnekte if bloğunda sabit tanımlı değildir).
+> + ```define("GREETING_IT","Ciao")``` ifadesinde sabit tanımlıdır ve değeri "Ciao"dur.
+>     - Eğer ```GREETING_IT``` sabiti daha önce tanımlanmışsa, ```define()``` fonksiyonu tekrar çalıştırılamaz ve sabitin değeri değiştirilemez.
+
 ***
 #### Dikkat edilmesi gerekenler
 ***
-+ ```Performans:```
-+ ```Hata Kontrolü:```
-+ ```Güvenlik:```
++ ```Performans:``` constant() fonksiyonu her çağırıldığımda sabitin ismini çözümlemesi gerekitğinden, sabit ismine doğrudan erişimden biraz daha yavaştır. Ancak bu fark genellikle ihmal edilebilir düzeydedir.
++ ```Hata Kontrolü:``` Dinamik sabit isimleri oluşturulurken hatalara karşı dikkatli olunmalıdır. Sabit ismi yanlış oluşturulursa, ```constant()``` fonksiyonu bir hata döndürür.
++ ```Güvenlik:``` Kullanıcı girdilerine dayalı olarak dinamik sabit isimleri oluşturulurken dikkatli olunmalıdır. Kullanıcı girdilerinin doğruluğunu ve güvenliğini sağlamak önemlidir.
