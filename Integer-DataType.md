@@ -52,7 +52,7 @@ $maximum_integer = PHP_INT_MAX;
 ~~~~~~~
 $minimum_integer = PHP_INT_MIN;
 ~~~~~~~
-> Output: -9223372036854775807> 
+> Output: -9223372036854775807
 > + 32-bit sistemlerde genellikle bu değer ```-2147483647``` (2<sup>31</sup> - 1) olur.
 > + 64-bit sistemlerde ise bu değer ```-9223372036854775807``` (2<sup>63</sup> - 1) olur.
  
