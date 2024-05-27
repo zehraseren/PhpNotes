@@ -57,6 +57,8 @@ echo $array["surname"];
 ##### Bunu Uyarıyı Önlemek İçin Kullanılan Yöntemler
 2.1. ```array_key_exists``` Fonksiyonu
   - Bir key'in array'de mevcut olup olmadığını kontrol etmek için bu fonksiyon kullanılır.
+  - Key'in varlığını kontrol ederken, değerin ```null``` olup olmadığına bakılmaz.
+  - Bir key'in değeri ```null``` olsa bile array_key_exists() ```true``` döner.
 ~~~~~~~
 $array = ["name" => "Zehra", "age" => 29];
 
@@ -69,6 +71,7 @@ if (array_key_exists("surname", $array)) {
 
 2.2. ```isset``` Fonksiyonu
   - ```array_key_exists``` fonksiyonu ile benzer şekilde çalışır ve bir key'in dizide mevcut olup olmadığını ve ```null``` olup olmadığını kontrol eder.
+  - Eğer key'in değeri ```null``` ise, isset() ```false``` döner.
 ~~~~~~~
 $array = ["name" => "Zehra", "age" => 29];
 
@@ -78,6 +81,21 @@ if (isset($array["surname"])) {
   echo "Key not available.";
 }
 ~~~~~~~
+
+##### Not:
++ Başka bir key kontrol yöntemi ```in_array()```'dir. Bu fonksiyonda key yerine değeri kontrol etmek için kullanılabilir.
+~~~~~~~
+$array = ["apple", "pear", "banana"];
+
+if(in_array("pear", $array)) {
+    echo "The value 'pear' is present in the array.";
+} else {
+    echo "The value 'pear' is not present in the array.";
+}
+
+print_r($array);
+~~~~~~~
+> Output: The value 'pear' is present in the array.
  
 2.3. Null Coalescing Operatörünü Kullanma | PHP 7+
   - PHP 7 ve sonrasında, null coalescing operatörü ```??``` kullanılabilir.
@@ -203,8 +221,118 @@ echo $student["age"];
 + ```Esneklik:``` Associative arrays, elemanların belirli bir key ile tanımlanmasını sağladığından, data'ya daha anlamlı bir yapı kazandırır ve elemanlara daha kolay erişim sağlar.
 > Associative arrays, özellikle farklı veri türlerini gruplamak ve ilişkilendirmek için kullanışlıdır.
 
+***
+### 5. Multi-dimensional arrays nedir?
+***
++ Çok boyutlu array'ler (multi-dimensional arrays), diğer array'lerin içinde array'lerin bulunduğu ve verilerin hiyerarşik olarak düzenlendiği özel bir dizi türüdür.
++ Bu array'ler tek bir array içinde birden çok boyuta sahip veri yapıları oluşturulmasına olanak sağlar.
++ Her bir boyut, bir array içindeki iç içe geçmiş bir başka array'e karşılık gelir.
++ Multi-dimensional array'ler, genellikle matrisler, tablolar, ağaçlar gibi data yapılarını temsil etmek için kullanılır. Örneğin, bir matrisi temsil etmek için iki boyutlu bir array kullanılabilir, her bir satırı ve sütunu belirli bir anahtarla erişilebilir.
+~~~~~~~
+$matris = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+];
 
+print_r($matris);
+~~~~~~~
+> Output: Array ( [0] => Array ( [0] => 1 [1] => 2 [2] => 3 ) [1] => Array ( [0] => 4 [1] => 5 [2] => 6 ) [2] => Array ( [0] => 7 [1] => 8 [2] => 9 ) )
+> + ```$matris``` adlı iki boyutlu array'de her biri iç içe geçmiş bir array ve satır bulunur.
+> + İlk boyut, satırları ve ikinci boyut sütunları temsil eder.
+> + ```Bu şekilde, çok boyutlu array'ler karmaşık data yapılarını düzenlemek için kullanılabilir.``` 
 
+##### Örnekler
++ İki Boyutlu Array
+~~~~~~~
+$two_dimensional = [
+  ["Ahmet", "Yılmaz", 25],
+  ["Ayşe", "Kara", 30],
+  ["Mehmet", "Öztürk", 22]
+];
 
+echo($two_dimensional)[0][0];
+echo($two_dimensional)[1][1];
+~~~~~~~
+> Output: Ahmet
 
+> Output: Kara
 
++ Üç Boyutlu Array
+~~~~~~~
+$three_dimensional = [
+  [
+    ["apple", "pear"],
+    ["cherry", "strawberry"],
+  ],
+  [
+    ["banana", "pineapple"],
+    ["kiwi", "mango"],
+  ],
+];
+
+echo($three_deminsional)[0][0][1];
+echo($three_deminsional)[1][1][0];
+~~~~~~~
+> Output: pear
+
+> Output: kiwi
+
+> ```Bir array'in belirli bir elemanının değerini yazdırmak için "echo" kullanabilir.```
+
+***
+### 6. Array'lerde Duplicate keys & overwriting nedir?
+***
++ Array'lerde key'ler benzersiz olmalıdır. Aynı key birden fazla kes tanımlanırsa, bu durumda son tanımlanan değer, o key'in değerini geçersiz kılar ve üzerine yazar. Bu davranışa ```duplicate keys  overwriting (aynı key'lerin tekrar tanımlanması ve üzerine yazılması)``` denir.
+
+~~~~~~~
+$array = [
+  "name" => "Fatma",
+  "surname" => "Şeren",
+  "age" => 29,
+  "name" => "Zehra"
+];
+
+print_r($array);
+~~~~~~~
+> Output: Array ( [name] => Zehra [surname] => Şeren [age] => 29 )
+> + Yukarıdaki örnekte "name" iki kere tanımlanmıştır. İlk değer "Fatma", ikinci değer ise "Zehra" olarak atanmıştır.
+> + PHP'de bir array'de aynı key birden fazla kez tanımlandığında, son tanımlanan değer geçerli olur ve önceki değer üzerine yazılır.
+
+***
+### 7. Having keys on only some elements & how automatic indexing works (yalnızca bazı öğelerde key olması ve otomatik index'leme nasıl çalışır)?
+***
++ Array'ler, aynı anda hem ilişkisel (associative) hemde sayısal (indexed) key'ler içerebilir.
++ Bazı elemanlar belirli key'lerle tanımlanabilirken, diğer elemanlar otomatik olarak index'lenebilir. Bu durum, array elemanlarının karışık şekilde key'lerle ve otomatik index'lerle tanımlanmasını sağlar.
+~~~~~~~
+$array = [
+    "name" => "Zehra",
+    "surname" => "Şeren",
+    7,
+    "age" => 29,
+    "city" => "İstanbul",
+    19
+];
+
+print_r($array);
+~~~~~~~
+> Output: Array ( [name] => Zehra [surname] => Şeren [0] => 7 [age] => 29 [city] => İstanbul [1] => 19 )
+> + Belirli key'lerle tanımlanan elemanlar, array içinde belirtilen key'lerle saklanır.
+> + Otomatik index'lenen elemanlar, dizideki son sayısal key baz alınarak sırayla index'lenir. Yukarıdaki örnekte ```5``` elemanı otomatik olarak ```[0]``` anahtarıyla, ```10``` elemanı ise otomatik olarak ```[1]``` saklanmıştır.
+
+##### Otomatik index'leme nasıl çalışır?
+1. ```Başlangıç:``` Array'e ilk eleman eklendiğinde ve belirli bir key atanmadığında, bu elemanı ```[0]``` elemanı saklar.
+2. ```Sırayla Index'leme:``` Sonraki elemanlar için, eğer belirli bir key atanmazsa, önceki en yüksek sayısal key'in bir fazlasını kullanarak otomatik index'leme yapar.
+3. ```Karışık Key'ler:``` Bir array'de belirli key'lerle elemanlar tanımlandığında, otomatik index'leme bu belirli key'lerden bağımsız olarak çalışır.
+~~~~~~~
+$array = [];
+$array[] = "apple";        // Otomatik olarak [0] key'i verilir.
+$array["fruit"] = "pear";  // Belirli key: [fruit]
+$array[] = "banana";       // Otomatik olarak [1] key'i verilir.
+$array[5] = "strawberry";  // Belirli key: [5]
+$array[] = "cherry";       // Otomatik olarak [6] key'i verilir.
+
+print_r($array);
+~~~~~~~
+> Output: Array ( [0] => apple [fruit] => pear [1] => banana [5] => strawberry [6] => cherry )
+> + Belirli  key'lerle ve otomatik index'leme ile karışık olarak array'leri yönetlebilir. Bu esneklik, array'lerin karmaşık veri yapılarını temsil etmesini kolaylaştırır.
