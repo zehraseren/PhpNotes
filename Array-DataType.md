@@ -112,7 +112,7 @@ echo $array["surname"] ?? "Default value";
   - API veya database sorguları yaparken dönen veriler beklenen anahtarları içermediğinde.
 
 #### 3. Mutate arrays nedir?
-+ Array'leri değştirmek (mutate etmek) veya üzerinde değişilik yapmak, array'in içeriğini güncellemeyi, eklemeyi, çıkarmayı veya değiştirmeyi içerir.
++ Array'leri değiştirmek (mutate etmek) veya üzerinde değişilik yapmak, array'in içeriğini güncellemeyi, eklemeyi, çıkarmayı veya değiştirmeyi içerir.
 + Array'leri mutasyona uğratmanın çeşitli yolları vardır ve bunlar genellikle belirli işlevler ve operatörler kullanılarak gerçekleştirilir.
 
 ##### Mutate Array Yöntemleri
