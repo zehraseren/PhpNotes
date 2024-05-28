@@ -34,3 +34,10 @@ switch ($day) {
 }
 ~~~~~~~
 > Output: Today is Wednesday.
+
+##### switch statament nasıl çalışır?
++ `switch` ifadesi, belirtilen değişkenin değerine göre değerlendirme yapar.
++ Her `case` ifadesi, değişkenin belirli bir değere sahip olup olmadığını kontrol eder.
++ Değişkenin değeri `case` ifadesindeki değere eşitse, o `case` bloğu çalışır ve `break` ifadesine ulaşana kadar devam eder.
++ `break` ifadesi, `switch` yapısını sonlandırır. Eğer `break` ifadesi kullanılmazsa, kod bir sonraki case bloğuna geçer (bu duruma `fall-through` denir).
++ `default`  bloğu, değişkenin hiçbir `case` değeriyle eşleşmemesi durumunda çalışır. `default` bloğu isteğe bağlıdır ancak hiçbir `case` değeriyle eşleşmeyen durumlar için bir güvenlik ağı sağlar ve genellikle kullanılması önerilir.
