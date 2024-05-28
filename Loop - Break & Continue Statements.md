@@ -57,3 +57,33 @@ foreach ($array as $item) {
 + `do-while:` Kod bloğunu en az bir kez çalıştırmak ve ardından koşul doğru olduğu sürece tekrar etmek için.
 + `for:` Belirli bir aralıkta döngüyü çalıştırmak için.
 + `foreach:` Bir array'in veya iterable nesnenin her elemanı için döngüyü çalıştırmak için.
+
+##### Örnek
+~~~~~~~
+$user = [
+    "name" => "Zehra",
+    "surname" => "Şeren",
+    "skills" => ["PHP", "Angular", "JavaScript", "React"],
+];
+
+foreach ($user as $key => $value) {
+    echo $key . ": ";
+
+    if (is_array($value)) {
+        foreach ($value as $skill) {
+            echo $skill . ", ";
+        }
+    }
+    else {
+        echo $value;
+    }
+    echo '<br />';
+}
+~~~~~~~
++ `foreach ($user as $key => $value) {`: `$user` adlı array döngüye sokulur. Her bir array öğesi için, key (`$key`) ve değer (`$value`) çiftini alır.
++ ` echo $key . ": ";`: key (`$key`) ekrana yazdırılı ve `:` ile ayrım yapılır. Değerlerin ekrana yazdırılması bu ayrımdan sonra gerçekleştirilir.
++ `if (is_array($value)) {`: `$value`'nun bir array olup olmadığı kontrol edilir. Eğer `$value` bir array ise, içeri girerek ve array elemanlarını işlemek için başka bir iç içe döngü başlatılır.
++ `foreach ($value as $skill) {`: `$value` bir array ise bu iç içe döngü, `$value`'nun her bir elemanını alır ve `$skill` değişkenine atar. `Bu iç içe döngü, array elemanlarını tek tek ekrana yazdırmak için kullanılırç`
++ `echo $skill . ", ";`: İç içe döngüdeki her bir eleman, virgül ile ayrılarak ekrana yazdırılır.
++ `else {echo $value;}`: Eğer `$value` bir dizi değilse, yani tek bir değer ise, bu değer doğrudan ekrana yazdırılır.
++ ` echo '<br />';`: Her bir key-value çifti işlendikten sonra bir `<br />` etiketi kullanılarak satır değişimi sağlanır.
