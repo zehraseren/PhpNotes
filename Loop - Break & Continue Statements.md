@@ -83,7 +83,32 @@ foreach ($user as $key => $value) {
 + `foreach ($user as $key => $value) {`: `$user` adlı array döngüye sokulur. Her bir array öğesi için, key (`$key`) ve değer (`$value`) çiftini alır.
 + ` echo $key . ": ";`: key (`$key`) ekrana yazdırılı ve `:` ile ayrım yapılır. Değerlerin ekrana yazdırılması bu ayrımdan sonra gerçekleştirilir.
 + `if (is_array($value)) {`: `$value`'nun bir array olup olmadığı kontrol edilir. Eğer `$value` bir array ise, içeri girerek ve array elemanlarını işlemek için başka bir iç içe döngü başlatılır.
-+ `foreach ($value as $skill) {`: `$value` bir array ise bu iç içe döngü, `$value`'nun her bir elemanını alır ve `$skill` değişkenine atar. `Bu iç içe döngü, array elemanlarını tek tek ekrana yazdırmak için kullanılırç`
++ `foreach ($value as $skill) {`: `$value` bir array ise bu iç içe döngü, `$value`'nun her bir elemanını alır ve `$skill` değişkenine atar. `Bu iç içe döngü, array elemanlarını tek tek ekrana yazdırmak için kullanılır.`
 + `echo $skill . ", ";`: İç içe döngüdeki her bir eleman, virgül ile ayrılarak ekrana yazdırılır.
 + `else {echo $value;}`: Eğer `$value` bir dizi değilse, yani tek bir değer ise, bu değer doğrudan ekrana yazdırılır.
 + ` echo '<br />';`: Her bir key-value çifti işlendikten sonra bir `<br />` etiketi kullanılarak satır değişimi sağlanır.
+
+#### endfor ve endforeach nedir?
++ `endfor` ve `endforeach` ifadeleri, uzun `for` ve `foreach` döngülerini sonlandırmak için kullanılan özel ifadelerdir.
+> Bu ifadeler, karmaşık döngülerde kodun okunabilirliğini artırmak için kullanılır.
+
++ `endfor` ifadesi, bir for döngüsünü sonlandırmak için kullanılır. Genellikle, bir for döngüsünde birden fazla satırda kod bulunuyorsa ve döngünün sonunu belirlemek zor oluyorsa kullanılır.
+~~~~~~~
+<?php
+for ($i = 0; $i < 5; $i++) {
+    echo $i . "<br>";
+}
+endfor;
+?>
+~~~~~~~
+
++ `endforeach` ifadesi, bir for döngüsünü sonlandırmak için kullanılır. Genellikle, bir foreach döngüsünde birden fazla satırda kod bulunuyorsa ve döngünün sonunu belirlemek zor oluyorsa kullanılır.
+~~~~~~~
+<?php
+$array = [1, 2, 3, 4, 5];
+foreach ($array as $item) {
+    echo $item . "<br>";
+}
+endforeach;
+?>
+~~~~~~~
