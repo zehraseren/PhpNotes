@@ -406,19 +406,36 @@ $x + $y
 
 10. Execution (Yürütme) Operators | ``` `` ```
 ----
++ Bir kabuk komutunu çalıştırmak için kullanılır. `shell_exec` fonksiyonuna benzer şekilde çalışır ve bir komut satırı komutunu çalıştırır, ardından bu komutun çıktısını döner.
 ~~~~~~~
+$output = `ls -l`;
+echo "<pre>$output</pre>";
 ~~~~~~~
-> Output:
 
 11. Type Operators | ```instanceof```
 ----
-~~~~~~~
-~~~~~~~
-> Output:
++ Genellikle belirli bir değerin veya değişkenin türünü (type) kontrol etmek veya belirlemek için kullanılan operatörler ve fonksiyonlar kümesini ifade eder.
++ PHP'de doğrudan "type operator" olarak adlandırılan bir operatör yoktur, ancak tür kontrolü ve tür dönüşümü yapmak için kullanılan bazı operatörler ve fonksiyonlar vardır.
+    - is_int(): Bir değişkenin tamsayı (integer) olup olmadığını kontrol eder.
+    - is_float(): Bir değişkenin kayan nokta (float) sayı olup olmadığını kontrol eder.
+    - is_string(): Bir değişkenin dize (string) olup olmadığını kontrol eder.
+    - is_bool(): Bir değişkenin boolean (true/false) olup olmadığını kontrol eder.
+    - is_array(): Bir değişkenin dizi (array) olup olmadığını kontrol eder.
+    - is_object(): Bir değişkenin nesne (object) olup olmadığını kontrol eder.
+    - is_null(): Bir değişkenin null olup olmadığını kontrol eder.
+    - is_resource(): Bir değişkenin kaynak (resource) olup olmadığını kontrol eder.
+    - is_callable(): Bir değişkenin çağrılabilir (callable) olup olmadığını kontrol eder.
 
-12. Nullsafe Operators | ``````
+12. Nullsafe Operators | `?->`
 ----
++ Bir nesne zincirinde null kontrollerini daha kolay ve temiz bir şekilde yapılmasına olanak tanır.
++ Bir nesne veya alt nesne null olduğunda hataya yol açmadan işlemi güvenli bir şekilde sonlandırır ve null döner.
++ `Nullsafe operatörü, bir nesne zincirinde herhangi bir noktada null değeri olup olmadığını kontrol eder. Eğer nullsa, işlemi durdurur ve null döner. Aksi halde, zincirin geri kalanını yürütür.`
 ~~~~~~~
-~~~~~~~
-> Output:
+$person = null;
+$name = $person?->getName();
 
+echo $name;
+~~~~~~~
+> Output: null
+> + `$person `değişkeni null olduğu için getName() metodu çağrılmadan null döner ve herhangi bir hata meydana gelmez.
