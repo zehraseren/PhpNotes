@@ -45,7 +45,7 @@ greeting("Zehra");
 > Output: Hello, Zehra!
 
 #### Değişken Sayıda Parametreler
-+ Bir fonksiyonun değişken sayıda parametre almasını sağlamak için `... (splat operator) ` kullanılabilir.
++ Bir fonksiyonun değişken sayıda parametre almasını sağlamak için `... (splat operator)` kullanılabilir.
 ~~~~~~~
 function sum(...$numbers) {
   return array_sum($numbers);
@@ -292,7 +292,7 @@ merhaba();
 ##### Kullanım Alanları
 + Şartlı fonksiyon tanımlamanın bazı yaygın kullanım alanları şunlardır:
   - `Backward Compatibility (Geriye Dönük Uyumluluk):` Eski sürümlerde tanımlı olmayan fonksiyonları sadece ihtiyaç duyulduğunda tanımlamak.
-  - `Özelleştiriliş Fonksiyonlar:` Uygulamanın çalışma ortamına veya belirli parametrelere göre farklı fonksiyon davranışları sağlamak.
+  - `Özelleştirilmiş Fonksiyonlar:` Uygulamanın çalışma ortamına veya belirli parametrelere göre farklı fonksiyon davranışları sağlamak.
   - `Ad Çakışmalarını Önleme:` Aynı fonksiyon adının birden fazla yerde tanımlanmasını önlemek.
 
 > PHP'de şartlı fonksiyon tanımlama, uygulamanın dinamik ve esnek olmasını sağlar. Fonksiyonları belirli koşullara bağlı olarak tanımlayarak kodunuzun modülerliğini ve bakımını artırabilir. Bu yöntem, özellikle büyük ve karmaşık projelerde kodunuzu daha yönetilebilir ve esnek hale getirmek için oldukça kullanışlıdır.
@@ -395,7 +395,7 @@ echo calculator(10, 5, "ext") . "\n";
   > Fatal error: Cannot redeclare function_name() in /path/to/file.php on line X
 
 #### Çözüm Yolları
-1.Fonksiyon İsimlerinin Benzersiz Olmasını Sağlamak
+1. Fonksiyon İsimlerinin Benzersiz Olmasını Sağlamak
 + Farklı fonksiyonlar tanımlarken, isimlerinin benzersiz olmasına dikkat edilmelidir. Fonksiyon isimlerinin anlamlı ve spesifik olması, ad çakışmalarını önlemeye yardımcı olabilir.
 ~~~~~~~
 function salute() {
@@ -602,14 +602,14 @@ hello(null);
 
 > Output: Hello, guest!
 
-> + `hello` fonksiyonu string türünde bir argüman ya da null kabul eder. null değeri geçirildiğinde farklı bir mesaj yazdırır.
+> + `hello` fonksiyonu string türünde bir argüman ya da null kabul eder. `null` değeri geçirildiğinde farklı bir mesaj yazdırır.
 
 ##### Nullable Dönüş Değeri
 ~~~~~~~
 function findable(int $id): ?string {
-    $datas = [1 => "One", 2 => "Two", 3 => "Three"];
+    $data = [1 => "One", 2 => "Two", 3 => "Three"];
     
-    return $datas[$id] ?? null;
+    return $data[$id] ?? null;
 }
 
 echo findable(2);
@@ -623,8 +623,8 @@ echo findable(5);
 
 #### Nullable Types Kullanım Alanları
 + `Opsiyonel Parametreler:` Bir fonksiyonun belirli bir parametreyi opsiyonel hale getirmek ve yoksa `null` değerini kabul etmek için.
-+ `Database Sorguları:` Bir database sorgusunun sonucunda bulunmayan kayıtlar için `null` döndürebilmek.
-+ `İsteğe Bağlı Dönüş Değerleri:` Bir fonksiyonun belirli bir değeri döndüremediği durumlarda `null` döndürebilmek.
++ `Database Sorguları:` Bir database sorgusunun sonucunda bulunmayan kayıtlar için `null` döndürebilir.
++ `İsteğe Bağlı Dönüş Değerleri:` Bir fonksiyonun belirli bir değeri döndüremediği durumlarda `null` döndürebilir.
 
 #### Katı Tip Kontrolü ile Kullanımı
 + Katı tip kontrolü etkinleştirildiğinde, `nullable` types hala çalışır ve belirtilen türde ya da `null` değerlerini kabul eder.
@@ -653,38 +653,204 @@ echo strictTypesNullable(null);
 + Union types, bir değişkenin birden fazla belirli türden birini alabileceğini belirtmek için kullanılır.` Bu, fonksiyonların daha esnek ve dinamik olmasını sağlar.`
 + Union types tanımlamak için, türleri dikey çubuk `|` ile ayırarak belirtilir.
 
-#####
+##### Fonksiyon Argümanında Union Types
 ~~~~~~~
-~~~~~~~
-> Output:
-> +
+function operation(int|float $num1, int|float $num2): int|float {
+    return $num1 + $num2;
+}
 
-#####
+echo operation(5, 3);
+echo operation(5.5, 3.2);
+echo operation(5, 3.2);
 ~~~~~~~
+> Output: 8
+
+> Output: 8.7
+
+> Output: 8.2
+
+> + `operation` fonksiyonu hem `int` hem de `float` türünde argümanlar kabul edebilir ve dönebilir.
+
+##### Fonksiyon Dönüş Değerinde Union Types
 ~~~~~~~
-> Output:
-> +
+function getData(int $id): int|string {
+    $data = [1 => "One", 2 => "Two", 3 => "Three"];
+    
+    return $data[$id] ?? $id;
+}
+
+echo getData(2);
+echo getData(4);
+~~~~~~~
+> Output: Two
+
+> Output: 4
+
+> + `getData` fonksiyonu hem `int` hem de `string` türünde değerler döndürebilir.
+> + `return $data[$id] ?? $id;`: `$id` anahtarının `$getData` dizisinde olup olmadığını kontrol eder. `$id` dizide varsa karşılık gelen değeri döndürür; yoksa `$id` kendisini döndürür.
+> + `??` operatörü, PHP'de "null birleşim" operatörü olarak bilinir. Sol taraf null ise sağ tarafı döndürür. Ancak, dizide olmayan bir anahtarı kullanmaya çalışmak null döndüreceği için burada uygun bir kullanım sağlar.
 
 #### Union Types ile Nullable Types
-+
++ Union types, nullable types ile birlikte de kullanılabilir. Bu durumda, null değeri de kabul edilebilir bir tür olarak belirtilir.
 ~~~~~~~
+function operation(?int|float $value): ?float {
+    return $value ? $value * 2 : null;
+}
+
+echo operation(5);
+echo operation(5.5);
+echo operation(null);
 ~~~~~~~
-> Output:
-> +
+> Output: 10
+
+> Output: 11
+
+> Output: Return value null
+
+> + `operation` fonksiyonu `int`, `float` ve `null` değerlerini kabul edebilir ve döndürebilir.
 
 #### Union Types Kullanım Alanları
++ `Esneklik:` Bir fonksiyonun birden fazla türde argüman kabul edebilmesini ve dönebilmesini sağlar.
++ `Gerçek Dünya Modelleri:` Gerçek dünya senaryolarında, bir değer birden fazla türde olabileceğinden, union types kullanarak bu tür senaryoları daha iyi modelleyebilirsiniz.
++ `Geriye Dönük Uyum:` Eski kodlarla uyumluluğu sürdürmek ve yeni tür eklemeleri yapmak için union types kullanabilirsiniz.
 
 #### Katı Tip Kontrolü ile Kullanımı
-+
++ Union types, katı tip kontrolü ile birlikte de çalışır ve tür uyumsuzlukları durumunda PHP'nin hata fırlatmasını sağlar.
 ~~~~~~~
-~~~~~~~
-> Output:
-> +
+declare(strict_types=1);
 
->
+function sum(int|float $x, int|float $y): int|float {
+    return $x + $y;
+}
+
+echo sum(5, 3.5);
+echo sum(5, "3");
+
+~~~~~~~
+> Output: 8.5
+
+> Output: Error: Uncaught TypeError
+
+> + `sum` fonksiyonu `int` ve `float` türlerini kabul eder. "3" gibi bir string argüman geçildiğinde, katı tip kontrolü etkin olduğu için hata fırlatılır.
+
+> Union types, fonksiyonların ve değişkenlerin daha esnek ve dinamik olmasını sağlayan güçlü bir özelliktir. Bir değişkenin birden fazla belirli türden birini alabileceğini belirtir ve kodun daha anlaşılır, esnek ve hataya dayanıklı olmasına yardımcı olur. Union types, özellikle büyük projelerde ve karmaşık veri modellerinde kullanışlıdır ve katı tip kontrolü ile birlikte kullanıldığında kodun doğruluğunu artırır.
 
 ***
 ### Mixed Types nedir?
 ***
++ PHP 8.0 ile birlikte tanıtılan `mixed types`, bir değişkenin birden fazla türde değer alabileceğini belirtmek için kullanılır.
++ Bir değişkenin aşağıdaki türlerden herhangi biri olabileceğini ifade eder:
+    - int
+    - float
+    - string
+    - bool
+    - array
+    - object
+    - callable
+    - resource
+    - null.
+    - `mixed types`, özellikle dinamik veri yapıları veya çeşitli türlerde veri döndüren fonksiyonlar için kullanışlıdır.
++ Hem fonksiyon argümanlarında hem de dönüş değerlerinde kullanılabilir.
 
+#### Fonksiyon Argümanında Mixed Types
+~~~~~~~
+function print(mixed $data): void {
+    if (is_array($data)) {
+        echo implode(", ", $data);
+    } else {
+        echo $data;
+    }
+}
 
+print("Hello World!");
+print([1, 2, 3]); 
+~~~~~~~
+> Output: Hello World!
+
+> Output: 1, 2, 3
+
+> + `print` fonksiyonu mixed türünde bir argüman kabul eder ve argümanın türüne göre farklı işlemler yapar.
+
+#### Fonksiyon Dönüş Değerinde Mixed Types
+~~~~~~~
+function getData(int $id): mixed {
+    $data = [1 => "One", 2 => 2.5, 3 => true];
+    
+    return $data[$id] ?? null;
+}
+
+echo getData(1);
+echo getData(2);
+echo getData(3);
+~~~~~~~
+> Output: One
+
+> Output: 2.5
+
+> Output: 1
+
+> + `getData` fonksiyonu `mixed types` türünde bir değer döndürebilir. Dönüş değeri, veritabanında bulunan farklı türlerdeki verilere göre değişir.
+
+#### Mixed Types Kullanım Alanları
++ `Dinammik Data Yapıları:` Dinamik olarak değişen data türlerini işlemek için.
++ `Çeşitli Türlerde Veri Döndüren Fonksiyonlar:` Aynı fonksiyonun farklı türlerde veri döndürebileceği durumlarda.
++ `Geriye Dönük Uyum:` Eski kodlarla uyumluluğu sürdürmek için.
+
+#### Katı Tip Kontrolü ile Kullanımı
++ `mixed types`, katı tip kontrolü ile birlikte de kullanılabilir. Katı tip kontrolü etkin olduğunda, mixed types belirtilen tüm türleri kabul eder ve tür uyumsuzluklarında hata fırlatılmaz.
+~~~~~~~
+declare(strict_types=1);
+
+function getValue(): mixed {
+    return 42;
+}
+
+echo getValue();
+~~~~~~~
+> + `getValue` fonksiyonu `mixed types` bir değer döndürebilir.
+
+~~~~~~~
+function addValue(mixed $value): void {
+    if (is_string($value)) {
+        echo strtoupper($value);
+    } else {
+        var_dump($value);
+    }
+}
+
+addValue("test");
+addValue([1, 2, 3]);
+~~~~~~~
+> Output: TEST
+
+> Output: Array(3) { [0]=> int(1) [1]=> int(2) [2]=> int(3) }
+
+> + `addValue` fonksiyonu mixed types olarak bir argüman kabul eder. Katı tip kontrolü etkin olduğunda bile, mixed types belirtilen tüm türleri kabul eder.
+
+#### Mixed Types Avantajları ve Dezavantajları
+
+##### Avantajları
++ `Esneklik:` Mixed types, fonksiyonların ve değişkenlerin çeşitli türlerdeki verilerle çalışabilmesini sağlar. 
++ `Basitlik:` Farklı türdeki verileri işleyen fonksiyonları yazarken kodu basitleştirir.
++ `Uyumluluk:` Eski kodlarla uyumlu olmayı sürdürür ve genişletilebilirlik sağlar.
+
+##### Dezavantajları
++ `Tip Güvenliği Azalması:` Mixed types kullanıldığında, belirli bir tür beklentisi olmadan çalışmak zor olabilir dolayısıyla hata ayıklamayı zorlaştırabilir.
++ `Dokümantasyon ve Anlaşılabilirlik:` Fonksiyonların döndürdüğü veya kabul ettiği türlerin açıkça belirtilmemesi, kodun anlaşılabilirliğini azaltabilir
+
+> `mixed types`, PHP'de bir değişkenin birden fazla türde değer alabileceğini ifade eder ve fonksiyonların daha esnek olmasını sağlar. Ancak, bu esneklik tip güvenliğini azaltabilir, bu yüzden dikkatli kullanılmalıdır. Özellikle dinamik veri yapıları ve çeşitli türlerde veri döndüren fonksiyonlar için kullanışlıdır. Katı tip kontrolü ile birlikte kullanıldığında bile, mixed types geniş bir data türü yelpazesini kabul eder.
+
+#### Union types vs Mixed Types 
++ Union types ve mixed types, PHP'de bir değişkenin birden fazla türde olabileceğini belirtmek için kullanılan iki farklı yaklaşımdır, ancak aralarında önemli farklar vardır.
+  
++ Tip Güvenliği
+  - `Union Types:` Daha fazla tip güvenliği sağlar çünkü hangi türlerin kabul edildiği ve döndürüldüğü açıkça belirtilir. Bu, yanlış türdeki data'ların kullanılmasını engeller.
+  - `Mixed Types:` Daha az tip güvenliği sağlar çünkü herhangi bir türdeki data kabul edilir. Bu, tip uyumsuzluklarının tespit edilmesini zorlaştırabilir.
+
++ Kullanım Amacı
+  - `Union Types:` Belirli birkaç türde data kabul eden ve döndüren fonksiyonlar ve değişkenler için idealdir. Tiplerin net olarak belirlenmesi gerektiğinde kullanılır.
+  - `Mixed Types:` Çok çeşitli türlerde data kabul eden ve döndüren fonksiyonlar ve değişkenler için kullanışlıdır. Dinamik ve esnek data yapıları ile çalışırken tercih edilir.
+
++ Okunabilirlik ve Anlaşılabilirlik
+  - `Union Types:` Kodun okunabilirliğini ve anlaşılabilirliğini artırır çünkü hangi türlerin kabul edildiği ve döndürüldüğü nettir.
+  - `Mixed Types:` Kodun anlaşılmasını zorlaştırabilir çünkü bir değişkenin veya fonksiyonun hangi türde veri ile çalıştığı belirsiz olabilir.
