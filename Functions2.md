@@ -90,9 +90,6 @@ run($callback);
 ***
 ### Anonymous functions (anonim fonksiyonlar) nedir?
 ***
-+
-
-#### Anonim Fonksiyonların Temel Kullanımı
 + Adı olmayan ve doğrudan bir değişkene atanarak kullanılabilen fonksiyonlardır.
 + PHP'de anonim fonksiyonlar, function anahtar kelimesi kullanılarak tanımlanır ve genellikle callable veya closure olarak adlandırılır. `Bu fonksiyonlar, diğer fonksiyonlara argüman olarak geçirilebilir veya bir değişken olarak saklanabilir.`
 
