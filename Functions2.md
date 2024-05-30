@@ -451,29 +451,210 @@ funcBuild([$object, 'hello'], 'Zehra');
 
 ##### Kullanım Alanları
 1. Array Fonksiyonları
-+
++ Callback fonksiyonları, `array_map`, `array_filter`, `array_walk` gibi array işleme fonksiyonlarında sıkça kullanılır.
 ~~~~~~~
+$numbers = [1, 2, 3, 4, 5];
+
+$square = function($num) {
+    return $num * $num;
+};
+
+$squared = array_map($square, $numbers);
+print_r($squared);
 ~~~~~~~
-> Output:
+> Output: Array ( [0] => 1 [1] => 4 [2] => 9 [3] => 16 [4] => 25 )
 
 2. Event Handling (Olay Yönetimi)
-+
++ Callback'ler, olay tabanlı programlama ve event handler'lar oluşturmak için kullanılır.
 ~~~~~~~
+function clickButton($callback) {
+    // The called function when click the button
+    $callback();
+}
+
+clickButton(function() {
+    echo "Button clicked!";
+});
 ~~~~~~~
-> Output:
+> Output: Button clicked!
 
 3. Karmaşık İşlem ve Akış Kontrolü
-+
++ Karmaşık işlem akışlarında belirli işlemleri dinamik olarak belirlemek için kullanılır.
 ~~~~~~~
-~~~~~~~
-> Output:
+function selectOprt($operation, $x, $y) {
+    if (is_callable($operation)) {
+        return $operation($x, $y);
+    }
+    return null;
+}
 
->
+$sum = function($x, $y) {
+    return $x + $y;
+};
+
+$result = selectOprt($sum, 10, 5);
+echo $result;
+~~~~~~~
+> Output: 15
+
+> Callable ve callback fonksiyonları, PHP'de esnek ve dinamik programlama yapılmasını sağlar. Bu özellikler, kodun daha modüler ve yeniden kullanılabilir hale getirir.
 
 ***
-### Closure vs callable (kapatılabilir vs çağrılabilir) nedir?
+### Closure vs callable (kapatılabilir vs çağrılabilir)
 ***
+##### Closure
++ Closure'lar, PHP'de fonksiyonların adını belirtmeden anonim olarak tanımlanabilen, ve genellikle bir değişkene atanarak kullanılan fonksiyonlardır.
++ Closure'lar, tanımlandıkları yerin kapsamındaki değişkenlere erişebilirler. Bu özellik, closure'ların tanımlandıkları bağlamdan veri alabilmesini sağlar.
+
+#### Özellik ve Kullanım
++ `Anonim Fonksiyonlar:` Closure'lar anonim fonksiyonlar olarak da bilinirler ve bir değişkene atanabilirler.
++ `Kapsam Kullanımı:` `use` keyword ile dış değişkenlere erişim sağlanabilir.
++ `Closure Class:` PHP'de closure'lar Closure Class'ının bir örneğidir.
+
+~~~~~~~
+$message = "Hello, world!";
+
+$closure = function() use ($message) {
+    echo $message;
+};
+
+$closure();
+~~~~~~~
+> Output: Hello, world!
+
+##### Callable
++ Callable, PHP'de çağrılabilir bir fonksiyonu veya yöntemi ifade eden bir veri türüdür.
++ Callable bir değişken veya ifade, bir fonksiyon, bir class'ın statik method'u, bir class'ın örneği ile kullanılan bir method, veya bir Closure olabilir.
+
+#### Özellik ve Kullanım
++ `Fonksiyon İsmi:` Bir fonksiyonun adı callable olabilir.
++ `Anonim Fonksiyonlar:` Closure'lar da callable türündedir.
++ `Class Yöntemleri:` Bir class'ın yöntemi callable olabilir.
++ `Statik Yöntemler:` Bir class'ın statik yöntemi de callable olabilir.
+
+~~~~~~~
+function greet() {
+    echo "Hello!";
+}
+
+$callable = 'greet';
+
+if (is_callable($callable)) {
+    $callable();
+}
+~~~~~~~
+> Output: Hello!
+
+~~~~~~~
+class Greeter {
+    public static function sayHello() {
+        echo "Hello from Greeter!";
+    }
+}
+
+$callableStatic = ['Greeter', 'sayHello'];
+
+if (is_callable($callableStatic)) {
+    $callableStatic();
+}
+~~~~~~~
+> Output: Hello from Greeter!
+> + `greet` fonksiyonu ve `Greeter::sayHello` statik method'u callable türünde değişkenler olarak kullanılmıştır.
+
+#### Closure vs Callable
++ Tanımlama
+    - `Closure:` Anonim fonksiyonlar olarak tanımlanır ve bir değişkene atanabilir.
+    - `Callable:` Fonksiyon, closure, class method'u veya statik method olabilir.
+
++ Erişim
+    - `Closure:` `use` keyword ile dış değişkenlere erişebilir.
+    - `Callable:` Bir fonksiyonun veya method'un çağrılabilir olup olmadığını kontrol etmek için kullanılır.
+
++ Class
+    - `Closure:` Closure class'ın bir örneğidir.
+    - `Callable:` Callable türü, fonksiyonların ve yöntemlerin genel çağrılabilirliğini ifade eder.
+
++ Kullanım Alanı
+    - `Closure:` Anonim fonksiyonlar, kapsama bağlı değişkenlere erişim, dinamik fonksiyon tanımlama
+    - `Callable:` Dinamik fonksiyon çağrıları, callback mekanizmaları, genel amaçlı çağrılabilir fonksiyon referansları
+
++ Örnek
+    - `Closure:` $closure = function() use ($var) { ... };
+    - `Callable:` $callable = 'functionName'; or $callable = [$object, 'methodName'];
 
 ***
 ### Arrow functions nedir?
 ***
++ Arrow functions, PHP 7.4 ile tanıtılan ve daha kısa ve okunabilir bir şekilde anonim fonksiyonlar (closure'lar) yazmaya olanak tanıyan bir özelliktir.
++ Arrow functions, `fn` keyword ile tanımlanır ve dış kapsamdan (parent scope) değişkenlere otomatik olarak erişebilir. Bu özellik, `use` keyword'ünü kullanmadan dış değişkenlere erişimi sağlar.
+
+#### Özellikler ve Kullanım
++ `Kısa Söz Dizimi:` Daha kısa ve öz bir sözdizimine sahiptir. Tek satırlık fonksiyon tanımlamaları için idealdir.
++ `Otomatik Erişim:` Tanımlandıkları yerin kapsamındaki değişkenlere otomatik olarak erişebilir. `use` keyword'ü gerektirmez.
++ `Tek Satırlık Gövde:` Arrow functions'ın gövdesi tek bir ifade olmalıdır ve bu ifade otomatik olarak döndürülür (`return` keyword'ü gerektirmez).
+
+###### Örnekler
+
+1. Temel Kullanım Örneği
+~~~~~~~
+$multiple = 2;
+$multiplication = fn($num) => $num * $multiple;
+
+echo $multiplication(5);
+~~~~~~~
+> Output: 10
+> + `$multiplication` arrow function'ı `$multiple` değişkenine otomatik olarak erişir ve verilen sayıyı bu değişkenle çarpar.
+
+2. Daha Karmaşık Bir Örnek
+~~~~~~~
+$num1 = 10;
+$num2 = 20;
+
+$sum = fn($x, $y) => $x + $y + $num1 + $num2;
+
+echo $sum(5, 5);
+~~~~~~~
+> Output: 40
+> + `$sum` arrow function'ı, dış kapsamdan `$num1` ve `$num2` değişkenlerine otomatik olarak erişir ve verilen parametrelerle birlikte bu değişkenleri toplar.
+
+##### Arrow Functions ile `array_map` Kullanımı
++ Arrow functions, array'ler üzerinde işlem yapmak için kullanılan fonksiyonlarla (örneğin array_map) çok kullanışlıdır.
+~~~~~~~
+$numbers = [1, 2, 3, 4, 5];
+$multiple = 2;
+
+$result = array_map(fn($num) => $num * $multiple, $numbers);
+
+print_r($result);
+~~~~~~~
+> Output: Array ( [0] => 2 [1] => 4 [2] => 6 [3] => 8 [4] => 10 )
+> +
+
+##### Arrow Functions ile `usort` Kullanımı:
++ Arrow functions, kullanıcı tanımlı sıralama işlevleri için de kullanılabilir.
+~~~~~~~
+$names = ["Ali", "Zehra", "Ahmet", "Ayşe"];
+
+usort($names, fn($x, $y) => strlen($x) <=> strlen($y));
+
+print_r($isimler);
+~~~~~~~
+> Output: Array ( [0] => Ali [1] => Ayşe [2] => Zehra [3] => Ahmet )
+> + `usort` fonksiyonu, array elemanlarını uzunluklarına göre sıralamak için bir arrow function kullanır.
+
+#### Arrow Functions vs. Anonymous Functions (Closure'lar)
++ Tanımlama
+    - `Arrow Functions:` fn($param) => $expression
+    - `Anonymous Functions:` function($param) use ($variable) { return $expression; }
+
++ Gövde
+    - `Arrow Functions:` Tek bir ifade
+    - `Anonymous Functions:` Birden fazla ifade veya komut içerebilir
+
++ `use` Keyword
+    - `Arrow Functions:` Gerektirmez, otomatik erişim sağlar
+    - `Anonymous Functions:` Dış değişkenlere erişim için `use` keyword'ü gerektirir
+
++ Kapsamdan Değişken Erişimi
+    - `Arrow Functions:` Otomatik olarak erişebilir
+    - `Anonymous Functions:` `use` keyword'ü ile manuel olarak erişim sağlar
