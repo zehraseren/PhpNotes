@@ -317,6 +317,158 @@ print_r($evenNumbers);
 ***
 ### Callable data type & callback functions (çağrılabilir data tipleri ve geri çağrılan fonksiyonlar) nedir?
 ***
+#### Callable Data Type
++  `callable` türü, çağrılabilir bir fonksiyon, yöntem veya bir closure anlamına gelir. Bir değişken veya ifade `callable` olarak tanımlandığında, bu onun bir fonksiyon olarak çağrılabileceği anlamına gelir.
++  Callable türü, fonksiyonlar, anonim fonksiyonlar, closure'lar, class yöntemleri ve hatta class'ın belirli bir örneği ile birlikte kullanabilecek yöntemleri içerir.
+
+###### Örnekler
+1. Fonksiyon İsmi
+~~~~~~~
+function selamla() {
+    echo "Hello, World!";
+}
+
+$func = 'hello';
+if (is_callable($func)) {
+    $func();!
+}
+~~~~~~~
+> Output: Hello, World!
+
+2. Anonim Fonksiyon (Closure)
+~~~~~~~
+$salute = function() {
+    echo "Hello, Anonymous Function!";
+};
+
+if (is_callable($salute)) {
+    $salute();
+}
+~~~~~~~
+> Output: Hello, Anonymous Function!
+
+3. Class Yöntemi
+~~~~~~~
+class Greeter {
+    public function salute() {
+        echo "Hello, Class Management!";
+    }
+}
+
+$object = new Greeter();
+$method = [$object, 'salute'];
+
+if (is_callable($method)) {
+    $method();
+}
+~~~~~~~
+> Output: Hello, Class Management!
+
+4. Statik Class Yöntemi
+~~~~~~~
+class Greeter {
+    public static function salute() {
+        echo "Hello, Static Class Management!";
+    }
+}
+
+$method = ['Greeter', 'salute'];
+
+if (is_callable($method)) {
+    $method();
+}
+~~~~~~~
+> Output: Hello, Static Class Management!
+
+#### Callback Functions
++ Callback fonksiyonları, bir işlevin argümanı olarak geçirilen ve bu işlev içinde çağrılan fonksiyonlardır. Callback'ler, programın belirli bir noktasında bir fonksiyonun çalıştırılmasını sağlamak için kullanılır.
+
+###### Örnekler
+1. Temel Callback Fonksiyonu
+~~~~~~~
+function funcBuild($callback) {
+    if (is_callable($callback)) {
+        $callback();
+    }
+}
+
+function hello() {
+    echo "Hello, Callback!";
+}
+
+funcBuild('hello');
+~~~~~~~
+> Output: Hello, Callback!
+
+2. Anonim Fonksiyon Callback
+~~~~~~~
+function funcBuild($callback) {
+    if (is_callable($callback)) {
+        $callback();
+    }
+}
+
+funcBuild(function() {
+    echo "Hello, Anonymous Callback!";
+});
+~~~~~~~
+> Output: Hello, Anonymous Callback!
+
+3. Parametreli Callback
+~~~~~~~
+function funcBuild($callback, $param) {
+    if (is_callable($callback)) {
+        $callback($param);
+    }
+}
+
+function hello($name) {
+    echo "Merhaba, $name!";
+}
+
+funcBuild('hello', 'Zehra');
+~~~~~~~
+> Output: Hello, Zehra!
+
+4. Class Yönetimi Callback
+~~~~~~~
+function funcBuild($callback, $param) {
+    if (is_callable($callback)) {
+        $callback($param);
+    }
+}
+
+class Greeter {
+    public function hello($name) {
+        echo "Hello, $name!";
+    }
+}
+
+$object = new Greeter();
+funcBuild([$object, 'hello'], 'Zehra');
+~~~~~~~
+> Output: Hello, Zehra!
+
+##### Kullanım Alanları
+1. Array Fonksiyonları
++
+~~~~~~~
+~~~~~~~
+> Output:
+
+2. Event Handling (Olay Yönetimi)
++
+~~~~~~~
+~~~~~~~
+> Output:
+
+3. Karmaşık İşlem ve Akış Kontrolü
++
+~~~~~~~
+~~~~~~~
+> Output:
+
+>
 
 ***
 ### Closure vs callable (kapatılabilir vs çağrılabilir) nedir?
