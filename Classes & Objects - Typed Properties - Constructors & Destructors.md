@@ -44,7 +44,7 @@ $myCar = new Car();
 
 // Set the properties of the object
 $myCar->set_color('Vantablack');
-$myCar->set_model('Volvo');
+$myCar->set_model('Volvo XC90');
 
 // Get the properties of the object and print them to the screen
 echo "Color of the car: " . $myCar->get_color();
@@ -53,7 +53,7 @@ echo "Model of the car: " . $myCar->get_model();
 ~~~~~~~
 > Output: Color of the car: Vantablack
 
-> Output: Model of the car: Volvo
+> Output: Model of the car: Volvo XC90
 
 ----
 ### Class properties (sınıf özellikleri) nedir?
@@ -370,19 +370,90 @@ class Car {
 
 // Create a new object and set properties using method chaining
 $myCar = new Car('Red', 'Toyota');
-$myCar->setColor('Vantablack')->setModel('Volvo')->setSpeed(120);
+$myCar->setColor('Vantablack')->setModel('Volvo XC90')->setSpeed(120);
 
 echo $myCar->getInfo();
 ?>
 ~~~~~~~
-> Output: Color: Vantablack, Model: Volvo, Speed: 120 km/h
+> Output: Color: Vantablack, Model: Volvo XC90, Speed: 120 km/h
+
+#### Method Chaining Avantajları
++ `Daha Okunabilir Kod:` Kodun daha okunabilir ve takip edilebilir olmasını sağlar. `Özellikle aynı nesne üzerinde birden fazla işlemin yapılması gerektiğinde yararlıdır.`
++ `Daha Az Kod Tekrarı:` Tek bir satırda birden fazla method'u çağırarak, aynı nesneyi tekrar tekrar belirtmeye gerek kalmaz.
++ `Kompakt Kod:` Uzun kod bloklarını daha kısa ve öz hale getirir.
+
+#### Method Chaining Kullanırken Dikkat Edilmesi Gerekenler
++ `Method'ların Dönüş Değeri:` `Method chaining`'in çalışabilmesi için her bir yöntemin `$this` döndürmesi gerekmektedir.
++ `Hatalar ve Hata Yöntemi:` Method chaining sırasında herhangi bir hata oluşursa, hangi yöntemde hatanın oluştuğunu belirlemek zor olabilir. Bu nedenle, `hata yönetimi stratejilerini iyi belirlemek önemlidir.`
++ `Okunabilirlik:` Her ne kadar method chaining kodu kısaltıp daha kompakt hale getirse de, aşırı kullanımı kodun okunabilirliğini azaltabilir. `Uzun zincirler yerine mantıksal bloklar halinde kullanmak daha iyi olabilir.`
+  
+> Method chaining, PHP'de nesne yönelimli programlamayı daha etkili hale getirir ve kodun daha temiz, okunabilir ve yönetilebilir olmasını sağlar. Bu teknik, özellikle karmaşık nesne yapılandırmaları ve ardışık işlem zincirleri için oldukça kullanışlıdır.
 
 ----
-###  Creating objects using variables nedir?
-+
+###  Creating objects using variables (değişken kullanarak nesne oluşturma) nedir?
++ Dinamik olarak class adlarını depolamak ve bu adları kullanarak objects oluşturmak için kullanılır.
++ Özellikle class adlarının dinamik olarak belirlendiği veya koşullara bağlı olarak değişebildiği durumlarda yararlıdır.
++ Bir class adını bir değişkende saklayabilir ve bu değişkeni kullanarak object oluşturabilirsiniz. Bu işlem, class adını depolayan değişkenin önüne `new` keyword'ünü koyarak yapılır.
 ~~~~~~~
+<?php
+class Car {
+    public $color;
+    public $model;
+
+    public function __construct($color, $model) {
+        $this->color = $color;
+        $this->model = $model;
+    }
+
+    public function getInfo() {
+        return "Color: {$this->color}, Model: {$this->model}";
+    }
+}
+
+class Bike {
+    public $color;
+    public $brand;
+
+    public function __construct($color, $brand) {
+        $this->color = $color;
+        $this->brand = $brand;
+    }
+
+    public function getInfo() {
+        return "Color: {$this->color}, Brand: {$this->brand}";
+    }
+}
+
+// Dynamically set a class name
+$className = 'Car';
+$object = new $className('Vantablack', 'Volvo XC90');
+echo $object->getInfo();
+
+// Use a different class name
+$className = 'Bike';
+$object = new $className('Red', 'Bianchi');
+echo $object->getInfo();
+?>
 ~~~~~~~
-> Output: 
+> Output: Color: Vantablack, Model: Volvo XC90
+
+> Output: Color: Red, Brand: Bianchi
+
+#### Avantajları
++ `Esneklik:` Dinamik olarak class adlarını belirleyebilir ve bu class'lardan nesneler oluşturabilir.
++ `Modülerlik:` Farklı class türleri tek bir yapı içinde işlenebilir.
++ `Koşullu Nesne Oluşturma:` Koşullara bağlı olarak farklı class'lardan object'ler oluşturabilir.
+
+#### Kullanım Alanları
++ `Fabrika Deseni (Factory Pattern):` Fabrika deseni, hangi class'ın örneğinin oluşturulacağının dinamik olarak belirlendiği bir tasarım deseni oluşturup bu yöntemi kullanarak uygulanabilir.
++ `Koşullu İşlemler:` Uygulamada belirli koşullara göre farklı class'ların örnekleri oluşturulması gerektiğinde kullanılabilir.
++ `Eklenti Tabanlı Sistemler:` Eklenti veya modül tabanlı sistemlerde, class adları dinamik olarak belirlenip kullanılabilir.
+
+#### Dikkat Edilmesi Gerekenler
++ `Geçersiz Class Adları:` Değişkende geçersiz veya var olmayan bir class adı belirtilirse, PHP bir hata (fatal error) verecektir. Bu nedenle class adlarının doğruluğunu kontrol etmek önemlidir.
++ `Güvenlik:` Kullanıcı girişi veya dış kaynaklardan gelen verilerle doğrudan class adları belirlenirken dikkatli olunmalıdır. Güvenlik açıklarına neden olabilir.
+
+> Dinamik nesne oluşturma, PHP'de esnek ve dinamik uygulamalar geliştirmeyi sağlar. Bu teknik, özellikle büyük ve modüler projelerde büyük faydalar sağlayabilir.
 
 ----
 ### Creating multiple objects of the same class nedir?
