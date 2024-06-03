@@ -88,7 +88,9 @@ class ElectricCar extends Car {
 
 ***
 #### Encapsulation | Kapsülleme
-+ Veriyi koruma ve gizleme yöntemidir. Özellikler ve yöntemler `private`, `protected` ve `public` erişim belirleyicileri ile kontrol edilir.
++ Bir class'ın verilerini (özelliklerini) ve bu veriler üzerinde işlem yapan yöntemlerini (metotlarını) bir arada tutar ve bu verilere dışarıdan doğrudan erişimi kontrol eder.
++ Veri gizliliğini ve veri bütünlüğünü korur, class'ın dışındaki kodun class'ın iç işleyişine müdahale etmesini engeller.
++ Özellikler ve yöntemler `private`, `protected` ve `public` erişim belirleyicileri ile kontrol edilir.
 ~~~~~~~
 <?php
 
@@ -112,6 +114,55 @@ class Car {
 ?>
 ~~~~~~~
 
+#### Kapsüllemenin Avantajları
++ `Veri Gizliliği:` Verilere dışarıdan doğrudan erişimi kısıtlayarak veri gizliliğini sağlar.
++ `Veri Bütünlüğü:` Verilerin class içindeki belirli yöntemler aracılığıyla değiştirilmesini sağlayarak veri bütünlüğünü korur.
++ `Esneklik ve Bakım Kolaylığı:` Class'ın iç yapısını değiştirmeden dış arayüzü koruyarak esneklik ve bakım kolaylığı sağlar.
+
+#### Kapsülleme ve Get/Set Yöntemleri
++ Veri gizliliğini sağlamak için private veya protected özelliklere erişimi `get/set` yöntemleri aracılığıyla kontrol edilir. Bu yöntemler, özelliklerin değerlerini almak ve ayarlamak için kullanılır, böylece veri doğrulama ve iş mantığı eklemek mümkündür.
+~~~~~~~
+<?php
+
+class User {
+    private $name;
+    private $age;
+
+    public function getName() {
+        return $this->name;
+    }
+
+    public function setName($name) {
+        if (is_string($name) && !empty($name)) {
+            $this->name = $name;
+        } else {
+            throw new Exception("Invalid name.");
+        }
+    }
+
+    public function getAge() {
+        return $this->age;
+    }
+
+    public function setAge($age) {
+        if (is_int($age) && $age > 0) {
+            $this->age = $age;
+        } else {
+            throw new Exception("Invalid age.");
+        }
+    }
+}
+
+$user = new User();
+$user->setName("Zehra Şeren");
+$user->setAge(29);
+echo $user->getName();
+echo $user->getAge();
+?>
+~~~~~~~
+> Output: Zehra Şeren
+
+> Output: 29
 
 ***
 #### Polymorphism | Polimorfizm
@@ -163,6 +214,134 @@ $myElectricCar->startEngine();
 ?>
 ~~~~~~~
 > Output: Starting electric car engine
+
+##### Abstract Classes (Soyut Sınıflar)
++ Doğrudan örneklenemeyen ve diğer class'lar için bir temel olarak hizmet veren class'lardır. Abstract class'lar, bir veya daha fazla soyut yöntem (abstract methods) içerebilir. Soyut yöntemler, yalnızca bildirimden ibarettir ve alt class'lar tarafından gerçekleştirilmelidir.
+
+###### Soyut Sınıf Tanımlama
++ Bir class'ı soyut yapmak için `abstract` keyword kullanılır.
+~~~~~~~
+<?php
+
+abstract class Animal {
+    // Abstract method (no implementation)
+    abstract protected function makeSound();
+
+    // Normal method (has implementation)
+    public function sleep() {
+        echo "Sleeping...";
+    }
+}
+?>
+~~~~~~~
+
+###### Abstract Class'ı Kullanma
++ Abstract class'lar doğrudan örneklenemez, ancak bu class'ları miras alan alt class'lar oluşturulabilir ve kullanılabilir.
+~~~~~~~
+<?php
+
+class Dog extends Animal {
+    // Implementing the abstract method in the subclass
+    public function makeSound() {
+        echo "Bark";
+    }
+}
+
+$dog = new Dog();
+$dog->makeSound();
+$dog->sleep();
+?>
+~~~~~~~
+> Output: 
+
+> Output: 
+
+###### Interfaces (Arayüzler)
++ Class'ların gerçekleştirmesi gereken yöntemlerin bir listesini tanımlar. Interface'ler, herhangi bir uygulama (implementation) içermez, sadece hangi yöntemlerin bulunması gerektiğini belirtir. Bir class birden fazla interface uygulayabilir.
+
+###### Interface Tanımlama
+~~~~~~~
+<?php
+
+interface AnimalInterface {
+    public function makeSound();
+}
+?>
+~~~~~~~
+
+###### Interface Kullanma
++ Bir class, implements keyword ile bir veya daha fazla interface's uygulayabilir.
+~~~~~~~
+<?php
+
+class Cat implements AnimalInterface {
+    public function makeSound() {
+        echo "Meow";
+    }
+}
+
+$cat = new Cat();
+$cat->makeSound();
+?>
+~~~~~~~
+> Output: Meow
+
+##### Abstraction Kullanımının Avantajları
++ `Karmaşıklığın Gizlenmesi:` Kullanıcıya sadece gerekli olan bilgileri sunarak detayları gizler.
++ `Kodun Yeniden Kullanımı:` Soyut class'lar ve interface'ler, farklı class'ların ortak davranışlarını belirlemek için kullanılabilir.
++ `Esneklik:` Bir class'ın birden fazla interface'i uygulayabilmesi, esnek ve modüler bir tasarıma olanak tanır.
++ `Bakım ve Güncelleme Kolaylığı:` Abstraction, kodun daha kolay bakım ve güncelleme yapılabilir olmasını sağlar.
+
+###### Araç Abstract Class ve Farklı Araçlar
+~~~~~~~
+<?php
+
+// Abstract class
+abstract class Vehicle {
+    protected $color;
+
+    public function __construct($color) {
+        $this->color = $color;
+    }
+
+    // Abstract method
+    abstract protected function startEngine();
+
+    public function getColor() {
+        return $this->color;
+    }
+}
+
+// Car class
+class Car extends Vehicle {
+    public function startEngine() {
+        echo "Car engine started";
+    }
+}
+
+// Bike class
+class Motorcycle extends Vehicle {
+    public function startEngine() {
+        echo "Motorcycle engine started";
+    }
+}
+
+$car = new Car("Red");
+echo $car->getColor();
+$car->startEngine();
+
+$motorcycle = new Motorcycle("Blue");
+echo $motorcycle->getColor();
+$motorcycle->startEngine();
+?>
+~~~~~~~
+> Output: Red
+
+> Output: Car engine started
+
+> Output: Blue
+
+> Output: Çıktı: Motorcycle engine started
 
 #### OOP'nin Avantajları
 + `Kodun Yeniden Kullanılabilirliği:` Class'lar ve nesneler, kodun yeniden kullanılmasını sağlar.
