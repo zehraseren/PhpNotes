@@ -66,7 +66,19 @@ class Car {
 
 ***
 #### Inheritance | Kalıtım
-+ Bir class'ın başka bir class'tan özellik ve yöntemleri miras almasını sağlar.
++ Bir class'ın (sub class veya türetilmiş class) başka bir class'tan özellik ve yöntemleri miras almasını sağlar.
++ Kodun yeniden kullanılabilirliğini artırır ve yazılımın bakımını ve genişletilmesini kolaylaştırır.
+
+#### Kalıtımın Temel Özellikleri
+- `Alt Sınıf (Subclass):` Başka bir class'tan miras alan class.
+- `Üst Sınıf (Superclass):` Alt class'a özelliklerini ve yöntemlerini devreden class.
+- `extends Keyword:` Bir class'ın başka bir class'tan kalıtım almasını sağlamak için kullanılır.
+
+#### Kalıtımın Avantajları
++ `Kodun Yeniden Kullanımı:` Üst class'ın özellikleri ve yöntemleri, alt class'larda tekrar kullanılabilir.
++ `Bakım Kolaylığı:` Kodun bir yerde değiştirilmesi, bu kodu miras alan tüm class'ları etkiler.
++ `Genişletilebilirlik:` Varolan class'ların davranışlarını genişletmek veya değiştirmek kolaydır.
+
 ~~~~~~~
 <?php
 
@@ -85,6 +97,176 @@ class ElectricCar extends Car {
 ?>
 ~~~~~~~
 
+###### Üst Class Tanımlama
+~~~~~~~
+<?php
+
+class Animal {
+    public $name;
+    public $color;
+
+    public function __construct($name, $color) {
+        $this->name = $name;
+        $this->color = $color;
+    }
+
+    public function makeSound() {
+        echo "Some generic animal sound";
+    }
+
+    public function describe() {
+        return "This is a $this->color $this->name.";
+    }
+}
+?>
+~~~~~~~
+
+###### Alt Class Tanımlama
++ Alt class, `extends` keyword kullanılarak üst class'tan miras alır.
+~~~~~~~
+<?php
+
+class Dog extends Animal {
+    public function makeSound() {
+        echo "Bark";
+    }
+}
+
+class Cat extends Animal {
+    public function makeSound() {
+        echo "Meow";
+    }
+}
+
+$dog = new Dog("Dog", "Brown");
+echo $dog->describe();
+$dog->makeSound();
+
+$cat = new Cat("Cat", "Black");
+echo $cat->describe();
+$cat->makeSound();
+?>
+~~~~~~~
+> Output: This is a Brown Dog.
+
+> Output: Bark
+
+
+> Output: This is a Black Cat.
+
+> Output: Meow
+
+##### Overriding (Geçersiz Kılma)
++ Alt class'lar, üst class'lardan miras alınan yöntemleri kendi ihtiyaçlarına göre değiştirebilirler. Buna `geçersiz kılma (overriding)` denir.
+~~~~~~~
+<?php
+
+class Animal {
+    public function makeSound() {
+        echo "Some generic animal sound";
+    }
+}
+
+class Dog extends Animal {
+    // Overriding the makeSound method
+    public function makeSound() {
+        echo "Bark";
+    }
+}
+
+$dog = new Dog();
+$dog->makeSound();
+?>
+~~~~~~~
+> Output: Bark
+
+##### Parent Keyword
++ Alt class, üst class'ın yöntemlerine erişmek için parent keyword kullanabilir.
+~~~~~~~
+<?php
+
+class Animal {
+    public function makeSound() {
+        echo "Some generic animal sound";
+    }
+}
+
+class Dog extends Animal {
+    public function makeSound() {
+        // Call the makeSound method of a superclass
+        parent::makeSound();
+        echo " and Bark";
+    }
+}
+
+$dog = new Dog();
+$dog->makeSound();
+?>
+~~~~~~~
+> Output: Some generic animal sound and Bark
+
+##### Kalıtım ve Yapıcılar (Constructors)
++ Alt class'lar, üst class'ın yapıcı yöntemini çağırmak için `parent::__construct` yöntemini kullanabilirler.
+~~~~~~~
+<?php
+
+class Animal {
+    public $name;
+
+    public function __construct($name) {
+        $this->name = $name;
+    }
+}
+
+class Dog extends Animal {
+    public $breed;
+
+    public function __construct($name, $breed) {
+        // Call a superclass constructor method
+        parent::__construct($name);
+        $this->breed = $breed;
+    }
+
+    public function describe() {
+        return "This is a $this->breed named $this->name.";
+    }
+}
+
+$dog = new Dog("Rex", "German Shepherd");
+echo $dog->describe();
+?>
+~~~~~~~
+> Output: This is a German Shepherd named Rex.
+
+##### Kalıtım ve Erişim Belirleyicileri
++ Kalıtım, erişim belirleyicileri ile birlikte kullanıldığında veri gizliliğini ve erişim kontrolünü sağlar. `public`, `protected` ve `private` belirleyicileri kalıtımda önemli rol oynar.
+~~~~~~~
+<?php
+
+class Animal {
+    private $name;
+
+    public function __construct($name) {
+        $this->name = $name;
+    }
+
+    protected function getName() {
+        return $this->name;
+    }
+}
+
+class Dog extends Animal {
+    public function describe() {
+        // The getName method is protected and can be subclassed
+        return "This is a dog named " . $this->getName();
+    }
+}
+
+$dog = new Dog("Rex");
+echo $dog->describe();
+?>
+~~~~~~~
+> Output: This is a dog named Rex
 
 ***
 #### Encapsulation | Kapsülleme
@@ -165,8 +347,9 @@ echo $user->getAge();
 > Output: 29
 
 ***
-#### Polymorphism | Polimorfizm
-+ Aynı isimli method'ların farklı şekillerde kullanılabilmesidir.
+#### Polymorphism | Polimorfizm | Çok Biçimlilik
++ Aynı isimli method'ların farklı şekillerde kullanılabilmesidir yani bir nesnenin farklı şekillerde davranabilme yeteneğini ifade eder.
++ Aynı yöntemi farklı şekillerde uygulayan veya aynı adı taşıyan farklı yöntemleri olan class'lar arasında ilişki kurulmasını sağlar.
 ~~~~~~~
 <?php
 
@@ -193,6 +376,89 @@ $myElectricCar->startEngine();
 
 > Output:
 
+##### Türleri
+1. `Statik Polimorfizm (Compile-Time Polymorphism):` Derleme zamanında belirlenen polimorfizm türüdür. `Overloading` ve `operator overloading` bu tür polimorfizmin örnekleridir. `PHP'de, method overloading bulunmamaktadır` ancak operator overloading bazı durumlarda kullanılabilir.
++ `Method Overloading:` Aynı adı taşıyan ancak farklı parametre listelerine sahip yöntemlerin bulunması.
++ `Operator Overloading:` Operatörlerin farklı bağlamlarda farklı davranışlar sergilemesi.
+
+2. `Dinamik Polimorfizm (Run-Time Polymorphism):` Çalışma zamanında belirlenen polimorfizm türüdür. Kalıtım ve interface'ler üzerinde çalışır. Çalışma zamanında nesne türüne bağlı olarak farklı yöntemlerin çağrılmasını sağlar.
++ `Method Overriding:` Üst class'ta tanımlı bir yöntemin alt class'ta aynı adla ve aynı parametre listesiyle yeniden tanımlanması.
++ `Late Binding (Geç Bağlama):` Hangi yöntemin çağrılacağının çalışma zamanında belirlenmesi.
+
+###### Dinamik Polimorfizm (Method Overriding)
+~~~~~~~
+<?php
+
+class Animal {
+    public function makeSound() {
+        echo "Some generic animal sound";
+    }
+}
+
+class Dog extends Animal {
+    public function makeSound() {
+        echo "Bark";
+    }
+}
+
+class Cat extends Animal {
+    public function makeSound() {
+        echo "Meow";
+    }
+}
+
+// Calling the makeSound method of different subclasses with a superclass reference
+$animals = array(new Dog(), new Cat());
+foreach ($animals as $animal) {
+    $animal->makeSound();
+    echo "<br>";
+}
+?>
+~~~~~~~
+> + `Animal` class'ının `makeSound` method'u, hem `Dog` hem de `Cat` class'larında yeniden tanımlanmıştır. Bu durum, aynı method'un farklı alt class'lar tarafından farklı şekillerde uygulanabileceğini gösterir.
+
+###### Dinamik Polimorfizm (Method Overriding ve Late Binding)
+~~~~~~~
+<?php
+
+class Animal {
+    public function makeSound() {
+        echo "Some generic animal sound";
+    }
+}
+
+class Dog extends Animal {
+    public function makeSound() {
+        echo "Bark";
+    }
+}
+
+class Cat extends Animal {
+    public function makeSound() {
+        echo "Meow";
+    }
+}
+
+// Calling the makeSound method of different subclasses with late binding
+function describeAnimal(Animal $animal) {
+    echo "This animal says: ";
+    $animal->makeSound();
+    echo "<br>";
+}
+
+$dog = new Dog();
+$cat = new Cat();
+
+describeAnimal($dog);
+describeAnimal($cat);
+?>
+~~~~~~~
+> Output: This animal says: Bark
+
+> Output: This animal says: Meow
+
+> + `describeAnimal` fonksiyonu, bir `Animal` nesnesi aldığı için bu fonksiyona farklı alt class nesnelerini geçmek mümkündür. Fonksiyonun içinde çağrılan `makeSound` method'u, çalışma zamanında nesnenin türüne göre belirlenir.
+
 ***
 #### Abstraction | Soyutlama
 + Nesnelerin karmaşıklığını gizleme ve yalnızca gerekli bilgileri gösterme işlemidir. PHP'de abstract class ve interface kullanılarak yapılır.
@@ -218,7 +484,7 @@ $myElectricCar->startEngine();
 ##### Abstract Classes (Soyut Sınıflar)
 + Doğrudan örneklenemeyen ve diğer class'lar için bir temel olarak hizmet veren class'lardır. Abstract class'lar, bir veya daha fazla soyut yöntem (abstract methods) içerebilir. Soyut yöntemler, yalnızca bildirimden ibarettir ve alt class'lar tarafından gerçekleştirilmelidir.
 
-###### Soyut Sınıf Tanımlama
+###### Abstract Class Tanımlama
 + Bir class'ı soyut yapmak için `abstract` keyword kullanılır.
 ~~~~~~~
 <?php
@@ -431,3 +697,99 @@ echo Counter::getCount();
 + `Sadece Statik Üyelere Erişim:` Statik yöntemler, sadece statik özelliklere ve diğer statik yöntemlere erişebilir.
 
 > PHP'de statik özellikler ve yöntemler, belirli bir class'a ait olan ancak class'ın nesnelerine bağlı olmayan özellikler ve yöntemlerdir. Statik üyeler, class adı kullanılarak doğrudan erişilebilir ve class'ın herhangi bir örneği oluşturulmadan kullanılabilir. Bu, belleği daha verimli kullanmayı ve class'ın tüm örnekleri arasında ortak veri paylaşımını sağlar. Statik özellikler ve yöntemler, yazılım geliştirme sürecinde belirli senaryolarda oldukça kullanışlı olabilir.
+
+***
+### Interface (arayüz) nedir?
++ Nesne yönelimli programlamanın (OOP) bir özelliğidir ve class'lar arasında bir sözleşme veya belirli bir davranışı tanımlar.
++ Interface'ler, class'ların belirli yöntemleri uygulamasını ve bu yöntemleri sağlamasını zorunlu kılar.
++ PHP'de bir class birden fazla interface'si uygulayabilir, böylece çoklu kalıtımın bir şekilde taklit edilmesine olanak tanır.
+
+##### Interface Tanımlama
++ Interface'ler, `interface` keywor kullanılarak tanımlanır. Interface'lerin yöntemleri sadece bildirimlerden oluşur, yani yöntemlerin gövdesi (implementasyonu) bulunmaz.
+~~~~~~~
+<?php
+
+interface Logger {
+    public function log($message);
+}
+
+interface Formatter {
+    public function format($data);
+}
+?>
+~~~~~~~
+
+> + `Logger` ve `Formatter` adında iki interface tanımlanmıştır. Her ikisi de bir yöntem içerir, ancak bu yöntemlerin herhangi bir gövdesi yoktur.
+
+##### Interface Uygulama (Implementing an Interface)
++ Bir class, bir veya daha fazla interface'i implements keyword kullanarak uygulayabilir. Interface'de belirtilen tüm yöntemlerin class tarafından tanımlanması gerekmektedir.
+~~~~~~~
+<?php
+
+class FileLogger implements Logger {
+    public function log($message) {
+        echo "Logging message to file: $message";
+    }
+}
+
+class JsonSerializer implements Formatter {
+    public function format($data) {
+        return json_encode($data);
+    }
+}
+?>
+~~~~~~~
+> + `FileLogger` class'ı `Logger` interface'ni uygularken, `JsonSerializer` class'ı ise `Formatter` interface'ni uygulamaktadır. Her iki class da interface'de tanımlanan yöntemleri (log ve format) uygulamak zorundadır.
+
+##### Birden Fazla Interface'in Uygulanması
++ Bir class, birden fazla interface uygulayabilir. Interface'ler virgülle ayrılarak sıralanır.
+~~~~~~~
+<?php
+
+class DatabaseLogger implements Logger, Formatter {
+    public function log($message) {
+        echo "Logging message to database: $message";
+    }
+
+    public function format($data) {
+        return serialize($data);
+    }
+}
+?>
+~~~~~~~
+> + `DatabaseLogger` class'ı hem `Logger` hem de `Formatter` interface'lerini uygulamaktadır.
+
+##### Arayüzün Kalıtımı (Extending an Interface)
++ Bir interface, başka bir interface'den kalıtım alabilir. Kalıtım alınan interface'de tanımlanan yöntemler, kalıtım alan interface'de de bulunur.
+~~~~~~~
+<?php
+
+interface Formatter {
+    public function format($data);
+}
+
+interface JsonSerializer extends Formatter {
+    public function toJson($data);
+}
+?>
+~~~~~~~
+> + `JsonSerializer` interface'si `Formatter` interface'inden kalıtım almıştır. Bu durumda, `JsonSerializer` interface'İnde hem `format` yöntemi hem de `toJson` yöntemi bulunmalıdır.
+
+##### Interface'in Kullanımı
++ Class'lar arasında bir sözleşme sağlar ve kodun daha modüler, esnek ve yeniden kullanılabilir olmasını sağlar.
++ Bir interface'si uygulayan class'lar, belirli bir davranışı sağlayacağından emin olur. Interface'ler ayrıca çoklu kalıtımın eksikliğini telafi eder ve class'ların aynı anda birden fazla sözleşmeyi sağlamasına olanak tanır.
+~~~~~~~
+<?php
+
+function processData($formatter, $data) {
+    echo $formatter->format($data);
+}
+
+$serializer = new JsonSerializer();
+$data = ['name' => 'Zehra', 'age' => 29];
+processData($serializer, $data); // Process data by converting to Json format
+?>
+~~~~~~~
+> + `processData` fonksiyonu, bir `Formatter` interface'si uygulayan herhangi bir nesneyi alabilir. Bu, fonksiyonun esnek bir şekilde farklı veri biçimlerini işleyebilmesini sağlar.
+
+> PHP'de interface'ler, bir class'ın belirli bir davranışı sağlamasını zorunlu kılar.Iinterface'ler, class'lar arasında bir sözleşme sağlar ve kodun daha modüler, esnek ve yeniden kullanılabilir olmasını sağlar. Bir class bir interface'i implements keyword ile uygular ve interface'de belirtilen tüm yöntemleri tanımlamak zorundadır. Bir class birden fazla interface'si uygulayabilir ve bir interface başka bir interface'den kalıtım alabilir. Interface'ler, genellikle nesnelerin davranışlarını tanımlamak ve değişikliklere karşı esneklik sağlamak için kullanılır.
