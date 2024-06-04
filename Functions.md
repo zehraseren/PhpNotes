@@ -62,7 +62,7 @@ echo sum(1, 2, 3, 4);
 
 ###### Anonim Fonksiyon
 ~~~~~~~
-$array = [1 ,2 , 3, 4, 5];
+$array = [1, 2 , 3, 4, 5];
 
 $squaredArray = array_map(function($n) {
   return $n * $n;
@@ -105,7 +105,7 @@ function factorial($n) {
 
 echo "5! = " . factorial(5) . "\n";
 ~~~~~~~
-> Output: 120
+> Output: 5! = 120
 
 ***
 ### Where to define functions (fonksiyonlar nerede tanımlanır)?
@@ -205,7 +205,7 @@ $greet("Zehra");
 + `Projenin Büyüklüğü ve Karmaşıklığı:` Büyük ve karmaşık projelerde, fonksiyonların modüler olması önemlidir.
 + `Kodun Okunabilirliği ve Bakımı:` Kodunuzu düzenli ve anlaşılır tutmak için fonksiyonları uygun yerlerde tanımlayın.
 + `Yeniden Okunabilirlik:` Fonksiyonların farklı betiklerde veya projelerde tekrar kullanılmasını sağlamak için modüler yapıyı tercih edin.
-> Genel olarak, küçük ve basit projelerde fonksiyonları küresel kapsamda (global scope) tanımlamak yeterli olabilir. Ancak, daha büyük ve karmaşık projelerde fonksiyonları class'lar içinde method olarak tanımlamak (OOP içinde) veya ayrı dosyalarda tutmak (include | require), kodunuzu daha organize ve yönetilebilir hale getirecektir.
+> Genel olarak, küçük ve basit projelerde fonksiyonları küresel kapsamda (global scope) tanımlamak yeterli olabilir. Ancak, daha büyük ve karmaşık projelerde fonksiyonları class'lar içinde method olarak tanımlamak (OOP içinde) veya ayrı dosyalarda tutmak (include | require), kodu daha organize ve yönetilebilir hale getirecektir.
 
 *** 
 ### Declaring functions conditionally (şartlı fonksiyon tanımlama) nedir?
@@ -273,7 +273,7 @@ dynamicFunction();
 > + `mt_rand() fonksiyonu`, belirtilen iki sayı arasındaki rastgele bir tamsayıyı üretir. Bu fonksiyon, daha hızlı ve daha iyi rastgele sayı üreten bir algoritma kullanır.
 > + `mt_rand(0, 1):` Bu fonksiyon, 0 ile 1 arasında rastgele bir tamsayı döndürür. Yani, sonuç ya 0 ya da 1 olur.
 > + `== 1:` Elde edilen rastgele sayı 1'e eşit mi diye kontrol edilir.
-> + Kontrol sonucunda elde edilen boolean değer (true ya da false) $kosul değişkenine atanır.
+> + Kontrol sonucunda elde edilen boolean değer (true ya da false) `$kosul` değişkenine atanır.
 
 #### `function_exists` ile Fonksiyon Varlığını Kontrol Etme
 + Bir fonksiyonun zaten tanımlı olup olmadığını kontrol etmek için `function_exists` fonksiyonu kullanılabilir. `Böylece aynı fonksiyon adının tekrar tanımlanmasını önlenir.`
@@ -284,7 +284,7 @@ if (!function_exists('hello')) {
     }
 }
 
-merhaba();
+hello();
 ~~~~~~~
 > Output: Hello World!
 > + Eğer `hello` fonksiyonu daha önce tanımlanmamışsa, bu tanımlama yapılır.
@@ -295,34 +295,34 @@ merhaba();
   - `Özelleştirilmiş Fonksiyonlar:` Uygulamanın çalışma ortamına veya belirli parametrelere göre farklı fonksiyon davranışları sağlamak.
   - `Ad Çakışmalarını Önleme:` Aynı fonksiyon adının birden fazla yerde tanımlanmasını önlemek.
 
-> PHP'de şartlı fonksiyon tanımlama, uygulamanın dinamik ve esnek olmasını sağlar. Fonksiyonları belirli koşullara bağlı olarak tanımlayarak kodunuzun modülerliğini ve bakımını artırabilir. Bu yöntem, özellikle büyük ve karmaşık projelerde kodunuzu daha yönetilebilir ve esnek hale getirmek için oldukça kullanışlıdır.
+> PHP'de şartlı fonksiyon tanımlama, uygulamanın dinamik ve esnek olmasını sağlar. Fonksiyonları belirli koşullara bağlı olarak tanımlayarak kodun modülerliğini ve bakımını artırabilir. Bu yöntem, özellikle büyük ve karmaşık projelerde kodu daha yönetilebilir ve esnek hale getirmek için oldukça kullanışlıdır.
 
 ***
 ### Inner functions (iç içe fonksiyolar) nedir?
 ***
 + Bir fonksiyonun içinde tanımlanan başka bir fonksiyonu ifade eder.
 + İç fonksiyonlar, yalnızca onları tanımlayan dış fonksiyon çalıştırıldığında tanımlanır ve sadece bu dış fonksiyonun kapsamı içinde kullanılabilir.
-+ Belirli bir görev veya işlem için gereken işlevselliği kapsüllemek ve kodunuzu daha modüler hale getirmek için kullanışlı olabilir.
++ Belirli bir görev veya işlem için gereken işlevselliği kapsüllemek ve kodu daha modüler hale getirmek için kullanışlı olabilir.
 ~~~~~~~
-function externalFunction() {
-    echo "External function worked.\n";
+function outerFunction() {
+    echo "Outer function worked.\n";
 
     function innerFunction() {
         echo "Inner function worked.\n";
     }
 }
 
-// Sadece dış fonksiyon çağrıldığında iç fonksiyon tanımlanır.
+// The inner function is defined only when the outer function is called.
 externalFunction();
 
-// İç fonksiyonu çağırmak artık mümkündür.
+// It is now possible to call the internal function.
 innerFunction();
 ~~~~~~~
-> Output: External function worked.
+> Output: Outer function worked.
 
 > Output: Inner function worked.
 
-> + `innerFunction` yalnızca `externalFunction` çağrıldıktan sonra tanımlanır ve kullanılabilir hale gelir. 
+> + `innerFunction` yalnızca `outerFunction` çağrıldıktan sonra tanımlanır ve kullanılabilir hale gelir. 
 
 #### İç Fonksiyonların Özellikleri ve Kullanım Alanları
 ##### Özellikler
@@ -338,7 +338,7 @@ innerFunction();
 ##### Örnekler
 1. İç Fonksiyon ile Hesaplama
 ~~~~~~~
-function extFunc($value) {
+function outFunc($value) {
     function inFunc($x) {
         return $x * 2;
     }
@@ -346,10 +346,10 @@ function extFunc($value) {
     echo "Result: " . inFunc($value) . "\n";
 }
 
-extFunc(5); 
+outFunc(5); 
 ~~~~~~~
-> Output: 10
-> + `inFunc` sadece `extFunc` içinde kullanılır ve `$value` değişkenini ikiyle çarpar.
+> Output: Result: 10
+> + `inFunc` sadece `outFunc` içinde kullanılır ve `$value` değişkenini ikiyle çarpar.
 
 2. Birden Fazla İç Fonksiyon
 ~~~~~~~
@@ -358,27 +358,27 @@ function calculator($value1, $value2, $operation) {
         return $x + $y;
     }
 
-    function ext($x, $y) {
+    function sub($x, $y) {
         return $x - $y;
     }
 
     if ($operation == "sum") {
         return sum($value1, $value2);
     } elseif ($operation == "ext") {
-        return ext($value1, $value2);
+        return sub($value1, $value2);
     } else {
         return "Invalid operation";
     }
 }
 
 echo calculator(10, 5, "sum") . "\n";
-echo calculator(10, 5, "ext") . "\n";
+echo calculator(10, 5, "sub") . "\n";
 ~~~~~~~
 > Output: 15
 
 > Output: 5
 
-> + `calculator` fonksiyonu içinde `sum` ve `ext` adında iki iç fonksiyon tanımlanır ve `$operation` parametresine göre uygun fonksiyon çağrılır.
+> + `calculator` fonksiyonu içinde `sum` ve `sub` adında iki iç fonksiyon tanımlanır ve `$operation` parametresine göre uygun fonksiyon çağrılır.
 
 ##### Dikkat Edilmesi Gerekenler
   - `Performans:` İç fonksiyonlar, dış fonksiyon her çağrıldığında yeniden tanımlanır, bu nedenle sıkça çağrılan fonksiyonlarda performans sorunlarına yol açabilir.
@@ -403,7 +403,7 @@ function salute() {
 }
 
 function saluteTheWorld() {
-    echo "Hello Wprld!";
+    echo "Hello World!";
 }
 ~~~~~~~
 
@@ -501,8 +501,8 @@ $person = newPerson("Zehra");
 echo $person->name;
 ~~~~~~~
 > Output: Zehra
-> + `newPerson` fonksiyonunun dönüş tipi `Person` sınıfından bir nesne olarak belirtilmiştir.
-> + `Person` adında bir class tanımlandı ve bu class'ın `name` özelliğini kurucu method (__construct) aracılığıyla başlatıldı.
+> + `newPerson` fonksiyonunun dönüş tipi `Person` class'ından bir nesne olarak belirtilmiştir.
+> + `Person` adında bir class tanımlandı ve bu class'ın `name` özelliğini kurucu method (`__construct`) aracılığıyla başlatıldı.
 > + `newPerson` fonksiyonu, verilen bir isimle yeni bir `Person` nesnesi oluşturuldu ve bu nesne döndürüldü.
 > + Sonrasında, oluşturulan `Person` nesnesinin `name` özelliği ekrana yazdırılır.
 
@@ -513,7 +513,7 @@ function greet(): void {
 }
 ~~~~~~~
 > Output: Hello!
-> `void` dönüş tipi, fonksiyonun hiçbir değer döndürmediğini belirtir.
+> + `void` dönüş tipi, fonksiyonun hiçbir değer döndürmediğini belirtir.
 > Fonksiyon, işlemlerini tamamladığında otomatik olarak `null` döndürse bile, void dönüş tipi ile çelişmez.
 
 #### Strict Types (Katı Tip Kontrolü)
@@ -546,7 +546,7 @@ echo sum(5, "3");
 
 > Output: Error: Uncaught TypeError
 
-> + `sum` fonksiyonu yalnızca `int` türünde argümanlar kabul eder. "3" gibi bir string argüman geçildiğinde hata oluşur.
+> + `sum` fonksiyonu yalnızca `int` türünde argümanlar kabul eder. `3` gibi bir string argüman geçildiğinde hata oluşur.
 
 ##### Katı Tip Kontrolü ile Esnek Tip Kontrolü Arasındaki Fark
 1. Esnek Tip Kontrolü (Default Behavior):
@@ -559,7 +559,7 @@ function sum(int $xy int $b): int {
 echo sum(5, "3");
 ~~~~~~~
 > Output: 8
-> + "3" string'i otomatik olarak `int` türüne dönüştürülür ve hata oluşmaz.
+> + `3` string'i otomatik olarak `int` türüne dönüştürülür ve hata oluşmaz.
 
 2. Katı Tip Kontrolü:
 + Katı tip kontrolü etkinleştirildiğinde, tür dönüşümü yapılmaz ve uyumsuz türler hata fırlatır.
@@ -688,7 +688,7 @@ echo getData(4);
 
 > + `getData` fonksiyonu hem `int` hem de `string` türünde değerler döndürebilir.
 > + `return $data[$id] ?? $id;`: `$id` anahtarının `$getData` dizisinde olup olmadığını kontrol eder. `$id` dizide varsa karşılık gelen değeri döndürür; yoksa `$id` kendisini döndürür.
-> + `??` operatörü, PHP'de "null birleşim" operatörü olarak bilinir. Sol taraf null ise sağ tarafı döndürür. Ancak, dizide olmayan bir anahtarı kullanmaya çalışmak null döndüreceği için burada uygun bir kullanım sağlar.
+> + `??` operatörü, PHP'de `null birleşim` operatörü olarak bilinir. Sol taraf null ise sağ tarafı döndürür. Ancak, array'de olmayan bir key'i kullanmaya çalışmak `null` döndüreceği için burada uygun bir kullanım sağlar.
 
 #### Union Types ile Nullable Types
 + Union types, nullable types ile birlikte de kullanılabilir. Bu durumda, null değeri de kabul edilebilir bir tür olarak belirtilir.
@@ -711,8 +711,8 @@ echo operation(null);
 
 #### Union Types Kullanım Alanları
 + `Esneklik:` Bir fonksiyonun birden fazla türde argüman kabul edebilmesini ve dönebilmesini sağlar.
-+ `Gerçek Dünya Modelleri:` Gerçek dünya senaryolarında, bir değer birden fazla türde olabileceğinden, union types kullanarak bu tür senaryoları daha iyi modelleyebilirsiniz.
-+ `Geriye Dönük Uyum:` Eski kodlarla uyumluluğu sürdürmek ve yeni tür eklemeleri yapmak için union types kullanabilirsiniz.
++ `Gerçek Dünya Modelleri:` Gerçek dünya senaryolarında, bir değer birden fazla türde olabileceğinden, union types kullanarak bu tür senaryoları daha iyi modellenebilir.
++ `Geriye Dönük Uyum:` Eski kodlarla uyumluluğu sürdürmek ve yeni tür eklemeleri yapmak için union types kullanılabilir.
 
 #### Katı Tip Kontrolü ile Kullanımı
 + Union types, katı tip kontrolü ile birlikte de çalışır ve tür uyumsuzlukları durumunda PHP'nin hata fırlatmasını sağlar.
@@ -731,7 +731,7 @@ echo sum(5, "3");
 
 > Output: Error: Uncaught TypeError
 
-> + `sum` fonksiyonu `int` ve `float` türlerini kabul eder. "3" gibi bir string argüman geçildiğinde, katı tip kontrolü etkin olduğu için hata fırlatılır.
+> + `sum` fonksiyonu `int` ve `float` türlerini kabul eder. `3` gibi bir string argüman geçildiğinde, katı tip kontrolü etkin olduğu için hata fırlatılır.
 
 > Union types, fonksiyonların ve değişkenlerin daha esnek ve dinamik olmasını sağlayan güçlü bir özelliktir. Bir değişkenin birden fazla belirli türden birini alabileceğini belirtir ve kodun daha anlaşılır, esnek ve hataya dayanıklı olmasına yardımcı olur. Union types, özellikle büyük projelerde ve karmaşık veri modellerinde kullanışlıdır ve katı tip kontrolü ile birlikte kullanıldığında kodun doğruluğunu artırır.
 
@@ -749,7 +749,7 @@ echo sum(5, "3");
     - callable
     - resource
     - null.
-    - `mixed types`, özellikle dinamik veri yapıları veya çeşitli türlerde veri döndüren fonksiyonlar için kullanışlıdır.
++ `mixed types`, özellikle dinamik veri yapıları veya çeşitli türlerde veri döndüren fonksiyonlar için kullanışlıdır.
 + Hem fonksiyon argümanlarında hem de dönüş değerlerinde kullanılabilir.
 
 #### Fonksiyon Argümanında Mixed Types
@@ -767,7 +767,7 @@ print([1, 2, 3]);
 ~~~~~~~
 > Output: Hello World!
 
-> Output: 1, 2, 3
+> Output: 1, 2, 3,
 
 > + `print` fonksiyonu mixed türünde bir argüman kabul eder ve argümanın türüne göre farklı işlemler yapar.
 
@@ -792,7 +792,7 @@ echo getData(3);
 > + `getData` fonksiyonu `mixed types` türünde bir değer döndürebilir. Dönüş değeri, veritabanında bulunan farklı türlerdeki verilere göre değişir.
 
 #### Mixed Types Kullanım Alanları
-+ `Dinammik Data Yapıları:` Dinamik olarak değişen data türlerini işlemek için.
++ `Dinamik Data Yapıları:` Dinamik olarak değişen data türlerini işlemek için.
 + `Çeşitli Türlerde Veri Döndüren Fonksiyonlar:` Aynı fonksiyonun farklı türlerde veri döndürebileceği durumlarda.
 + `Geriye Dönük Uyum:` Eski kodlarla uyumluluğu sürdürmek için.
 
