@@ -39,7 +39,7 @@ for ($i = 0; $i < 5; ++$i) {
     echo "i: $i\n";
 }
 ~~~~~~~
-> Output: Tick işlemi çalıştırıldı. i:0 Tick işlemi çalıştırıldı.i: 1 Tick işlemi çalıştırıldı. i: 2 Tick işlemi çalıştırıldı. i: 3 Tick işlemi çalıştırıldı. i: 4 Tick işlemi çalıştırıldı. Tick işlemi çalıştırıldı.
+> Output: Tick işlemi çalıştırıldı. i:0 Tick işlemi çalıştırıldı. i: 1 Tick işlemi çalıştırıldı. i: 2 Tick işlemi çalıştırıldı. i: 3 Tick işlemi çalıştırıldı. i: 4 Tick işlemi çalıştırıldı. Tick işlemi çalıştırıldı.
 
 + `declare(ticks=1);`: Bu ifade, her bir tick olayının gerçekleşmesini sağlar. Tick olayları, genellikle bir döngü adımı veya bir deyim yürütüldüğünde tetiklenir.
 + `function tick_handler() {echo "Tick işlemi çalıştırıldı.\n";}`: `tick_handler` adında bir işlev tanımlanır. Bu işlev, her tick olayında çalıştırılır ve ekrana "Tick işlemi çalıştırıldı." mesajını yazdırır.
@@ -53,7 +53,7 @@ for ($i = 0; $i < 5; ++$i) {
 +  `register_tick_function` ile kaydedilir ve belirli sayıda komut yürütüldüğünde bu fonksiyonlar çağrılır.
 
 ##### Özet:
-+ `return:` Fonksiyonların veya metodların sonucunu döndürmek ve çalışmasını sonlandırmak için kullanılır.
++ `return:` Fonksiyonların veya method'ların sonucunu döndürmek ve çalışmasını sonlandırmak için kullanılır.
 + `declare:` PHP'nin çalışma zamanı davranışını belirli yönergeler ile değiştirmek için kullanılır. Yaygın olarak kullanılan yönerge `ticks`'dir.
 + `tickable:` `declare(ticks=1);` ifadesi ile belirlenen ve belirli sayıda düşük seviyeli komut yürütüldüğünde tetiklenen olaylardır. `register_tick_function` ile kullanılır.
 
