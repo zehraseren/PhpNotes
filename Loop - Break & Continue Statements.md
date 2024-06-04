@@ -50,7 +50,7 @@ foreach ($array as $item) {
 }
 ~~~~~~~
 > Output: 0 1 2 3 4
-> + `$array`'in her elemanı için kod bloğunu çalıştırır ve her bir elemanı $item`` değişkenine atar.
+> + `$array`'in her elemanı için kod bloğunu çalıştırır ve her bir elemanı `$item` değişkenine atar.
 
 ##### Hangi döngü ne şekilde kullanılmalıdır?
 + `while:` Bir koşul doğru olduğu sürece döngüyü çalıştırmak için.
@@ -81,7 +81,7 @@ foreach ($user as $key => $value) {
 }
 ~~~~~~~
 + `foreach ($user as $key => $value) {`: `$user` adlı array döngüye sokulur. Her bir array öğesi için, key (`$key`) ve değer (`$value`) çiftini alır.
-+ ` echo $key . ": ";`: key (`$key`) ekrana yazdırılı ve `:` ile ayrım yapılır. Değerlerin ekrana yazdırılması bu ayrımdan sonra gerçekleştirilir.
++ ` echo $key . ": ";`: key (`$key`) ekrana yazdırılır ve `:` ile ayrım yapılır. Değerlerin ekrana yazdırılması bu ayrımdan sonra gerçekleştirilir.
 + `if (is_array($value)) {`: `$value`'nun bir array olup olmadığı kontrol edilir. Eğer `$value` bir array ise, içeri girerek ve array elemanlarını işlemek için başka bir iç içe döngü başlatılır.
 + `foreach ($value as $skill) {`: `$value` bir array ise bu iç içe döngü, `$value`'nun her bir elemanını alır ve `$skill` değişkenine atar. `Bu iç içe döngü, array elemanlarını tek tek ekrana yazdırmak için kullanılır.`
 + `echo $skill . ", ";`: İç içe döngüdeki her bir eleman, virgül ile ayrılarak ekrana yazdırılır.
