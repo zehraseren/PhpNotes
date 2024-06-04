@@ -17,7 +17,7 @@ $func = "hello";
 $func(); 
 ~~~~~~~
 > Output: Hello, World!
-> + `$fonksiyon` değişkeninin değeri `hello` fonksiyonunun adı olarak belirlenmiştir.
+> + `$func` değişkeninin değeri `hello` fonksiyonunun adı olarak belirlenmiştir.
 > + `$func()` ifadesi, `hello` fonksiyonunu çağırır.
 
 2. Parametrelerle Kullanım
@@ -57,7 +57,7 @@ function sum($x, $y) {
     return $x + $y;
 }
 
-function ext($x, $y) {
+function sub($x, $y) {
     return $x - $y;
 }
 
@@ -91,7 +91,7 @@ run($callback);
 ### Anonymous functions (anonim fonksiyonlar) nedir?
 ***
 + Adı olmayan ve doğrudan bir değişkene atanarak kullanılabilen fonksiyonlardır.
-+ PHP'de anonim fonksiyonlar, function anahtar kelimesi kullanılarak tanımlanır ve genellikle callable veya closure olarak adlandırılır. `Bu fonksiyonlar, diğer fonksiyonlara argüman olarak geçirilebilir veya bir değişken olarak saklanabilir.`
++ PHP'de anonim fonksiyonlar, function keyword kullanılarak tanımlanır ve genellikle `callable` veya `closure` olarak adlandırılır. `Bu fonksiyonlar, diğer fonksiyonlara argüman olarak geçirilebilir veya bir değişken olarak saklanabilir.`
 
 #### Anonim Fonksiyonların Temel Kullanımı
 + Anonim fonksiyonlar, normal bir fonksiyon gibi tanımlanır ancak adları yoktur. Bir değişkene atanarak çağrılabilirler.
@@ -123,7 +123,7 @@ echo funcConstructor($square, 4);
 > + `funcConstructor` fonksiyonu, bir anonim fonksiyonu argüman olarak alır ve bu fonksiyonu kullanarak işlem yapar.
 
 3. Kapsam Kullanımı (use keyword ile)
-+ Anonim fonksiyonlar kendi kapsamları dışında tanımlanmış değişkenlere doğrudan erişemezler. Ancak `use` keyword'ü ile bu değişkenleri fonksiyon içine dahil edebilirler.
++ Anonim fonksiyonlar kendi kapsamları dışında tanımlanmış değişkenlere doğrudan erişemezler. Ancak `use` keyword ile bu değişkenleri fonksiyon içine dahil edebilirler.
 ~~~~~~~
 $message = "World";
 
@@ -134,7 +134,7 @@ $greeting = function($name) use ($message) {
 echo $greeting("Zehra");
 ~~~~~~~
 > Output: Hello, Zehra! How are you World?
-> + `$message` değişkeni `use` keyword'ü ile anonim fonksiyonun kapsamına dahil edilmiştir.
+> + `$message` değişkeni `use` keyword ile anonim fonksiyonun kapsamına dahil edilmiştir.
 
 + Dışarıdaki değişkenleri anonim fonksiyonlar içinde kullanarak daha dinamik ve esnek kod yazmaya olanak tanır. Dış değişkenler fonksiyon içine dahil edilerek, fonksiyonun dışarıdaki duruma göre farklı sonuçlar üretmesi sağlanır.
 + `use` keyword, `özellikle kapanış (closure) fonksiyonlar` içinde dış değişkenlere erişmek istediğinizde kullanışlıdır. Böylece, fonksiyonun tanımlandığı yerdeki değişkenleri fonksiyon içinde kullanabilirsiniz. Bu mekanizma, fonksiyonel programlama paradigmalarına uygun bir şekilde, fonksiyonlarınızı daha esnek ve yeniden kullanılabilir hale getirir.
@@ -423,7 +423,7 @@ function funcBuild($callback, $param) {
 }
 
 function hello($name) {
-    echo "Merhaba, $name!";
+    echo "Hello, $name!";
 }
 
 funcBuild('hello', 'Zehra');
