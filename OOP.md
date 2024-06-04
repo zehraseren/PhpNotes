@@ -26,7 +26,7 @@ class Car {
 ~~~~~~~
 
 ***
-#### Objects | Objects
+#### Objects | Nesneler
 + Class'lardan türetilen varlıklardır. Class'ların somut örnekleridir.
 ~~~~~~~
 <?php
@@ -38,7 +38,7 @@ echo $myCar->message();
 > Output: My car is a vantablack Volvo XC90.
 
 ***
-#### Properties | Objects
+#### Properties | Özellikler
 + Bir class'ın değişkenleridir ve nesnelerin durumunu saklar.
 ~~~~~~~
 <?php
@@ -372,9 +372,9 @@ $myElectricCar = new ElectricCar();
 $myElectricCar->startEngine();
 ?>
 ~~~~~~~
-> Output:
+> Output: Starting car engine
 
-> Output:
+> Output: Starting electric car engine
 
 ##### Türleri
 1. `Statik Polimorfizm (Compile-Time Polymorphism):` Derleme zamanında belirlenen polimorfizm türüdür. `Overloading` ve `operator overloading` bu tür polimorfizmin örnekleridir. `PHP'de, method overloading bulunmamaktadır` ancak operator overloading bazı durumlarda kullanılabilir.
@@ -518,9 +518,9 @@ $dog->makeSound();
 $dog->sleep();
 ?>
 ~~~~~~~
-> Output: 
+> Output: Bark
 
-> Output: 
+> Output: Sleeping...
 
 ###### Interfaces (Arayüzler)
 + Class'ların gerçekleştirmesi gereken yöntemlerin bir listesini tanımlar. Interface'ler, herhangi bir uygulama (implementation) içermez, sadece hangi yöntemlerin bulunması gerektiğini belirtir. Bir class birden fazla interface uygulayabilir.
@@ -536,7 +536,7 @@ interface AnimalInterface {
 ~~~~~~~
 
 ###### Interface Kullanma
-+ Bir class, implements keyword ile bir veya daha fazla interface's uygulayabilir.
++ Bir class, implements keyword ile bir veya daha fazla interface uygulayabilir.
 ~~~~~~~
 <?php
 
@@ -554,7 +554,7 @@ $cat->makeSound();
 
 ##### Abstraction Kullanımının Avantajları
 + `Karmaşıklığın Gizlenmesi:` Kullanıcıya sadece gerekli olan bilgileri sunarak detayları gizler.
-+ `Kodun Yeniden Kullanımı:` Soyut class'lar ve interface'ler, farklı class'ların ortak davranışlarını belirlemek için kullanılabilir.
++ `Kodun Yeniden Kullanımı:` Abstract class'lar ve interface'ler, farklı class'ların ortak davranışlarını belirlemek için kullanılabilir.
 + `Esneklik:` Bir class'ın birden fazla interface'i uygulayabilmesi, esnek ve modüler bir tasarıma olanak tanır.
 + `Bakım ve Güncelleme Kolaylığı:` Abstraction, kodun daha kolay bakım ve güncelleme yapılabilir olmasını sağlar.
 
@@ -585,7 +585,7 @@ class Car extends Vehicle {
     }
 }
 
-// Bike class
+// Motorcycle class
 class Motorcycle extends Vehicle {
     public function startEngine() {
         echo "Motorcycle engine started";
@@ -693,7 +693,7 @@ echo Counter::getCount();
 + `Ortak Veri:` Tüm class örnekleri arasında ortak veri paylaşımı sağlar.
 
 #### Static Properties & Methods'un Sınırlamaları
-+ `Sınıf Düzeyinde Kullanım:` Statik özellikler ve yöntemler, class'ın örneklerine özgü değildir.
++ `Class Düzeyinde Kullanım:` Statik özellikler ve yöntemler, class'ın örneklerine özgü değildir.
 + `Sadece Statik Üyelere Erişim:` Statik yöntemler, sadece statik özelliklere ve diğer statik yöntemlere erişebilir.
 
 > PHP'de statik özellikler ve yöntemler, belirli bir class'a ait olan ancak class'ın nesnelerine bağlı olmayan özellikler ve yöntemlerdir. Statik üyeler, class adı kullanılarak doğrudan erişilebilir ve class'ın herhangi bir örneği oluşturulmadan kullanılabilir. Bu, belleği daha verimli kullanmayı ve class'ın tüm örnekleri arasında ortak veri paylaşımını sağlar. Statik özellikler ve yöntemler, yazılım geliştirme sürecinde belirli senaryolarda oldukça kullanışlı olabilir.
@@ -705,7 +705,7 @@ echo Counter::getCount();
 + PHP'de bir class birden fazla interface'si uygulayabilir, böylece çoklu kalıtımın bir şekilde taklit edilmesine olanak tanır.
 
 ##### Interface Tanımlama
-+ Interface'ler, `interface` keywor kullanılarak tanımlanır. Interface'lerin yöntemleri sadece bildirimlerden oluşur, yani yöntemlerin gövdesi (implementasyonu) bulunmaz.
++ Interface'ler, `interface` keyword kullanılarak tanımlanır. Interface'lerin yöntemleri sadece bildirimlerden oluşur, yani yöntemlerin gövdesi (implementasyonu) bulunmaz.
 ~~~~~~~
 <?php
 
@@ -777,7 +777,7 @@ interface JsonSerializer extends Formatter {
 
 ##### Interface'in Kullanımı
 + Class'lar arasında bir sözleşme sağlar ve kodun daha modüler, esnek ve yeniden kullanılabilir olmasını sağlar.
-+ Bir interface'si uygulayan class'lar, belirli bir davranışı sağlayacağından emin olur. Interface'ler ayrıca çoklu kalıtımın eksikliğini telafi eder ve class'ların aynı anda birden fazla sözleşmeyi sağlamasına olanak tanır.
++ Bir interface'i uygulayan class'lar, belirli bir davranışı sağlayacağından emin olur. Interface'ler ayrıca çoklu kalıtımın eksikliğini telafi eder ve class'ların aynı anda birden fazla sözleşmeyi sağlamasına olanak tanır.
 ~~~~~~~
 <?php
 
@@ -790,6 +790,6 @@ $data = ['name' => 'Zehra', 'age' => 29];
 processData($serializer, $data); // Process data by converting to Json format
 ?>
 ~~~~~~~
-> + `processData` fonksiyonu, bir `Formatter` interface'si uygulayan herhangi bir nesneyi alabilir. Bu, fonksiyonun esnek bir şekilde farklı veri biçimlerini işleyebilmesini sağlar.
+> + `processData` fonksiyonu, bir `Formatter` interface'i uygulayan herhangi bir nesneyi alabilir. Bu, fonksiyonun esnek bir şekilde farklı veri biçimlerini işleyebilmesini sağlar.
 
-> PHP'de interface'ler, bir class'ın belirli bir davranışı sağlamasını zorunlu kılar. Interface'ler, class'lar arasında bir sözleşme sağlar ve kodun daha modüler, esnek ve yeniden kullanılabilir olmasını sağlar. Bir class bir interface'i implements keyword ile uygular ve interface'de belirtilen tüm yöntemleri tanımlamak zorundadır. Bir class birden fazla interface'si uygulayabilir ve bir interface başka bir interface'den kalıtım alabilir. Interface'ler, genellikle nesnelerin davranışlarını tanımlamak ve değişikliklere karşı esneklik sağlamak için kullanılır.
+> PHP'de interface'ler, bir class'ın belirli bir davranışı sağlamasını zorunlu kılar. Interface'ler, class'lar arasında bir sözleşme sağlar ve kodun daha modüler, esnek ve yeniden kullanılabilir olmasını sağlar. Bir class bir interface'i implements keyword ile uygular ve interface'de belirtilen tüm yöntemleri tanımlamak zorundadır. Bir class birden fazla interface'i uygulayabilir ve bir interface başka bir interface'den kalıtım alabilir. Interface'ler, genellikle nesnelerin davranışlarını tanımlamak ve değişikliklere karşı esneklik sağlamak için kullanılır.
