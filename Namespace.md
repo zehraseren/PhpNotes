@@ -1,7 +1,7 @@
 ### Namespace (ad alanı) nedir?
 ***
 + Büyük projelerde kodun düzenlenmesi ve isim çakışmalarının önlenmesi amacıyla kullanılır.
-+ PHP 5.3 ile tanıtılan namespace'ler, class'ları, inrerface'leri, fonksiyonları ve sabitleri mantıksal gruplara ayrılmasına olanak tanır. Böylece `özellikle aynı isimde birden fazla class'ın veya fonksiyonun bulunduğu büyük projelerde oldukça faydalıdır.`
++ PHP 5.3 ile tanıtılan namespace'ler, class'ları, interface'leri, fonksiyonları ve sabitleri mantıksal gruplara ayrılmasına olanak tanır. Böylece `özellikle aynı isimde birden fazla class'ın veya fonksiyonun bulunduğu büyük projelerde oldukça faydalıdır.`
 
 #### Namespace Tanımı ve Kullanımı
 + Namespace, `namespace` keyword'ü ile tanımlanır ve genellikle dosyanın en üstünde yer alır.
