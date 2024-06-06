@@ -571,9 +571,52 @@ $messages = [
 
 ***
 ### Generating Links to Routes | Rotalara Bağlantı Oluşturma
-+
++ rota (route) isimlerini kullanarak daha sürdürülebilir ve esnek kodlar yazılmasını sağlayacaktır.
+
+#### Basit Link Oluşturma
++ Mesajların listesini görüntülerken, her mesaj için ayrı bir sayfa oluşturmak istenebilir. İlk olarak, doğrudan bir `a` elementi eklenip yol belirtilsin.
 ~~~~~~~
+{% for key, message in messages %}
+    <div>
+        <a href="/messages/{{ key }}">Show Message</a>
+    </div>
+{% endfor %}
 ~~~~~~~
+> Bu yöntemle, her mesaj için doğru yolu oluşturabilir. Ancak, bu yöntem doğrudan yolları (URLs) kullanır ve bu da uygulamanın ölçeklenebilirliği ve bakımı açısından zorluklara yol açabilir.
+
+#### Symfony Console Kullanarak Rotaları İncelemek
++ Terminalden mevcut rotaları incelenir ve bu mevcut rotaların isimlerini ve yollarını öğrenmenilmeisini sağlar.
+~~~~~~~
+symfony console debug:router
+~~~~~~~
+
++ Bu komut, uygulamadaki tüm rotaları ve onların isimlerini listeler.
+~~~~~~~
+ -------------------------- -------- -------- ------ -----------------------------------
+  Name                       Method   Scheme   Host   Path
+ -------------------------- -------- -------- ------ -----------------------------------
+  app_show_one               GET      ANY      ANY    /messages/{id}
+  app_message_list           GET      ANY      ANY    /messages
+ -------------------------- -------- -------- ------ -----------------------------------
+~~~~~~~
+> `app_show_one` rotasının `/messages/{id}` yolunda bir mesajı göstermek için kullanıldığını görülür.
+
+#### Twig Path Fonksiyonu Kullanarak Dinamik Linkler Oluşturm
++ Doğrudan yol belirtmek yerine, Twig'in `path` fonksiyonunu kullanarak rota isimleri üzerinden dinamik yollar oluşturulabilir. Bu, rotaların değiştirilmesi durumunda kodu güncellemeyi kolaylaştırır.
+
++ Yukarıdaki `a` elementi aşağıdaki gibi güncellenir.
+~~~~~~~
+{% for key, message in messages %}
+    <div>
+        <a href="{{ path('app_show_one', {id: key}) }}">Show Message</a>
+    </div>
+{% endfor %}
+~~~~~~~
+> `path` fonksiyonu, `app_show_one` rotası için dinamik bir URL oluşturur ve `{id: key}` parametresiyle birlikte id'yi geçirir.
+
+#### Daha Esnek ve Bakımı Kolay Kodlar
++ Uygulamanın ölçeklenebilirliği ve bakımı açısından büyük avantajlar sağlar. Rota yolları değiştiğinde, sadece rota tanımını güncellemek yeterli olacaktır, tüm şablon dosyalarda URL'leri tek tek değiştirmeye gerek kalmayacaktır.
++ `Symfony'de link oluştururken doğrudan URL'ler kullanmak yerine rota isimlerini ve Twig path fonksiyonunu kullanmak, daha esnek ve sürdürülebilir bir yaklaşım sağlar. Bu yöntemle, uygulamanın gelecekteki değişikliklere daha kolay uyum sağlamasını garantilemiş olunur.`
 
 ***
 ### Symfony Maker (Generating Boring Code)
