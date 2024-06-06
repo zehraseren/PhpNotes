@@ -486,9 +486,88 @@ public function index()
 
 ***
 ### Twig Functions - Including Partial Templates | Twig Fonksiyonları - Kısmi Şablonlar Dahil
-+
++ `include` fonksiyonu, başka şablonların parçalarını mevcut Twig şablonunun içine dahil edilmesini sağlar.
+
+#### Messages Array'ini Değiştirmek
++ `messages` array'inin her mesajın oluşturulma tarihini içerecek şekilde değiştirilsin.
+
+###### İşte güncellenmiş array'in genel bir görünümü:
 ~~~~~~~
+$messages = [
+    [
+        'message' => 'First message',
+        'created' => '2021-05-15',
+    ],
+    [
+        'message' => 'Second message',
+        'created' => '2022-04-20',
+    ],
+    // Add as many messages as needed
+];
 ~~~~~~~
+
+#### Twig Şablonunu Güncellemek
++ Güncellenmiş ``message` array'i ile şablon bozulacak çünkü artık iç içe array'ler alıyor. Bu yeni yapıyı işlemek için Twig şablonun güncellenmesi gerekiyor.
+
+##### 1. Array Elemanlarına Erişmek
++ Twig’de array elemanlarına erişmek için nokta notasyonunu kullanabilir, bu da PHP kare parantez sözdiziminden daha kullanışlıdır.
+~~~~~~~
+{{ message.message }}
+{{ message.created }}
+~~~~~~~
+
+##### 2. Mesajları Tarihleriyle Birlikte Görüntülemek
++ Mesajları oluşturulma tarihleriyle birlikte görüntülemek için şablon güncellenir. Ayrıca, tarihleri formatlamak ve karşılaştırmak için Twig’de date fonksiyonunu kullanarak koşullu render işlemi uygulanır.
+~~~~~~~
+{% for message in messages %}
+    <div>
+        <div>{{ message.message }}</div>
+        <div style="color:gray;">
+            {% if message.created|date("Y-m-d") < "now"|date_modify("-1 year") %}
+                Older than 1 year
+            {% else %}
+                {{ message.created|date("d-m-Y") }}
+            {% endif %}
+        </div>
+    </div>
+{% endfor %}
+~~~~~~~
+> Bir mesajın oluşturulma tarihinin bir yıldan eski olup olmadığını kontrol eder. Eğer öyleyse, `Older than 1 year` ifadesini görüntüler; aksi halde tarihi `gün-ay-yıl` formatında gösterir.
+
+#### `include` Fonksiyonunu Kullanmak
++ Mantığı (örneğin tarih formatlama) birden fazla şablonda tekrarlamamak için `include` fonksiyonunu kullanılabilir.
+
+##### 1. Kısmi Şablon Oluşturmak
++ Aynı dizinde `_message.html.twig` adında yeni bir dosya oluşturulur.
+~~~~~~~
+<!-- _message.html.twig -->
+<div style="color:gray;">
+    {% if message.created|date("Y-m-d") < "now"|date_modify("-1 year") %}
+        Older than 1 year
+    {% else %}
+        {{ message.created|date("d-m-Y") }}
+    {% endif %}
+</div>
+~~~~~~~
+
+##### 2. Kısmi Şablonu Dahil Etmek
++ Ana şablonda `include` fonksiyonunu kullanarak kısmi şablon dahil edilir.
+~~~~~~~
+{% for message in messages %}
+    <div>
+        <div>{{ message.message }}</div>
+        {{ include('hello/_message.html.twig', { message: message }) }}
+    </div>
+{% endfor %}
+~~~~~~~
+> Bu kurulum, tarih formatlama mantığını farklı şablonlarda tekrar kullanmanıza olanak tanır, tutarlılık sağlar ve kod tekrarını azaltır.
+
+##### 3. Kısmi Şablona Veri Geçmek
++ Bir şablonu dahil ederken, ona veri geçirilebilir. Bu, kısmi şablonun daha esnek ve yeniden kullanılabilir olmasını sağlar.
+~~~~~~~
+{{ include('hello/_message.html.twig', { message: message }) }}
+~~~~~~~
+> Bu satır, `message` değişkenini `_message.html.twig` şablonuna geçirir.
 
 ***
 ### Generating Links to Routes | Rotalara Bağlantı Oluşturma
