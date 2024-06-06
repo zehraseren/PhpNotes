@@ -26,9 +26,54 @@
 
 ***
 ### Controllers - Returning a Response | Denetleyici - Yanıt Döndürme 
-+
++ Symfony uygulamasında her isteğin controllers tarafından işlenir.
++ Controller, `src/controller` klasöründe bulunur.
+> `HelloController.php` adında bir dosya oluşturulsun.
+
+##### 1. Namespace Tanımlama
++ Tüm `src` klasöründeki kodlar bir `namespace` ile tanımlanmalıdır.
++ Hangi namespace kullanılacağı `composer.json` dosyasında yapılandırılmıştır.
+###### composer.json
 ~~~~~~~
+"autoload": {
+    "psr-4": {
+        "App\\": "src/"
+    }
+}
 ~~~~~~~
++ Controller dosyası için namespace `App\Controller` olmalıdır. Controller dosyasında namespace'i tanımlanır:
+~~~~~~~
+<?php
+
+namespace App\Controller;
+
+use Symfony\Component\HttpFoundation\Response;
+
+class HelloController
+{
+    public function index(): Response
+    {
+        return new Response('Hello');
+    }
+}
+~~~~~~~
+
+##### 2. Yönlendirme (Routing) Tanımlama
++ Controller'in çalışması için routing yapılandırmak gerekir. Routing, hangi URL'nin hangi controller eylemine yönlendirileceğini belirler. Bu yapılandırma `config/routes.yaml` dosyasında yapılır.
+~~~~~~~
+hello:
+    path: /
+    controller: App\Controller\HelloController::index
+~~~~~~~
+
+##### 3. Projeyi Çalıştırma
++ Değişiklik kaydedilip tarayıcıda ana sayfa refresh edilince ekranda `Hello` metnini gözükür.
+  - PHP class'ı dosya adı class adı ile aynı olmalıdır.
+  - Bir dosyada birden fazla class tanımlanmamalıdır.
+  - PHP'nin en son sürümlerinde, her fonksiyon veya method'un dönüş türü belirtilmelidir.
+  
+###### Mevcut Yönlendirmeleri Görüntüleme
+> Uygulamanda tanımlı mevcut yönlendirmeleri ve hangi controller'in çağrıldığını görmek için `symfony console debug:router` komutunu çalıştırılır. Bu komut, uygulamada tanımlı tüm yönlendirmeleri ve controller'ı listeler:
 
 ***
 ### Route Parameter Requirements / Optional Parameters | Rota Parametre Gereksinimleri / İsteğe Bağlı Parametreler
