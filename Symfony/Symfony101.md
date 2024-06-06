@@ -620,20 +620,119 @@ symfony console debug:router
 
 ***
 ### Symfony Maker (Generating Boring Code)
-+
++ Symfony framework'ü, belirli kalıplara dayalı olarak geliştirme yapılmasını sağlar. Örneğin, bir denetleyici (controller) oluştururken her seferinde aynı adımları izlenir: class oluşturulur, AbstractController class genişletirilir, rotaları tanımlanır vb.
++ Bu süreçler bazen zaman alıcı olabilir ve tekrarlayan işler haline gelebilir. Neyse ki Symfony, bu tür işleri otomatikleştirmek için kullanabilecek bir araç sunar: `Maker Bundle.`
+
+##### Maker Bundle'ı Kurma
++ Öncelikle, Maker Bundle'ı Symfony uyglamaya eklenmesi gerekmektedir. Bu araç sadece geliştirme ortamında kullanılacağı için, `--dev` bayrağı ile yüklenmelidir. Terminali açıp aşağıdaki komut çalıştırılmalıdır.
 ~~~~~~~
+composer require symfony/maker-bundle --dev
 ~~~~~~~
+
+##### Kullanılabilir Komutları Görüntüleme
++ Maker Bundle ile neler yapılabileceğini görmek için aşağıdaki komutu çalıştırarak mevcut komutları listelenir.
+~~~~~~~
+symfony console list make
+~~~~~~~
+> `make` ile başlayan tüm komutları listeleyecektir. Bu komutlar arasında denetleyiciler, varlıklar (entities), formlar ve daha fazlasını oluşturmak için kullanılabilecek komutlar bulunur.
+
+##### Bir Denetleyici (Controller) Oluşturma
++ Örneğin, yeni bir denetleyici oluşturmak için aşağıdaki komutu kullanabilir.
+~~~~~~~
+symfony console make:controller
+~~~~~~~
+
++ Bu komutu çalıştırdıktan sonra, komut bazı sorular sorar ve verilen cevaplara göre istenilen denetleyiciyi oluşturur. Örneğin bir `MicroPost` uygulaması oluşturulsun, yani bir tür Twitter klonu. Bu yüzden yeni controller `MicroPostController` olarak adlandırılmalıdır.
++ `Symfony'de denetleyici adları tekil olarak adlandırılmalıdır (örneğin, PizzasController yerine PizzaController).`
++ Komutu çalıştırıldıktan sonra gelen soruya `MicroPostController` yanıtı verilsin.
+~~~~~~~
+symfony console make:controller MicroPostController
+~~~~~~~
+> Bu işlem, `MicroPostController` adında bir denetleyici class'ı ve ona bağlı bir şablon dosyası oluşturur.
+
+##### Oluşturulan Kodları İnceleme
++ Terminali kapatıp oluşturulan dosyalara bakaldığında
+
+###### MicroPostController.php
+~~~~~~~
+<?php
+
+namespace App\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+class MicroPostController extends AbstractController
+{
+    #[Route('/micro/post', name: 'app_micro_post')]
+    public function index(): Response
+    {
+        return $this->render('micro_post/index.html.twig', [
+            'controller_name' => 'MicroPostController',
+        ]);
+    }
+}
+~~~~~~~
+>
+
+###### micro_post/index.html.twig:
+~~~~~~~
+{% extends 'base.html.twig' %}
+
+{% block title %}MicroPost{% endblock %}
+
+{% block body %}
+    <h1>Welcome to the MicroPost page!</h1>
+{% endblock %}
+~~~~~~~
+> Symfony, denetleyicinin doğru namespace ve gerekli bileşenleri içerecek şekilde oluşturur. Ayrıca, bir rota (route) tanımlar ve ilgili şablon dosyasını oluşturur.
+
+##### URL'yi Test Etme
++ Oluşturulan URL'yi ziyaret ederek sonucu kontrol edilir. Tarayıcınızda `http://localhost/micro/post` adresini ziyaret edilerek sayfanın düzgün bir şekilde görüntülendiğini doğrulanır.
++ Ardından, URL'yi daha okunabilir hale getirmek için `/micro/post` yolunu `/micro-post` olarak değiştirilir.
+
+###### MicroPostController.php
+~~~~~~~
+#[Route('/micro-post', name: 'app_micro_post')]
+~~~~~~~
+> Yeniden tarayıcıdan `http://localhost/micro-post` adresi ziyaret edilerek değişiklik kontrol edilir.
 
 ***
 ### Symfony Profiler (Debugging Project)
-+
-~~~~~~~
-~~~~~~~
++ Symfony Profiler, Symfony geliştirme sürecinde vazgeçilmez bir araçtır.
++ Profiler, uygulamanın performansı ve davranışı hakkında detaylı bilgi toplar. `Ancak, bu aracı hiçbir zaman canlı ortamlarda kullanılmamlıdır.` Bu, ciddi güvenlik açıklarına yol açabilir ve uygulamayı yavaşlatabilir. Bu nedenle, Profiler'ı sadece geliştirme ortamında kurulmalıdır.
 
-
-###
-+
+##### Profiler Kurulumu
++ Profiler'ı Symfony uygulamada eklemek için terminali açıp aşağıdaki komutu çalıştırılmalıdır.
 ~~~~~~~
+composer require symfony/profiler-pack --dev
 ~~~~~~~
+> Bu komut, Profiler paketini geliştirme ortamına ekler. Symfony'nin varsayılan ayarları, Profiler'ın sorunsuz çalışmasını sağlar. Kurulum tamamlandıktan sonra, uygulamanın yeniden başlatılması gerekebilir.
 
-***
+##### Profiler'ın Kullanımı
++ Profiler kurulduktan sonra, uygulama yerel sunucuda çalıştırılır ve bir sayfa yenilenir. `Sayfanın alt kısmında Profiler bar'ı görünmelidir.`
+
+##### Profiler Bar'ı İnceleme
++ Profiler bar'ı, aşağıdaki bilgileri gösterir:
+ 1. `HTTP Durum Kodu:` Bu, yapılan isteğin HTTP durum kodunu gösterir.
+ 2. `Rota ve Denetleyici Bilgisi:` Hangi rota ve denetleyici işleminin çalıştığını gösterir.
+ 3. `Performans Bilgileri:` Sayfanın ne kadar sürede oluşturulduğunu ve bu sürecin detaylarını gösterir.
+ 4. `Bellek Kullanımı:` İsteğin ne kadar bellek kullandığını gösterir.
+ 5. `Şablon Bilgileri:` Hangi şablonların kullanıldığını ve kaç kez kullanıldığını gösterir.
+ 6. `Sunucu Bilgileri:` PHP sürümü, yüklü uzantılar vb. bilgileri gösterir.
+ 7. `Uygulama Bilgileri:` Hangi ortamda çalışıldığını, hata ayıklamanın açık olup olmadığını gösterir.
+
+##### Profiler Detaylarına Bakma
++ Profiler bar'ındaki herhangi bir öğeye tıklayarak detaylı bilgiye ulaşabilir. Örneğin:
+    - `Request/Response Bilgileri:` GET ve POST parametreleri, yüklenen dosyalar, başlıklar vb. bilgileri içerir.
+    - `Performans Bilgileri:` Hangi işlemlerin ne kadar süre aldığını zaman çizelgesiyle gösterir.
+    - `Rota Bilgileri:` Hangi rotanın eşleştiğini ve diğer rotaların nasıl değerlendirildiğini gösterir.
+    - `Twig Şablonları:` Hangi şablonların kullanıldığını, kaç kez kullanıldığını gösterir.
+    - `Konfigürasyon Bilgileri:` Symfony uygulamanın konfigürasyon bilgilerini gösterir.
+
+##### Geçmiş İstekleri İnceleme
++ Profiler, önceki isteklerin bilgilerini de saklar. Sağ üst köşedeki "Last 10" bölümüne tıklayarak son yapılan isteklerin listesini görebilir ve her bir isteğin detaylarına bakılabilir.
+
+##### Profiler'ı Kapatma
++ Profiler'ı kapatmak için URL'den `_profiler` kısmını kaldırabilir veya bar'ın sağ alt köşesindeki düğmeye tıklayarak normal sayfaya dönülebilir.
