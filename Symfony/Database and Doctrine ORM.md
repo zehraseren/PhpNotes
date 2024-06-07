@@ -161,7 +161,6 @@ php bin/console make:entity
 php bin/console doctrine:migrations:diff
 php bin/console doctrine:migrations:migrate
 ~~~~~~~
->
 
 ***
 ### Running MySQL Server and Connecting from Symfony | MySQL Sunucusunu Çalıştırma ve Symfony'den Bağlanma
