@@ -61,8 +61,105 @@
 
 ***
 ### What is Docker? | Docker nedir?
-+
+![Docker@2x](https://github.com/zehraseren/PhpNotes/assets/94180168/7c5cbb94-2798-4b0a-98c6-12a8cab7d6b5)
+
+#### Docker nedir?
++ Docker, uygulamaları izole edilmiş ortamlarda (konteynerlerde) çalıştırılmasını sağlayan bir platformdur. Docker'ın temel bileşenleri şunlardır:
+  - `Image:` Belirli bir uygulamayı çalıştırmak için gereken her şeyi tanımlayan dosyalardır. Örneğin, bir MySQL veya PostgreSQL sunucusu çalıştırmak için önceden oluşturulmuş imajlar vardır.
+  - `Container:` İmajları kullanarak oluşturulan ve çalışan izole edilmiş ortamlardır. Bir imaj bir class'a benzetilebilirken, container bu class'ı bir örneği gibidir.
+
+#### Docker'ın Avantajları
++ `İzolasyon:` Her uygulama izole edilmiş bir ortamda çalışır, bu nedenle birbirleriyle veya ana işletim sistemiyle çakışmazlar.
++ `Taşınabilirlik:` Uygulamalar, her işletim sisteminde (Windows, Mac, Linux) aynı şekilde çalışır.
++ `Temizleme Kolaylığı:` Kullanılmayan bir container'ı kaldırarak sistem temiz ve düzenli tutulabilir.
+
+#### Docker Compose
++ Docker Compose, birden fazla container'ı bir araya getirip birlikte çalıştırılmasına olanak tanır. Örneğin, bir PostgreSQL container'ı ve bu veritabanını yönetmek için Adminer gibi bir araç çalıştırılabilir. Docker Compose, bu container'ların birbirleriyle nasıl etkileşime geçeceğini tanımlayan bir `docker-compose.yml` dosyası kullanır.
+
+#### Adım Adım PostgreSQL Kurulumu
+##### 1. Docker ve Docker Compose Kurulumu:
+   - Docker Compose, Docker ile birlikte gelir ancak gerekirse manuel olarak kurulabilir.
+ 
+ ##### 2. Proje Dizini Oluşturma:
+   - Bir proje dizini oluşturulup bu dizin içinde bir `docker-compose.yml` dosyası oluşturulur.
+ 
+ ##### 3. `docker-compose.yml` Dosyasını Yapılandırma
+   - Aşağıdaki yapılandırmayı `docker-compose.yml` dosyasına eklenmelidir.
+ ~~~~~~~
+ version: '3.8'
+
+ services:
+   postgres:
+     image: postgres:13
+     container_name: my_postgres
+     environment:
+       POSTGRES_DB: symfony_db
+       POSTGRES_USER: symfony_user
+       POSTGRES_PASSWORD: symfony_pass
+     ports:
+       - "5432:5432"
+     volumes:
+       - postgres_data:/var/lib/postgresql/data
+
+   adminer:
+     image: adminer
+     container_name: my_adminer
+     ports:
+       - "8080:8080"
+
+ volumes:
+   postgres_data:
+ ~~~~~~~
+ > + `postgres:` PostgreSQL veritabanı sunucusunu çalıştırır.
+ > + `adminer:` Web tabanlı veritabanı yönetim aracı Adminer'ı çalıştırır.
+ 
+ ##### 4. Docker Compose ile Konteynerleri Başlatma
+   - Termali açılır, proje dizini girilir.
+   - Aşağıdaki komut ile container'ler başlatılır.
+ ~~~~~~~
+ docker-compose up -d
+ ~~~~~~~
+ > Bu komut, belirtilen hizmetleri (PostgreSQL ve Adminer) arka planda çalıştırır.
+
+ ##### 5. Veritabanına Erişim
+   - Adminer'i kullanarak veritabanına erişmek için tarayıcıdan `http://localhost:8080` adresine gidilir.
+   - Giriş bilgilerini şu şekilde olmalıdır:
+     - Sunucu: `postgres`
+     - Kullanıcı Adı: `symfony_user`
+     - Parola: `symfony_pass`
+     - Veritabanı: `symfony_db`
+ > Artık PostgreSQL veritabanı sunucusu çalışıyor ve Adminer aracılığıyla yönetilebilir durumda.
+
+#### Symfony ile Veritabanı Bağlantısı
+1. Symfony Projesinde `.env` Dosyasını Düzenleme
++ Symfony projen'n kök dizinindeki `.env` dosyasında aşağıdaki gösterilen satır düzenlenmelidir:
 ~~~~~~~
+DATABASE_URL="postgresql://symfony_user:symfony_pass@127.0.0.1:5432/symfony_db"
+~~~~~~~
+> PostgreSQL varsayılan portu olan `5432` kullanılır.
+
+2. Doctrine'i Yükleme
++ Doctrine ORM'yi yüklemek için aşağıdaki komut çalıştırılır:
+~~~~~~~
+composer require symfony/orm-pack
+composer require --dev symfony/maker-bundle
+~~~~~~~
+
+3. Veritabanını ve Varlıkları Oluşturma
++ Veritabanını oluşturmak için:
+~~~~~~~
+php bin/console doctrine:database:create
+~~~~~~~
+
++ Bir varlık (entity) oluşturmak için:
+~~~~~~~
+php bin/console make:entity
+~~~~~~~
+
++ Veritabanı şemasını oluşturmak veya güncellemek için:
+~~~~~~~
+php bin/console doctrine:migrations:diff
+php bin/console doctrine:migrations:migrate
 ~~~~~~~
 >
 
