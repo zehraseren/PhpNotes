@@ -35,7 +35,7 @@
  2. `Symfony Uygulamasını Yapılandırma:` Symfony uygulamasının `.env` dosyasında veritabanı bağlantı bilgileri tanımlanmalıdır.
  ###### .env
  ~~~~~~~
- DATABASE_URL="mysql://db_user:db_password@127.0.0.1:3306/db_name"
+ DATABASE_URL="postgresql://symfony_user:symfony_pass@127.0.0.1:5432/symfony_db"
  ~~~~~~~
  > Burada:
  > + `db_user:` Veritabanı kullanıcı adı
@@ -105,7 +105,7 @@
      image: adminer
      container_name: my_adminer
      ports:
-       - "8080:8080"
+       - "5432:5432"
 
  volumes:
    postgres_data:
@@ -122,7 +122,7 @@
  > Bu komut, belirtilen hizmetleri (PostgreSQL ve Adminer) arka planda çalıştırır.
 
  ##### 5. Veritabanına Erişim
-   - Adminer'i kullanarak veritabanına erişmek için tarayıcıdan `http://localhost:8080` adresine gidilir.
+   - Adminer'i kullanarak veritabanına erişmek için tarayıcıdan `http://localhost:5432` adresine gidilir.
    - Giriş bilgilerini şu şekilde olmalıdır:
      - Sunucu: `postgres`
      - Kullanıcı Adı: `symfony_user`
@@ -163,11 +163,97 @@ php bin/console doctrine:migrations:migrate
 ~~~~~~~
 
 ***
-### Running MySQL Server and Connecting from Symfony | MySQL Sunucusunu Çalıştırma ve Symfony'den Bağlanma
-+
+### Running PostgreSQL Server and Connecting from Symfony | PostgreSQL Sunucusunu Çalıştırma ve Symfony'den Bağlanma
+##### 1. Doctrine ORM'nin Kurulması
++ Öncelikle, Doctrine ORM'yi Symfony projesine eklenmelidir. Bunu yapmak için aşağıdaki komutu çalıştırılmalıdır:
 ~~~~~~~
+composer require symfony/orm-pack
 ~~~~~~~
->
+> Komut çalıştırıldıktan sonra, bazı ek yapılandırmalar yapılması gerekmektedir. `composer require` komutu Docker yapılandırmasını güncellemek için bir öneri sunabilir, bu yapılandırmayı manuel olarak yapılması için sonraki adımların yapılması gerekmektedir.
+
+##### 2. Docker Compose Dosyasının Oluşturulması
++ Symfony projesinin kök dizininde `docker-compose.yml` dosyası oluşturulup aşağıdaki şekilde eklenmelidir.
+~~~~~~~
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:14
+    container_name: my_postgres
+    environment:
+      POSTGRES_DB: symfony_db
+      POSTGRES_USER: symfony_user
+      POSTGRES_PASSWORD: symfony_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  adminer:
+    image: adminer
+    container_name: my_adminer
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:
+~~~~~~~
+ > + `postgres:` PostgreSQL veritabanı sunucusunu çalıştırır.
+ > + `adminer:` Web tabanlı veritabanı yönetim aracı Adminer'ı çalıştırır.
+
+##### 3. Docker Container'larını Başlatma
++ Docker Desktop'ın çalıştığından emin olunmalıdır ve ardından terminalde aşağıdaki komut çalıştırılarak container'ları başlatılmalıdır:
+~~~~~~~
+docker-compose up -d
+~~~~~~~
+> Bu komut, belirtilen hizmetleri (PostgreSQL ve Adminer) arka planda çalıştırır. Bu işlem, imajları indirip konteynerleri başlatacaktır
+
+##### 4. Veritabanına Erişim
+ Adminer'i kullanarak veritabanına erişmek için tarayıcıdan `http://localhost:5432` adresine gidilir.
+   - Giriş bilgilerini şu şekilde olmalıdır:
+     - Sunucu: `postgres`
+     - Kullanıcı Adı: `symfony_user`
+     - Parola: `symfony_pass`
+     - Veritabanı: `symfony_db`
+
+##### 5. Symfony Projesinde Veritabanı Bağlantısının Yapılandırılması
++ Symfony uygulamasının .env dosyasında veritabanı bağlantı bilgileri tanımlanmalıdır.
+~~~~~~~
+DATABASE_URL="postgresql://symfony_user:symfony_pass@127.0.0.1:5432/symfony_db"
+~~~~~~~
+
+##### 6. Doctrine'i Yapılandırma
++ `config/packages/doctrine.yaml` dosyasını açıp aşağıdaki satır eklenmelidir:
+~~~~~~~
+doctrine:
+    dbal:
+        server_version: '16'
+~~~~~~~
+
+##### 7. Veritabanı ve Varlıkların (Entities) Oluşturulması
++ Veritabanını oluşturmak için aşağıdaki komutu çalıştırılmalıdır:
+~~~~~~~
+php bin/console doctrine:database:create
+~~~~~~~
+
++ Yeni bir varlık oluşturmak için:
+~~~~~~~
+php bin/console make:entity
+~~~~~~~
+
++ Veritabanı şemasını oluşturmak veya güncellemek için:
+~~~~~~~
+php bin/console doctrine:migrations:diff
+php bin/console doctrine:migrations:migrate
+~~~~~~~
+
+##### 8. Symfony'nin Bağlantıyı Doğrulaması
++ Symfony uygulamasını çalıştırmak için:
+~~~~~~~
+symfony server:start
+~~~~~~~
+> Ardından tarayıcı açılmalıdır. Profiler'ı kullanarak Doctrine bağlantısının başarılı olup olmadığını kontrol edilebilir. Herhangi bir hata görünmüyorsa, bağlantı başarılı demektir.
 
 ***
 ### Generating and Understanding Entities | Varlıkları Oluşturma ve Anlama 
