@@ -459,10 +459,110 @@ php bin/console doctrine:migrations:migrate --no-interaction
 
 ***
 ### Doctrine Fixtures (Fake Data) | Doctrine Fikstürleri (Sahte Veriler)
-+
++ Doctrine Repositories, veritabanındaki tabloyu temsil eden entity'lere veri eklemek, güncellemek, silmek ve verileri sorgulamak için kullanılır.
+
+##### 1. Repository Sınıfının Tanıtımı
++ Doctrine Repositories, belirli bir entity için veri sorgulama işlemlerini gerçekleştirir.
++ Symfony, entity için otomatik olarak bir repository class'ı oluşturur. Örneğin, `MicroPost` entity'si için `MicroPostRepository` adlı bir class oluşturulur.
+
+###### src/Repository/MicroPostRepository.php
 ~~~~~~~
+<?php
+
+namespace App\Repository;
+
+use App\Entity\MicroPost;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
+
+/**
+ * @extends ServiceEntityRepository<MicroPost>
+ *
+ * @method MicroPost|null find($id, $lockMode = null, $lockVersion = null)
+ * @method MicroPost|null findOneBy(array $criteria, array $orderBy = null)
+ * @method MicroPost[]    findAll()
+ * @method MicroPost[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ */
+class MicroPostRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, MicroPost::class);
+    }
+
+    // Add your custom methods here
+}
 ~~~~~~~
->
++ Bu class, `ServiceEntityRepository` class'ını genişletir ve `MicroPost` entity'si ile ilgili temel veri erişim işlemlerini sağlar. Bu class, veritabanı sorguları için çeşitli önceden tanımlanmış method'lara sahiptir:
+  - `find($id):` Belirtilen ID'ye sahip entity'yi bulur.
+  - `findOneBy(array $criteria):` Belirtilen kriterlere sahip tek bir entity'yi bulur.
+  - `findAll():` Tüm entity'leri döner.
+  - `findBy(array $criteria):` Belirtilen kriterlere sahip entity'leri bulur.
+
+##### 2. Repository Kullanarak Veri Sorgulama
++ `MicroPostRepository` class'ını kullanarak bazı veriler sorgulanabilir. Bu işlemleri gerçekleştirmek için bir controller oluşturulur:
+~~~~~~~
+php bin/console make:controller MicroPostController
+~~~~~~~
+
++ Bu komut, `src/Controller/` klasöründe `MicroPostController.php` adlı yeni bir controller dosyası oluşturacaktır. Bu dosyanın içeriği aşağıdaki gibi düzenlenmelidir:
+~~~~~~~
+<?php
+
+namespace App\Controller;
+
+use App\Repository\MicroPostRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+class MicroPostController extends AbstractController
+{
+    #[Route('/microposts', name: 'app_microposts')]
+    public function index(MicroPostRepository $microPostRepository): Response
+    {
+        // Find all micro posts
+        $microPosts = $microPostRepository->findAll();
+
+        // Render a template and pass the micro posts to it
+        return $this->render('micro_post/index.html.twig', [
+            'micro_posts' => $microPosts,
+        ]);
+    }
+}
+~~~~~~~
++ Yukarıdaki kodda:
+  - `/microposts` rotası tanımlanmıştır.
+  - `MicroPostRepository` dependency injection yoluyla alınmıştır.
+  - Tüm `MicroPost` kayıtları `findAll()` method'u ile sorgulanmış ve bir Twig şablonuna (`micro_post/index.html.twig`) geçirilmiştir.
+
+##### 3. Twig Şablonu Oluşturma
++ `templates/micro_post/index.html.twig` dosyasını oluşturulur ve içeriği aşağıdaki gibi düzenlenir:
+~~~~~~~
+{% extends 'base.html.twig' %}
+
+{% block title %}Micro Posts{% endblock %}
+
+{% block body %}
+    <h1>Micro Posts</h1>
+
+    <ul>
+        {% for microPost in micro_posts %}
+            <li>
+                <strong>{{ microPost.title }}</strong> - {{ microPost.text }} <em>({{ microPost.createdAt|date('Y-m-d H:i') }})</em>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+~~~~~~~
+> Bu şablon, `MicroPost` verilerini listelemek için kullanılır.
+
+##### 4. Uygulamayı Test Etme
++ Symfony sunucusu başlatılır:
+~~~~~~~
+symfony server:start
+~~~~~~~
++ Tarayıcınızda `http://localhost:5432/microposts` adresine gidili ve `MicroPost` verilerinin listelendiği kontrol edilir.
 
 ***
 ### No More Add or Save Method (Symfony 6.3 Changes) | Artık Ekle veya Kaydet Yöntemi Yok (Symfony 6.3 Değişiklikleri)
