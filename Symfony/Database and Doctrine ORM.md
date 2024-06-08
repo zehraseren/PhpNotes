@@ -566,36 +566,155 @@ symfony server:start
 
 ***
 ### No More Add or Save Method (Symfony 6.3 Changes) | Artık Ekle veya Kaydet Yöntemi Yok (Symfony 6.3 Değişiklikleri)
-+
++ Symfony 6.3 framework'ünün versiyonuyla birlikte bazı önemli değişiklikler yapılmıştır ve bunlardan biri de repository class'larındaki `add` veya `save` method'larının kaldırılmasıdır.
++ Öncelikle, yukarıda oluşturulan `MicroPost` entity'sine veri eklemek için kullanılan `AppFixtures` class'ına bir göz atıldığında:
 ~~~~~~~
-~~~~~~~
->
+<?php
 
+namespace App\DataFixtures;
+
+use App\Entity\MicroPost;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Persistence\ObjectManager;
+
+class AppFixtures extends Fixture
+{
+    public function load(ObjectManager $manager): void
+    {
+        $microPost1 = new MicroPost();
+        $microPost1->setTitle('Welcome to Symfony')
+                   ->setText('This is the first post')
+                   ->setCreated(new \DateTime());
+
+        $manager->persist($microPost1);
+
+        $microPost2 = new MicroPost();
+        $microPost2->setTitle('Learning Symfony')
+                   ->setText('This is the second post')
+                   ->setCreated(new \DateTime());
+
+        $manager->persist($microPost2);
+
+        $manager->flush();
+    }
+}
+~~~~~~~
+
+#### Yeni Veritabanı Kaydı Oluşturma
++ Symfony 6.3 ile birlikte  veri eklemek için `EntityManager`'ı kullanılması gerekmektedir. `MicroPost` entity'sine yeni bir kayıt eklemek için bir controller örneği üzerindenv yapılışı:
+  - Öncelikle, `MicroPostController` controller'ı oluşturulsun:
+  ~~~~~~~
+  php bin/console make:controller MicroPostController
+  ~~~~~~~
+  - `MicroPostController.php` dosyasının içeriği aşağıdaki gibi düzenlenir:
+  ~~~~~~~
+  <?php
+
+  namespace App\Controller;
+  
+  use App\Entity\MicroPost;
+  use Doctrine\ORM\EntityManagerInterface;
+  use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+  use Symfony\Component\HttpFoundation\Request;
+  use Symfony\Component\HttpFoundation\Response;
+  use Symfony\Component\Routing\Annotation\Route;
+  
+  class MicroPostController extends AbstractController
+  {
+      #[Route('/micropost/new', name: 'app_micropost_new', methods: ['POST'])]
+      public function new(Request $request, EntityManagerInterface $entityManager): Response
+      {
+          $microPost = new MicroPost();
+          $microPost->setTitle($request->request->get('title'))
+                    ->setText($request->request->get('text'))
+                    ->setCreated(new \DateTime());
+  
+          $entityManager->persist($microPost);
+          $entityManager->flush();
+  
+          return new Response('MicroPost created successfully.');
+      }
+  }
+  ~~~~~~~
+  > `EntityManagerInterface` aracılığıyla `persist` ve `flush` method'ları kullanılarak yeni bir `MicroPost` kaydı eklenir.
+
+#### Mevcut Veritabanı Kaydını Güncelleme
++ Mevcut bir kaydı güncellemek için de benzer bir yaklaşım kullanılır. Ancak burada `persist` method'unu çağırılmasına gerek yoktur; sadece değişiklikleri yapıp `flush` method'unu çağırmak yeterlidir.
++ `MicroPostController` içerisine güncelleme method'u eklendiğinde:
+~~~~~~~
+<?php
+
+namespace App\Controller;
+
+use App\Entity\MicroPost;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+class MicroPostController extends AbstractController
+{
+    #[Route('/micropost/new', name: 'app_micropost_new', methods: ['POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $microPost = new MicroPost();
+        $microPost->setTitle($request->request->get('title'))
+                  ->setText($request->request->get('text'))
+                  ->setCreated(new \DateTime());
+
+        $entityManager->persist($microPost);
+        $entityManager->flush();
+
+        return new Response('MicroPost created successfully.');
+    }
+
+    #[Route('/micropost/{id}/edit', name: 'app_micropost_edit', methods: ['POST'])]
+    public function edit(int $id, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $microPost = $entityManager->getRepository(MicroPost::class)->find($id);
+
+        if (!$microPost) {
+            throw $this->createNotFoundException('No MicroPost found for id '.$id);
+        }
+
+        $microPost->setTitle($request->request->get('title'))
+                  ->setText($request->request->get('text'));
+
+        $entityManager->flush();
+
+        return new Response('MicroPost updated successfully.');
+    }
+}
+~~~~~~~
+
++ 
+~~~~~~~
+~~~~~~~
 ***
 ### Doctrine Repostories (Fetching, Storing, Updating ½ Deleting Data)
-+
++ 
 ~~~~~~~
 ~~~~~~~
 >
 
 ***
 ### No Extra Bundle Needed! (Symfony 6.2 Changes) | Ekstra Pakete Gerek Yok! (Symfony 6.2 Değişiklikleri)
-+
++ 
 ~~~~~~~
 ~~~~~~~
 >
 
 ***
 ### Param Converter (Auto Fetching Entity) | Param Dönüştürücü (Otomatik Getiren Varlık)
-+
++ 
 ~~~~~~~
 ~~~~~~~
 >
 
 ***
-
 ### Project - Getting Posts From Databases | Proje - Veritabanlarından Gönderi Alma
-+
++ 
 ~~~~~~~
 ~~~~~~~
 >
