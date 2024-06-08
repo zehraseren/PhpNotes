@@ -257,17 +257,205 @@ symfony server:start
 
 ***
 ### Generating and Understanding Entities | Varlıkları Oluşturma ve Anlama 
-+
++ Bir entity oluşturulurken, veritabanında bir tabloya karşılık gelecek ve Doctrine ORM tarafından yönetilir.
+
+##### 1. Entity Oluşturma
++ Symfony'nin `make:entity` komutu kullanılarak yeni bir entity oluşturulur. Terminalde aşağıdaki komutu çalıştırılır:
 ~~~~~~~
+php bin/console make:entity
 ~~~~~~~
+
++ Ardından entity için bir isim girilir. Örneğin entity ismi olarak `MicroPost` adını verilsin.
+~~~~~~~
+Class name of the entity to create or update (e.g. BraveCarrot):
+> MicroPost
+~~~~~~~
+> Entity ve repository class'ları otomatik olarak oluşturulacak.
+
+##### 2. Entity İçin Alanlar (Fields) Eklemek
++ Entity'ye bazı alanlar eklenmelidir. `make:entity` komutu sırasıyla bu alanların eklenmesi için rehberlik edecektir:
+  - `title` alanı (string, nullable olamaz)
+  - `text` alanı (string, nullable olabilir)
+  - `created_at` alanı (datetime, nullable olabilir)
+
+###### Örnek girişler: 
+~~~~~~~
+New property name (press <return> to stop adding fields):
+> title
+
+Field type (enter ? to see all types) [string]:
+> string
+
+Field length [255]:
 >
+
+Can this field be null in the database (nullable) (yes/no) [no]:
+> no
+
+New property name (press <return> to stop adding fields):
+> text
+
+Field type (enter ? to see all types) [string]:
+> string
+
+Field length [255]:
+> 1000
+
+Can this field be null in the database (nullable) (yes/no) [no]:
+> yes
+
+New property name (press <return> to stop adding fields):
+> created_at
+
+Field type (enter ? to see all types) [string]:
+> datetime
+
+Can this field be null in the database (nullable) (yes/no) [no]:
+> yes
+
+New property name (press <return> to stop adding fields):
+>
+~~~~~~~
+> Bu adımlar, MicroPost entity'sine `title`, `text` ve `created_at` alanlarını ekler.
+
+##### 3. Entity Dosyasını İncelemek
++ Oluşturulan `MicroPost` entity'sini ìncelendiğinde bu dosya `src/Entity/MicroPost.php` altında bulunur.
+~~~~~~~
+<?php
+
+namespace App\Entity;
+
+use App\Repository\MicroPostRepository;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: MicroPostRepository::class)]
+class MicroPost
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private $id;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private $title;
+
+    #[ORM\Column(type: 'string', length: 1000, nullable: true)]
+    private $text;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private $createdAt;
+
+    // Getters and setters...
+}
+~~~~~~~
+
++ Bu class'ta:
+  - `#[ORM\Entity]:` Class'ın bir entity olduğunu belirtir.
+  - `#[ORM\Id]:` Bu alanın birincil key olduğunu belirtir.
+  - `#[ORM\GeneratedValue]:` Bu alanın otomatik olarak arttırıldığını belirtir.
+  - `#[ORM\Column]:` Bu alanın bir veritabanı kolonu olduğunu belirtir ve tür, uzunluk gibi özellikleri belirler.
+
+##### 4. Migration Oluşturma ve Uygulama
++ Entity class'ını oluşturduktan sonra, veritabanında karşılık gelen tabloyu oluşturmak için bir migration oluşturulmalıdır.
+
+###### Migration oluşturmak için:
+~~~~~~~
+php bin/console make:migration
+~~~~~~~
+
+###### Migration'ı uygulamak için:
+~~~~~~~
+php bin/console doctrine:migrations:migrate
+~~~~~~~
+> Bu komut, yeni bir tablo oluşturacak ve bu tabloya `MicroPost` entity'sinin alanlarını ekleyecektir.
+
+##### 5. Veritabanı Bağlantısını Test Etme
++ Veritabanı bağlantısının çalıştığını doğrulamak için Symfony uygulaması çalıştırılır:
+~~~~~~~
+symfony server:start
+~~~~~~~
+> Uygulama tarayıcıda açılıp Symfony Profiler'ı kontrol edilmelidir. Doctrine bağlantısının başarılı olduğu görülmelidir.
 
 ***
 ### Doctrine Migrations | Doctrine Geçişleri
-+
++ Symfony'de veritabanı değişikliklerini yönetmek ve bu değişiklikleri izlemek için migration'lar kullanılır.
++ Migration'lar, veritabanı şemasındaki değişiklikleri kodla tanımlanmasına olanak tanır ve bu değişiklikleri uygulamak veya geri almak için komutlar sağlar. 
+
+##### 1. Migration Oluşturma
++ Öncelikle, `MicroPost` entity'si için bir migration oluşturulmalıdır. Terminalde aşağıdaki komut çalıştırılmalıdır:
 ~~~~~~~
+php bin/console make:migration
 ~~~~~~~
->
+> Bu komut, migrations klasörü içinde yeni bir migration dosyası oluşturacaktır. Migration dosyasının adı, oluşturulma tarihine ve saatine göre belirlenir.
+
+##### 2. Migration Dosyasını İncelemek
++ `migrations` klasöründeki yeni migration dosyasını açılır. Açılan dosyada `up` ve `down` method'larına sahip bir class içerir.
+  - `up` method'u, migration'ı uygulandığında çalıştırılacak SQL komutlarını içerir.
+  - `down` method'u ise migration'u geri almak için kullanılır.
+
+###### Örnek migration dosyası:
+~~~~~~~
+<?php
+
+declare(strict_types=1);
+
+namespace DoctrineMigrations;
+
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
+
+final class Version20230601123000 extends AbstractMigration
+{
+    public function getDescription(): string
+    {
+        return 'Create the micro_post table';
+    }
+
+    public function up(Schema $schema): void
+    {
+        // this up() migration is auto-generated, please modify it to your needs
+        $this->addSql('CREATE TABLE micro_post (id INT AUTO_INCREMENT NOT NULL, title VARCHAR(255) NOT NULL, text VARCHAR(1000) DEFAULT NULL, created_at DATETIME DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+    }
+
+    public function down(Schema $schema): void
+    {
+        // this down() migration is auto-generated, please modify it to your needs
+        $this->addSql('DROP TABLE micro_post');
+    }
+}
+~~~~~~~
++ Bu dosyada:
+  - `getDescription():` Migration'un ne yaptığını açıklayan bir açıklama döner.
+  - `up(Schema $schema):` Migration'u uygulamak için gereken SQL komutlarını içerir.
+  - `down(Schema $schema):` Migration'u geri almak için gereken SQL komutlarını içerir.
+
+##### 3. Migration'u Uygulama
++ Migration'u uygulamak için aşağıdaki komutu çalıştırılır:
+~~~~~~~
+php bin/console doctrine:migrations:migrate
+~~~~~~~
+> Bu komut, veritabanında belirtilen değişiklikleri uygular. Komut çalıştırıldığında, değişikliklerin uygulanacağını belirten bir uyarı alınır ve "yes" yazarak onaylanır.
+
+##### 4. Migration Durumunu Kontrol Etme
++ Migration'ların durumunu kontrol etmek için aşağıdaki komutu kullanılır:
+~~~~~~~
+php bin/console doctrine:migrations:status
+~~~~~~~
+> Bu komut, mevcut migration'ların durumunu, kaç migration'ın uygulandığını ve kaç tane migration'ın uygulanmayı beklediğini gösterir.
+
+##### 5. Migration'u Geri Alma
++ Eğer bir migration geri almak istenirse aşağıdaki komut kullanılır:
+~~~~~~~
+php bin/console doctrine:migrations:migrate prev
+~~~~~~~
+> Bu komut, son uygulanan migration'ı geri alır. `doctrine:migrations:migrate` komutuna `--help` parametresini eklenerek daha fazla bilgi edinilebilir.
+
+##### 6. Etkileşimsiz Migration
++ Migration'lar etkileşimsiz bir şekilde uygulanmak istenirse, `--no-interaction` parametresi kullanılabilir:
+~~~~~~~
+php bin/console doctrine:migrations:migrate --no-interaction
+~~~~~~~
+> Bu komut, herhangi bir kullanıcı etkileşimi gerektirmeden migration'ları uygular.
 
 ***
 ### Doctrine Fixtures (Fake Data) | Doctrine Fikstürleri (Sahte Veriler)
