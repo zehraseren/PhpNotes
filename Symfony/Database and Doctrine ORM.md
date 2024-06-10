@@ -562,7 +562,7 @@ class MicroPostController extends AbstractController
 ~~~~~~~
 symfony server:start
 ~~~~~~~
-+ Tarayıcınızda `http://localhost:5432/microposts` adresine gidili ve `MicroPost` verilerinin listelendiği kontrol edilir.
++ Tarayıcıda `http://localhost:5432/microposts` adresine gidilir ve `MicroPost` verilerinin listelendiği kontrol edilir.
 
 ***
 ### No More Add or Save Method (Symfony 6.3 Changes) | Artık Ekle veya Kaydet Yöntemi Yok (Symfony 6.3 Değişiklikleri)
