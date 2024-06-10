@@ -43,3 +43,9 @@ $userService->createUser("zehraseren");
 > + `UserService` class'ından bir nesne oluşturulur.
 > + `setLogger` method'u çağrılarak, `Logger` nesnesi `UserService` class'ına enjekte edilir.
 > + `createUser` method'u çağrılır ve `zehraseren` adlı kullanıcı oluşturulur.
+
+###### Özet
++ `Logger` class'ı, mesajları loglamak için kullanılan basit bir class'tır.
++ `UserService` class'ı, kullanıcıları yönetmek için kullanılır ve loglama yapmak için bir `Logger` nesnesine ihtiyaç duyar.
++ Bu örnekte, bağımlılık enjeksiyonu setter method'u kullanılarak yapılmıştır. `setLogger` yöntemi, `Logger` nesnesini `UserService` class'ına enjekte eder.
++ Bağımlılıkları manuel olarak enjekte ederek, `UserService` class'ı, `Logger` nesnesini kullanarak kullanıcı oluşturma işlemini loglar.
