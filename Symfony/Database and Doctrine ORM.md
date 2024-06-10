@@ -688,7 +688,7 @@ class MicroPostController extends AbstractController
 }
 ~~~~~~~
 > Bu örnekte, `id` ile mevcut bir `MicroPost` kaydını buluyor ve güncelleyip flush method'u çağırılarak değişiklikler veritabanına kaydedilir.
-> + [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Symfony/Reading%20Code/Mevcut%20Veritaban%C4%B1%20Kayd%C4%B1n%C4%B1%20G%C3%BCncelleme.md)
+> + [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Symfony/Code%20Reading/Mevcut%20Veritaban%C4%B1%20Kayd%C4%B1n%C4%B1%20G%C3%BCncelleme.md)
 
 > Sonuç olarak, Symfony'nin en son sürümlerinde repository class'larındaki `add` ve `save` method'ları kaldırılmıştır. Bunun yerine, veri eklemek ve güncellemek için doğrudan `EntityManager` kullanması gerekmektedir.
 
@@ -871,10 +871,115 @@ class UserController extends AbstractController
 
 ***
 ### Param Converter (Auto Fetching Entity) | Param Dönüştürücü (Otomatik Getiren Varlık)
-+ 
++ Symfony'nin repository yöntemlerini kullanarak veri almayı ve ParamConverter ile tekil kayıtları basitleştirilebilir.
++ Tüm mikro gönderileri listelemek için index eylemini oluşturulur ve tek bir gönderiyi göstermek için bir eylem eklenir.
+
+##### Tüm Gönderileri Listelemek İçin Index Eylemi
++ İlk olarak, tüm mikro gönderileri alıp listelecek olan index eylemini tanımlanmalıdır.
 ~~~~~~~
+namespace App\Controller;
+
+use App\Repository\MicroPostRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+class MicroPostController extends AbstractController
+{
+    #[Route('/microposts', name: 'micropost_index')]
+    public function index(MicroPostRepository $microPostRepository): Response
+    {
+        $posts = $microPostRepository->findAll();
+
+        // For now, let's dump to see the posts
+         dd($post);
+
+        // Then, a template will be processed with the posts
+        // return $this->render('micropost/index.html.twig', ['posts' => $posts]);
+    }
+}
 ~~~~~~~
->
+> + Burada, index yöntemi tüm mikro gönderileri repository'nin `findAll` method'u kullanarak alır ve ekrana dump eder. Daha sonra, dump şablona dönüştürülür.
+> + `dd($posts)` satırı çalıştırıldığında gönderileri görebilir ve ardından işlem durdurulur. Bu, hata ayıklama işlemini kolaylaştırır.
+
+##### Tek Bir Gönderiyi Göstermek İçin Göster Eylemi
++ Bir tek mikro gönderiyi göstermek için bir eylem eklenir. Gönderiyi manuel olarak ID'ye göre almak yerine, `ParamConverter` işlevselliğini kullanılır.
+~~~~~~~
+use App\Entity\MicroPost;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+class MicroPostController extends AbstractController
+{
+    #[Route('/micropost/{id}', name: 'micropost_show')]
+    public function show(MicroPost $microPost): Response
+    {
+        // Let's dump the micro-post to see the details
+        dd($microPost);
+
+        // Next, a template with micro-post details will be processed
+        // return $this->render('micropost/show.html.twig', ['microPost' => $microPost]);
+    }
+}
+~~~~~~~
+> Burada, eylemin argümanını MicroPost varlığıyla tür belirtilir. ParamConverter sayesinde Symfony otomatik olarak ID'ye göre varlığı alır.
+
+##### Bağımlılıkları İşlemek
++ Geçmişte SensioFrameworkExtraBundle kullanılıyordu, ancak artık kullanılmıyor. Bunun yerine, varlıkların otomatik alınması Symfony'ye entegre edilmiştir.
+~~~~~~~
+composer require symfony/framework-bundle
+~~~~~~~
+> Projenin bu işlevselliğin zaten entegre olduğu en son Symfony sürümünü kullandığından emin olunmalıdır.
+
+##### ParamConverter Kullanımı
++ Varlıkların (enetity'lerin) alınmasını basitleştirir. Tür ipuçlarına dayanarak rota parametrelerini otomatik olarak varlıklara dönüştürür.
+
+##### ParamConverter ile Daha Fazla Özelleştirme
++ ParamConverter'ın varlıkları nasıl alacağı daha da özelleştirebilir. `MapEntity` özniteliği kullanılır. Örneğin, bir alanı ID yerine başlık ile bir varlık almak istenildiğinde:
+~~~~~~~
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
+use Symfony\Component\Routing\Annotation\Route;
+
+class MicroPostController extends AbstractController
+{
+    #[Route('/micropost/title/{title}', name: 'micropost_show_by_title')]
+    public function showByTitle(
+        #[MapEntity(expr: 'repository.findOneByTitle(title)')] MicroPost $microPost
+    ): Response
+    {
+        dd($microPost);
+
+        // return $this->render('micropost/show.html.twig', ['microPost' => $microPost]);
+    }
+}
+~~~~~~~
+> Yukarıdaki örnekte, `MapEntity` özniteliği, varsayılan ID yerine başlığa dayanarak bir MicroPost varlığı alır.
+> + [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Symfony/Code%20Reading/ParamConverter%20ile%20Daha%20Fazla%20%C3%96zelle%C5%9Ftirme%20%C3%96rne%C4%9Fi.md)
+
+##### Otomatik Almayı Devre Dışı Bırakma
++ Belirli argümanlar için otomatik alımı devre dışı bırakmak için, MapEntity özniteliğini devre dışı bırakılmış seçeneği true olarak ayarlanır.
+~~~~~~~
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
+use Symfony\Component\Routing\Annotation\Route;
+
+class UserController extends AbstractController
+{
+    #[Route('/user/{id}', name: 'user_show')]
+    public function show(
+        #[MapEntity(disabled: true)] User $user
+    ): Response
+    {
+        // Get user manually
+        $user = $this->getDoctrine()->getRepository(User::class)->find($user);
+
+        dd($user);
+
+        // return $this->render('user/show.html.twig', ['user' => $user]);
+    }
+}
+~~~~~~~
+> Bu durumda, Symfony otomatik olarak User varlığını almayacak ve almayı manuel olarak işlenebilir.
+> + [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Symfony/Code%20Reading/Otomatik%20Almay%C4%B1%20Devre%20D%C4%B1%C5%9F%C4%B1%20B%C4%B1rakma%20%C3%96rne%C4%9Fi.md)
 
 ***
 ### Project - Getting Posts From Databases | Proje - Veritabanlarından Gönderi Alma
