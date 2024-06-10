@@ -1,4 +1,4 @@
-+ Bu PHP kodu, Symfony framework'ü kullanarak yazılmış bir denetleyici (controller) sınıfını temsil eder.
++ Bu PHP kodu, Symfony framework'ü kullanarak yazılmış bir denetleyici (controller) class'ını temsil eder.
 + Bu controller, `MicroPost` adlı bir entity ilgili işlemleri gerçekleştirmek için çeşitli method'lar içerir.
 + Class ve method'lar daha ayrıntılı incelendiğinde:
 
