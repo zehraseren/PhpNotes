@@ -687,23 +687,187 @@ class MicroPostController extends AbstractController
     }
 }
 ~~~~~~~
+> Bu örnekte, `id` ile mevcut bir `MicroPost` kaydını buluyor ve güncelleyip flush method'u çağırılarak değişiklikler veritabanına kaydedilir.
+> + [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Symfony/Reading%20Code/Mevcut%20Veritaban%C4%B1%20Kayd%C4%B1n%C4%B1%20G%C3%BCncelleme.md)
 
-+ 
-~~~~~~~
-~~~~~~~
+> Sonuç olarak, Symfony'nin en son sürümlerinde repository class'larındaki `add` ve `save` method'ları kaldırılmıştır. Bunun yerine, veri eklemek ve güncellemek için doğrudan `EntityManager` kullanması gerekmektedir.
+
 ***
 ### Doctrine Repostories (Fetching, Storing, Updating ½ Deleting Data)
-+ 
++ Symfony framework'ünde her bir entity için bir repository class'ı bulunur. Bu repository class'ları, veritabanı tablosundaki verilerin yönetilmesine yardımcı olur ve SQL sorgularını elle yazma zorunluluğunu ortadan kaldırarak veri katmanına erişimi soyutlar.
++ Repository'ler, Doctrine ORM tarafından sağlanan hazır method'lar içerir. Bu method'lar sayesinde veri ekleme, silme, güncelleme ve sorgulama işlemleri kolaylıkla yapılabilir.
+
+##### 1. Repository'e Erişim
++ Symfony'de bir repository'e erişmek için `dependency injection` kullanılır. Dependency injection, bir class'ın bağımlılıklarını dışarıdan almasını sağlar. Bu sayede repository class'larına kolayca erişebilir.
+
+###### MicroPostController.php
 ~~~~~~~
+<?php
+
+namespace App\Controller;
+
+use App\Entity\MicroPost;
+use App\Repository\MicroPostRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+class MicroPostController extends AbstractController
+{
+    #[Route('/microposts', name: 'app_micropost_index')]
+    public function index(MicroPostRepository $microPostRepository): Response
+    {
+        $microPosts = $microPostRepository->findAll();
+
+        // Dump and Die to show the data
+        dd($microPosts);
+
+        return new Response('Check the debug output.');
+    }
+}
 ~~~~~~~
->
+> Bu örnekte, `index` method'unda `MicroPostRepository`'i dependency injection ile alır. Bu sayede `findAll` method'u kullanarak tüm `MicroPost` kayıtlarını getirilebilir.
+
+##### 2. Veri Ekleme
++ Symfony'nin yeni sürümlerinde repository class'larındaki `add` ve `save` method'ları kaldırılmıştır. Bunun yerine, veriyi eklemek için `EntityManager` kullanılması gerekmektedir.
+~~~~~~~
+<?php
+
+namespace App\Controller;
+
+use App\Entity\MicroPost;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+class MicroPostController extends AbstractController
+{
+    #[Route('/micropost/new', name: 'app_micropost_new', methods: ['POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $microPost = new MicroPost();
+        $microPost->setTitle($request->request->get('title'))
+                  ->setText($request->request->get('text'))
+                  ->setCreated(new \DateTime());
+
+        $entityManager->persist($microPost);
+        $entityManager->flush();
+
+        return new Response('MicroPost created successfully.');
+    }
+}
+~~~~~~~
+> Yukarıdaki örnekte, yeni bir `MicroPost` entity'si oluşturulmakta ve `persist` ve `flush` method'ları kullanılarak veritabanına eklenmektedir.
+
+##### 3. Veri Güncelleme
++ Mevcut bir veriyi güncellemek için `EntityManager` kullanarak veriyi bulup, gerekli değişiklikleri yaptıktan sonra `flush` method'unun çağırılması yeterlidir.
+~~~~~~~
+<?php
+
+namespace App\Controller;
+
+use App\Entity\MicroPost;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+class MicroPostController extends AbstractController
+{
+    #[Route('/micropost/{id}/edit', name: 'app_micropost_edit', methods: ['POST'])]
+    public function edit(int $id, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $microPost = $entityManager->getRepository(MicroPost::class)->find($id);
+
+        if (!$microPost) {
+            throw $this->createNotFoundException('No MicroPost found for id '.$id);
+        }
+
+        $microPost->setTitle($request->request->get('title'))
+                  ->setText($request->request->get('text'));
+
+        $entityManager->flush();
+
+        return new Response('MicroPost updated successfully.');
+    }
+}
+~~~~~~~
+> Yukarıdaki örnekte, `id` ile mevcut bir `MicroPost` kaydı bulunur ve güncellenip `flush` method'u ile veritabanına kaydedilir.
+
+##### 4. Veri Silme
++ Bir kaydı silmek için de `EntityManager` kullanarak veriyi bulup `remove` ve `flush` method'larını çağırılması gerekmektedir.
+~~~~~~~
+<?php
+
+namespace App\Controller;
+
+use App\Entity\MicroPost;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+class MicroPostController extends AbstractController
+{
+    #[Route('/micropost/{id}/delete', name: 'app_micropost_delete', methods: ['DELETE'])]
+    public function delete(int $id, EntityManagerInterface $entityManager): Response
+    {
+        $microPost = $entityManager->getRepository(MicroPost::class)->find($id);
+
+        if (!$microPost) {
+            throw $this->createNotFoundException('No MicroPost found for id '.$id);
+        }
+
+        $entityManager->remove($microPost);
+        $entityManager->flush();
+
+        return new Response('MicroPost deleted successfully.');
+    }
+}
+~~~~~~~
+> Yukarıdaki örnekte, `id` ile mevcut bir `MicroPost` kaydı bulunur ve `remove` ve `flush` method'ları ile veritabanından silinir.
 
 ***
 ### No Extra Bundle Needed! (Symfony 6.2 Changes) | Ekstra Pakete Gerek Yok! (Symfony 6.2 Değişiklikleri)
-+ 
++ Symfony 6.2 ile tanıtılan bu yeni özellik, rotada bir entity class'ını type hint yaparak Symfony'nin otomatik olarak veritabanından bu nesneyi ID ile getirmesini sağlar. Dolayısıyla, ekstra bir paket kurulmasına gereken kalmaz, bu işlevsellik artık Symfony'nin yerleşik bir özelliğidir.
 ~~~~~~~
+use App\Entity\MicroPost;
+use Symfony\Component\Routing\Annotation\Route;
+
+class MicroPostController extends AbstractController
+{
+    #[Route('/micropost/{id}', name: 'micropost_show')]
+    public function show(MicroPost $microPost): Response
+    {
+        // Symfony automatically fetches the MicroPost object with ID.
+        return new Response('Title: ' . $microPost->getTitle());
+    }
+}
 ~~~~~~~
->
+
+##### `MapEntity` Özelliği
++ Yeni `mapEntity` özelliği, bu otomatik getirme işlevselliğini nasıl yapılandırabileceği ve hatta belirli durumlarda devre dışı bırakabileceğini sağlar. Örneğin, bir kullanıcı farklı bir şekilde getirmek istendiği durumlarda bu özellik kullanılabilir.
+~~~~~~~
+use App\Entity\User;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
+use Symfony\Component\Routing\Annotation\Route;
+
+class UserController extends AbstractController
+{
+    #[Route('/user/{id}', name: 'user_show')]
+    public function show(
+        #[MapEntity(disabled: true)] User $user
+    ): Response
+    {
+        // In this case, $user is not fetched automatically.
+        // You can fetch the $user object manually.
+    }
+}
+~~~~~~~
 
 ***
 ### Param Converter (Auto Fetching Entity) | Param Dönüştürücü (Otomatik Getiren Varlık)
