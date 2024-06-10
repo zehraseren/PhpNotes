@@ -980,13 +980,3 @@ class UserController extends AbstractController
 ~~~~~~~
 > Bu durumda, Symfony otomatik olarak User varlığını almayacak ve almayı manuel olarak işlenebilir.
 > + [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Symfony/Code%20Reading/Otomatik%20Almay%C4%B1%20Devre%20D%C4%B1%C5%9F%C4%B1%20B%C4%B1rakma%20%C3%96rne%C4%9Fi.md)
-
-***
-### Project - Getting Posts From Databases | Proje - Veritabanlarından Gönderi Alma
-+ 
-~~~~~~~
-~~~~~~~
->
-
-
-
