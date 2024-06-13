@@ -18,8 +18,7 @@ class MicroPostController extends AbstractController
         #[MapEntity(expr: 'repository.findOneByTitle(title)')] MicroPost $microPost
     ): Response
     {
-        dump($microPost);
-        die;
+        dd($microPost);
 
         // return $this->render('micropost/show.html.twig', ['microPost' => $microPost]);
     }
@@ -57,5 +56,5 @@ public function showByTitle(
 ###### Özet
 + Bu controller, belirli bir başlığa (`title`) göre `MicroPost` varlığını veri tabanından bulur ve onu görüntülemek için kullanır.
 + Symfony'nin `MapEntity` özelliği kullanılarak, `title` parametresi ile veri tabanında arama yapılır ve sonuç doğrudan `MicroPost` nesnesine eşlenir.
-+ `dd()`, `MicroPost` nesnesini ekrana dökerek hata ayıklama amacıyla kullanılır.
++ `dd(microPost)`, `MicroPost` nesnesini ekrana dökerek hata ayıklama amacıyla kullanılır.
 + Yoruma alınmış render ifadesi, `MicroPost` verisini bir Twig şablonunda görüntülemek için kullanılır.
