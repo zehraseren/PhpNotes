@@ -13,7 +13,7 @@
   - Redis
   - MongoDB
 
-+ İlişkisel veritabanları, tablolar etrafında yapılandırılmıştır ve bu tablolar sütunlardan oluşur. Her sütun belirli bir veri türüne sahiptir. Örneğin, bir blog gönderisini temsil etmek istiyorsanız, bir `blog_posts` tablosu oluşturulur. Bu tablo şu sütunlara sahip olabilir:
++ İlişkisel veritabanları, tablolar etrafında yapılandırılmıştır ve bu tablolar sütunlardan oluşur. Her sütun belirli bir veri türüne sahiptir. Örneğin, bir blog gönderisini oluşturulmak istenirse, bir `blog_posts` tablosu oluşturulur. Bu tablo şu sütunlara sahip olabilir:
   - title
   - content
   - created_at
@@ -22,7 +22,7 @@
 
 #### SQL ve Symfony'de Doctrine ORM
 + İlişkisel veritabanları ile çalışmak için SQL bilinmesi gerekmektedir. SQL'i bilmek kesinlikle faydalıdır, ancak Symfony ile çalışırken SQL'i çok iyi bilinmesine gerek yoktur. Bunun yerine, Symfony'de veritabanı ile etkileşime geçmek için Doctrine ORM (Object-Relational Mapping) kullanılır.
-+ Doctrine ORM, Symfony uygulamaları için varsayılan nesne-ilişkisel haritalama aracıdır. ORM'nin amacı, veritabanı ile nesne yönelimli programlama arasında bir köprü kurmaktır. Başka bir deyişle, `veritabanı tablolarını PHP class'larına ve sütunları PHP class alanlarına (properties) eşler.`
++ Doctrine ORM, Symfony uygulamaları için varsayılan nesne-ilişkisel haritalama aracıdır. ORM'nin amacı, veritabanı ile nesne yönelimli programlama arasında bir köprü kurmaktır. Başka bir deyişle, `veritabanı tablolarını PHP class'larına, sütunları PHP class alanlarına (properties) eşler.`
 + Doctrine ORM'nin çalışma mantığı şu şekildedir:
   - Her veritabanı tablosu için bir PHP class'ı oluşturulur.
   - Bu class'lar içinde tablo sütunlarını temsil eden alanlar bulunur.
@@ -41,16 +41,16 @@
  > + `db_user:` Veritabanı kullanıcı adı
  > + `db_password:` Veritabanı şifresi
  > + `127.0.0.1:` Veritabanı sunucusunun adresi
- > + `3306:` Veritabanı sunucusunun portu
+ > + `5432:` Veritabanı sunucusunun portu
  > + `db_name:` Kullanılacak veritabanının adı
  
- 3. `Doctrine Kurulumu:` Doctrine'i projeye dahil etmek için aşağıdaki komutu çalıştırılmalıdır.
+ 3. `Doctrine Kurulumu:` Doctrine'i projeye dahil etmek için aşağıdaki komut çalıştırılmalıdır.
  ~~~~~~~
  composer require symfony/orm-pack
  composer require --dev symfony/maker-bundle
  ~~~~~~~
  
- 4. `Veritabanı Yapılandırması:` Veritabanını oluşturmak ve yapılandırmak için aşağıdaki komutları kullanılmalıdır:
+ 4. `Veritabanı Yapılandırması:` Veritabanını oluşturmak ve yapılandırmak için aşağıdaki komutlar kullanılmalıdır.
  ~~~~~~~
  php bin/console doctrine:database:create
  php bin/console make:entity
@@ -64,9 +64,9 @@
 ![Docker@2x](https://github.com/zehraseren/PhpNotes/assets/94180168/7c5cbb94-2798-4b0a-98c6-12a8cab7d6b5)
 
 #### Docker nedir?
-+ Docker, uygulamaları izole edilmiş ortamlarda (konteynerlerde) çalıştırılmasını sağlayan bir platformdur. Docker'ın temel bileşenleri şunlardır:
++ Docker, uygulamaları izole edilmiş ortamlarda (container'larda) çalıştırılmasını sağlayan bir platformdur. Docker'ın temel bileşenleri şunlardır:
   - `Image:` Belirli bir uygulamayı çalıştırmak için gereken her şeyi tanımlayan dosyalardır. Örneğin, bir MySQL veya PostgreSQL sunucusu çalıştırmak için önceden oluşturulmuş imajlar vardır.
-  - `Container:` İmajları kullanarak oluşturulan ve çalışan izole edilmiş ortamlardır. Bir imaj bir class'a benzetilebilirken, container bu class'ı bir örneği gibidir.
+  - `Container:` İmajları kullanarak oluşturulan ve çalışan izole edilmiş ortamlardır. Bir imaj bir class'a benzetilebilirken, container bu class'ın bir örneği gibidir.
 
 #### Docker'ın Avantajları
 + `İzolasyon:` Her uygulama izole edilmiş bir ortamda çalışır, bu nedenle birbirleriyle veya ana işletim sistemiyle çakışmazlar.
@@ -114,7 +114,7 @@
  > + `adminer:` Web tabanlı veritabanı yönetim aracı Adminer'ı çalıştırır.
  
  ##### 4. Docker Compose ile Konteynerleri Başlatma
-   - Termali açılır, proje dizini girilir.
+   - Termal açılır, proje dizini girilir.
    - Aşağıdaki komut ile container'ler başlatılır.
  ~~~~~~~
  docker-compose up -d
@@ -132,7 +132,7 @@
 
 #### Symfony ile Veritabanı Bağlantısı
 1. Symfony Projesinde `.env` Dosyasını Düzenleme
-+ Symfony projen'n kök dizinindeki `.env` dosyasında aşağıdaki gösterilen satır düzenlenmelidir:
++ Symfony projesinin kök dizinindeki `.env` dosyasında aşağıdaki gösterilen satır düzenlenmelidir:
 ~~~~~~~
 DATABASE_URL="postgresql://symfony_user:symfony_pass@127.0.0.1:5432/symfony_db"
 ~~~~~~~
@@ -203,22 +203,22 @@ volumes:
  > + `adminer:` Web tabanlı veritabanı yönetim aracı Adminer'ı çalıştırır.
 
 ##### 3. Docker Container'larını Başlatma
-+ Docker Desktop'ın çalıştığından emin olunmalıdır ve ardından terminalde aşağıdaki komut çalıştırılarak container'ları başlatılmalıdır:
++ Docker Desktop'ın çalıştığından emin olunmalıdır ve ardından terminalde aşağıdaki komut çalıştırılarak container'lar başlatılmalıdır:
 ~~~~~~~
 docker-compose up -d
 ~~~~~~~
-> Bu komut, belirtilen hizmetleri (PostgreSQL ve Adminer) arka planda çalıştırır. Bu işlem, imajları indirip konteynerleri başlatacaktır
+> Bu komut, belirtilen hizmetleri (PostgreSQL ve Adminer) arka planda çalıştırır. Bu işlem, imajları indirip container'ları başlatacaktır.
 
 ##### 4. Veritabanına Erişim
- Adminer'i kullanarak veritabanına erişmek için tarayıcıdan `http://localhost:5432` adresine gidilir.
-   - Giriş bilgilerini şu şekilde olmalıdır:
-     - Sunucu: `postgres`
-     - Kullanıcı Adı: `symfony_user`
-     - Parola: `symfony_pass`
-     - Veritabanı: `symfony_db`
++ Adminer'ı kullanarak veritabanına erişmek için tarayıcıdan `http://localhost:5432` adresine gidilir.
++ Giriş bilgilerini şu şekilde olmalıdır:
+  - Sunucu: `postgres`
+  - Kullanıcı Adı: `symfony_user`
+  - Parola: `symfony_pass`
+  - Veritabanı: `symfony_db`
 
 ##### 5. Symfony Projesinde Veritabanı Bağlantısının Yapılandırılması
-+ Symfony uygulamasının .env dosyasında veritabanı bağlantı bilgileri tanımlanmalıdır.
++ Symfony uygulamasının `.env` dosyasında veritabanı bağlantı bilgileri tanımlanmalıdır.
 ~~~~~~~
 DATABASE_URL="postgresql://symfony_user:symfony_pass@127.0.0.1:5432/symfony_db"
 ~~~~~~~
@@ -260,7 +260,7 @@ symfony server:start
 + Bir entity oluşturulurken, veritabanında bir tabloya karşılık gelecek ve Doctrine ORM tarafından yönetilir.
 
 ##### 1. Entity Oluşturma
-+ Symfony'nin `make:entity` komutu kullanılarak yeni bir entity oluşturulur. Terminalde aşağıdaki komutu çalıştırılır:
++ Symfony'nin `make:entity` komutu kullanılarak yeni bir entity oluşturulur. Terminalde aşağıdaki komut çalıştırılır:
 ~~~~~~~
 php bin/console make:entity
 ~~~~~~~
@@ -319,7 +319,7 @@ New property name (press <return> to stop adding fields):
 > Bu adımlar, MicroPost entity'sine `title`, `text` ve `created_at` alanlarını ekler.
 
 ##### 3. Entity Dosyasını İncelemek
-+ Oluşturulan `MicroPost` entity'sini ìncelendiğinde bu dosya `src/Entity/MicroPost.php` altında bulunur.
++ Oluşturulan `MicroPost` entity'si ìncelendiğinde bu dosya `src/Entity/MicroPost.php` altında bulunur.
 ~~~~~~~
 <?php
 
@@ -500,12 +500,12 @@ class MicroPostRepository extends ServiceEntityRepository
   - `findBy(array $criteria):` Belirtilen kriterlere sahip entity'leri bulur.
 
 ##### 2. Repository Kullanarak Veri Sorgulama
-+ `MicroPostRepository` class'ını kullanarak bazı veriler sorgulanabilir. Bu işlemleri gerçekleştirmek için bir controller oluşturulur:
++ `MicroPostRepository` class'ını kullanarak bazı veriler sorgulanabilir. Bu işlemleri gerçekleştirmek için bir controller oluşturulur.
 ~~~~~~~
 php bin/console make:controller MicroPostController
 ~~~~~~~
 
-+ Bu komut, `src/Controller/` klasöründe `MicroPostController.php` adlı yeni bir controller dosyası oluşturacaktır. Bu dosyanın içeriği aşağıdaki gibi düzenlenmelidir:
++ Bu komut, `src/Controller/` klasöründe `MicroPostController.php` adlı yeni bir controller dosyası oluşturur. Bu dosyanın içeriği aşağıdaki gibi düzenlenmelidir:
 ~~~~~~~
 <?php
 
@@ -533,7 +533,7 @@ class MicroPostController extends AbstractController
 ~~~~~~~
 + Yukarıdaki kodda:
   - `/microposts` rotası tanımlanmıştır.
-  - `MicroPostRepository` dependency injection yoluyla alınmıştır.
+  - `MicroPostRepository` [dependency injection](https://github.com/zehraseren/PhpNotes/blob/main/Symfony/Dependency%20Injection.md) yoluyla alınmıştır.
   - Tüm `MicroPost` kayıtları `findAll()` method'u ile sorgulanmış ve bir Twig şablonuna (`micro_post/index.html.twig`) geçirilmiştir.
 
 ##### 3. Twig Şablonu Oluşturma
@@ -545,7 +545,6 @@ class MicroPostController extends AbstractController
 
 {% block body %}
     <h1>Micro Posts</h1>
-
     <ul>
         {% for microPost in micro_posts %}
             <li>
@@ -558,7 +557,7 @@ class MicroPostController extends AbstractController
 > Bu şablon, `MicroPost` verilerini listelemek için kullanılır.
 
 ##### 4. Uygulamayı Test Etme
-+ Symfony sunucusu başlatılır:
++ Symfony sunucusu başlatılır.
 ~~~~~~~
 symfony server:start
 ~~~~~~~
@@ -675,7 +674,7 @@ class MicroPostController extends AbstractController
         $microPost = $entityManager->getRepository(MicroPost::class)->find($id);
 
         if (!$microPost) {
-            throw $this->createNotFoundException('No MicroPost found for id '.$id);
+            throw $this->createNotFoundException('No MicroPost found for id: '.$id);
         }
 
         $microPost->setTitle($request->request->get('title'))
@@ -687,7 +686,7 @@ class MicroPostController extends AbstractController
     }
 }
 ~~~~~~~
-> Bu örnekte, `id` ile mevcut bir `MicroPost` kaydını buluyor ve güncelleyip flush method'u çağırılarak değişiklikler veritabanına kaydedilir.
+> Bu örnekte, `id` ile mevcut bir `MicroPost` kaydı bulunur ve güncelleyip flush method'u çağırılarak değişiklikler veritabanına kaydedilir.
 > + [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Symfony/Code%20Reading/Mevcut%20Veritaban%C4%B1%20Kayd%C4%B1n%C4%B1%20G%C3%BCncelleme.md)
 
 > Sonuç olarak, Symfony'nin en son sürümlerinde repository class'larındaki `add` ve `save` method'ları kaldırılmıştır. Bunun yerine, veri eklemek ve güncellemek için doğrudan `EntityManager` kullanması gerekmektedir.
@@ -784,7 +783,7 @@ class MicroPostController extends AbstractController
         $microPost = $entityManager->getRepository(MicroPost::class)->find($id);
 
         if (!$microPost) {
-            throw $this->createNotFoundException('No MicroPost found for id '.$id);
+            throw $this->createNotFoundException('No MicroPost found for id: '.$id);
         }
 
         $microPost->setTitle($request->request->get('title'))
@@ -850,7 +849,7 @@ class MicroPostController extends AbstractController
 ~~~~~~~
 
 ##### `MapEntity` Özelliği
-+ Yeni `mapEntity` özelliği, bu otomatik getirme işlevselliğini nasıl yapılandırabileceği ve hatta belirli durumlarda devre dışı bırakabileceğini sağlar. Örneğin, bir kullanıcı farklı bir şekilde getirmek istendiği durumlarda bu özellik kullanılabilir.
++ Yeni `mapEntity` özelliği, bu otomatik getirme işlevselliğini nasıl yapılandırabileceği ve hatta belirli durumlarda devre dışı bırakabileceğini sağlar. Örneğin, bir kullanıcı farklı bir şekilde getirilmek istendiği durumlarda bu özellik kullanılabilir.
 ~~~~~~~
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
@@ -868,10 +867,10 @@ class UserController extends AbstractController
     }
 }
 ~~~~~~~
-
+> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Symfony/Code%20Reading/mapEntity.md)
 ***
 ### Param Converter (Auto Fetching Entity) | Param Dönüştürücü (Otomatik Getiren Varlık)
-+ Symfony'nin repository yöntemlerini kullanarak veri almayı ve ParamConverter ile tekil kayıtları basitleştirilebilir.
++ Symfony'nin repository method'larını kullanılarak veri almayı ve ParamConverter ile tekil kayıtları basitleştirilebilir.
 + Tüm mikro gönderileri listelemek için index eylemini oluşturulur ve tek bir gönderiyi göstermek için bir eylem eklenir.
 
 ##### Tüm Gönderileri Listelemek İçin Index Eylemi
@@ -899,7 +898,7 @@ class MicroPostController extends AbstractController
     }
 }
 ~~~~~~~
-> + Burada, index yöntemi tüm mikro gönderileri repository'nin `findAll` method'u kullanarak alır ve ekrana dump eder. Daha sonra, dump şablona dönüştürülür.
+> + Burada, index method'u tüm mikro gönderileri repository'nin `findAll` method'u kullanarak alır ve ekrana dump eder (yani döker). Daha sonra, dump şablona dönüştürülür.
 > + `dd($posts)` satırı çalıştırıldığında gönderileri görebilir ve ardından işlem durdurulur. Bu, hata ayıklama işlemini kolaylaştırır.
 
 ##### Tek Bir Gönderiyi Göstermek İçin Göster Eylemi
@@ -925,14 +924,14 @@ class MicroPostController extends AbstractController
 > Burada, eylemin argümanını MicroPost varlığıyla tür belirtilir. ParamConverter sayesinde Symfony otomatik olarak ID'ye göre varlığı alır.
 
 ##### Bağımlılıkları İşlemek
-+ Geçmişte SensioFrameworkExtraBundle kullanılıyordu, ancak artık kullanılmıyor. Bunun yerine, varlıkların otomatik alınması Symfony'ye entegre edilmiştir.
++ Geçmişte SensioFrameworkExtraBundle kullanılıyordu ancak artık kullanılmamaktadır. Bunun yerine, varlıkların otomatik alınması Symfony'ye entegre edilmiştir.
 ~~~~~~~
 composer require symfony/framework-bundle
 ~~~~~~~
 > Projenin bu işlevselliğin zaten entegre olduğu en son Symfony sürümünü kullandığından emin olunmalıdır.
 
 ##### ParamConverter Kullanımı
-+ Varlıkların (enetity'lerin) alınmasını basitleştirir. Tür ipuçlarına dayanarak rota parametrelerini otomatik olarak varlıklara dönüştürür.
++ Varlıkların (entity'lerin) alınmasını basitleştirir. Tür ipuçlarına dayanarak rota parametrelerini otomatik olarak varlıklara dönüştürür.
 
 ##### ParamConverter ile Daha Fazla Özelleştirme
 + ParamConverter'ın varlıkları nasıl alacağı daha da özelleştirebilir. `MapEntity` özniteliği kullanılır. Örneğin, bir alanı ID yerine başlık ile bir varlık almak istenildiğinde:
