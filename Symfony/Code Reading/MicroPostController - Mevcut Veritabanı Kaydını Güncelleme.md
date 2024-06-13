@@ -54,7 +54,7 @@ public function edit(int $id, Request $request, EntityManagerInterface $entityMa
     $microPost = $entityManager->getRepository(MicroPost::class)->find($id);
 
     if (!$microPost) {
-        throw $this->createNotFoundException('No MicroPost found for id '.$id);
+        throw $this->createNotFoundException('No MicroPost found for id: '.$id);
     }
 
     $microPost->setTitle($request->request->get('title'))
