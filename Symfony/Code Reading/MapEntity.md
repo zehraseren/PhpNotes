@@ -78,3 +78,9 @@ public function show(
 > + `$this->getDoctrine()->getRepository(User::class)->find($user)`: Bu ifade, belirtilen ID'ye göre `User` varlığını veri tabanından getirir.
 > + `dd($user)`: Bu ifade, `User` nesnesini ekrana döker ve ardından betiği durdurur, hata ayıklama amacıyla kullanılır.
 > + Yoruma alınmış `return` ifadesi, `User` verisini bir Twig şablonunda görüntülemek için kullanılır.
+
+###### Özet
++ Bu controller, belirli bir ID'ye (`id`) göre `User` varlığını veri tabanından manuel olarak bulur.
++ `MapEntity` özelliği kullanılarak otomatik varlık eşlemesi devre dışı bırakılmıştır (`disabled: true`), bu nedenle varlık manuel olarak alınmalıdır.
++ Manuel olarak varlık getirilmesi, Doctrine `Repository` veya `EntityManager` kullanılarak yapılır.
++ Bu yapı, Symfony'nin güçlü yönlendirme ve veri tabanı entegrasyon özelliklerini kullanarak dinamik veri sorgulama ve görüntüleme işlemlerini esnek bir şekilde gerçekleştirme olanağı sağlar.
