@@ -19,14 +19,14 @@
 1. `Kullanıcı Tarayıcı İsteği:` Etkileşim, kullanıcının Symfony uygulamasında bir web sayfasını görüntülemek veya bir işlem gerçekleştirmek için web tarayıcısından bir istek göndermesiyle başlar.
 2. `HTTP Sunucusu:` İstek, uzaktaki bir fiziksel sunucuda çalışan bir HTTP sunucusu (örneğin, Apache veya Nginx) tarafından alınır. HTTP sunucusunun görevi gelen istekleri işlemek ve bunları PHP ikilisine iletmektir.
 3. `PHP İkilisi:` HTTP sunucusu, isteği Symfony uygulamasının kodunu çalıştırmakla sorumlu olan PHP ikilisine iletilir. Uygulamanın yürütülmesinin başlangıç noktası genellikle `index.php` dosyasıdır.
-4. `Yönlendirme:` İçsel olarak, Symfony uygulaması her gelen isteği nasıl ele alacağını belirlemek için yönlendirme adı verilen bir mekanizma kullanır. Yönlendirme, isteğin URL'sini belirli bir denetleyici eylemine eşler.
-5. `Denetleyici:` Yönlendirme sistemi, istek için uygun denetleyici eylemini belirlediğinde, denetleyici, isteği işlemek ve bir yanıt oluşturmakla sorumludur. Denetleyiciler, uygulamanın ana operatörleri olarak hizmet verir ve veritabanından veri almak, form gönderimlerini işlemek ve HTML çıktısı oluşturmak için şablonları işleyebilirler.
-6. `Yanıt Oluşturma:` Denetleyici, HTML, JSON veya XML gibi çeşitli biçimlerde olabilen bir yanıt oluşturur. Yanıt, uygulama tarafından oluşturulan dinamik içeriği, yanıt başlıklarını ve çerezleri içerebilir.
+4. `Yönlendirme:` İçsel olarak, Symfony uygulaması her gelen isteği nasıl ele alacağını belirlemek için yönlendirme adı verilen bir mekanizma kullanır. Yönlendirme, isteğin URL'ni belirli bir denetleyici eylemine eşler.
+5. `Controller | Denetleyici:` Yönlendirme sistemi, istek için uygun denetleyici eylemini belirlediğinde, denetleyici, isteği işlemek ve bir yanıt oluşturmakla sorumludur. Denetleyiciler, uygulamanın ana operatörleri olarak hizmet verir ve veritabanından veri almak, form gönderimlerini işlemek ve HTML çıktısı oluşturmak için şablonları işleyebilirler.
+6. `Yanıt Oluşturma:` Controller, HTML, JSON veya XML gibi çeşitli biçimlerde olabilen bir yanıt oluşturur. Yanıt, uygulama tarafından oluşturulan dinamik içeriği, yanıt başlıklarını ve çerezleri içerebilir.
 7. `HTTP Sunucusu Yanıtı:` Oluşturulan yanıt, HTTP sunucusuna geri gönderilir, ardından kullanıcının web tarayıcısına iletilir. Yanıt, istenen içeriğin yanı sıra herhangi ek HTTP başlıkları, çerezler veya durum kodları içerebilir.
 
 ***
 ### Controllers - Returning a Response | Denetleyici - Yanıt Döndürme 
-+ Symfony uygulamasında her isteğin controllers tarafından işlenir.
++ Symfony uygulamasında her istek controllers tarafından işlenir.
 + Controller, `src/controller` klasöründe bulunur.
 > `HelloController.php` adında bir dosya oluşturulsun.
 
@@ -42,7 +42,7 @@
     }
 }
 ~~~~~~~
-+ Controller dosyası için namespace `App\Controller` olmalıdır. Controller dosyasında namespace'i tanımlanır:
++ Controller dosyası için namespace `App\Controller` olmalıdır. Controller dosyasında namespace tanımlanır.
 
 ###### HelloController.php
 ~~~~~~~
@@ -62,7 +62,7 @@ class HelloController
 ~~~~~~~
 
 ##### 2. Yönlendirme (Routing) Tanımlama
-+ Controller'in çalışması için routing yapılandırmak gerekir. Routing, hangi URL'nin hangi controller eylemine yönlendirileceğini belirler. Bu yapılandırma `config/routes.yaml` dosyasında yapılır.
++ Controller'in çalışması için routing yapılandırması gerekmektedir. Routing, hangi URL'in hangi controller eylemine yönlendirileceğini belirler. Bu yapılandırma `config/routes.yaml` dosyasında yapılır.
 ~~~~~~~
 hello:
     path: /
@@ -70,20 +70,20 @@ hello:
 ~~~~~~~
 
 ##### 3. Projeyi Çalıştırma
-+ Değişiklik kaydedilip tarayıcıda ana sayfa refresh edilince ekranda `Hello` metnini gözükür.
++ Değişiklik kaydedilip tarayıcıda ana sayfa refresh edilince ekranda `Hello` metni gözükür.
   - PHP class'ı dosya adı class adı ile aynı olmalıdır.
   - Bir dosyada birden fazla class tanımlanmamalıdır.
   - PHP'nin en son sürümlerinde, her fonksiyon veya method'un dönüş türü belirtilmelidir.
   
 ###### Mevcut Yönlendirmeleri Görüntüleme
-> Uygulamanda tanımlı mevcut yönlendirmeleri ve hangi controller'in çağrıldığını görmek için `symfony console debug:router` komutunu çalıştırılır. Bu komut, uygulamada tanımlı tüm yönlendirmeleri ve controller'ı listeler:
+> Uygulamanda tanımlı mevcut yönlendirmeleri ve hangi controller'in çağrıldığını görmek için `symfony console debug:router` komutu kullanılır. Bu komut, uygulamada tanımlı tüm yönlendirmeleri ve controller'ı listeler.
 
 ***
 ### Routing Using PHP 8 Attributes
-+ Controller'da yazılan aksiyonun istek atabilmek için bir rota tanımlama yapılması gerekmektedir. Rotaları, `routes.yaml` dosyasında tanımlanır. Ancak bunun için daha daha iyi bir yol bulunmaktadır. Böylece ya anotasyonları ya da PHP 8'den itibaren yerleşik olarak gelen özellikleri (attributes) kullanılablir.
++ Controller'da yazılan aksiyonun istek atabilmek için bir rota tanımlama yapılması gerekmektedir. Rotaları, `routes.yaml` dosyasında tanımlanır. Ancak bunun için daha daha iyi bir yol bulunmaktadır. Böylece ya anotasyonları ya da PHP 8'den itibaren yerleşik olarak gelen özellikleri (attributes) kullanılabilir.
 
 #### Özelliklerle (Attributes) Rota Tanımlama
-+ Özellikler ve anotasyonlar aynı şekilde çalışır. Yönteme meta veri sağlarlar ve Symfony tarafından okunup anlaşılırlar.
++ Özellikler ve anotasyonlar aynı şekilde çalışır. Method'a meta veri sağlarlar ve Symfony tarafından okunup anlaşılırlar.
 + Özellikler PHP'nin yerleşik bir özelliği olduğundan, özellikle PHP 8'den itibaren `routes.yaml` dosyasında tanımlamak yerine, rota eşleştirildikten sonra çalışacak aksiyonun hemen üzerine bir özellik eklenir.
  
 ###### Özellik Ekleyerek Rota Tanımlama
@@ -105,7 +105,7 @@ class HelloController
         return new Response('Hello');
     }
 ~~~~~~~
-> Burada `Route` özelliği kullanarak yolu ve rota adını tanımlanır. `Route` class'ını da içe aktarılması gerekir.
+> Burada `Route` özelliği kullanılarak yolu ve rota adını tanımlanır. `Route` class'ını da içe aktarılması gerekir.
 
 ##### Ekstra Aksiyonlar Ekleme
 + Aynı controller'a daha fazla aksiyon eklensin. Örneğin, `showOne` adında bir method eklensin ve bu method bir parametre alsın.
@@ -138,15 +138,15 @@ class HelloController
     }
 }
 ~~~~~~~
-> + Burada `showObe` method'unda bir `id` parametresi alıynır ve bu parametreye göre bir mesaj döndürülür. Yolu `Route` özelliği ile tanımlanır ve parametreyi yolun içine `{id}` olarak eklenir.
-> + Mevcut rotaları ve hangi controller'in çağrıldığını görmek için `symfony console debug:router` komutu çağırılarak bakılabilir.
+> + Burada `showOne` method'unda bir `id` parametresi alınır ve bu parametreye göre bir mesaj döndürülür. Yolu `Route` özelliği ile tanımlanır ve parametre yolun içine `{id}` olarak eklenir.
+> + Mevcut rotaları ve hangi controller'ın çağrıldığını görmek için `symfony console debug:router` komutu çağrılarak bakılabilir.
 
 ***
 ### Route Parameter Requirements / Optional Parameters | Rota Parametre Gereksinimleri / İsteğe Bağlı Parametreler
 
 #### Parametre Gereksinimleri
-+ ID parametresi bir sayısal değer olmalıdır.  PHP'de array'ler varsayılan olarak sıfırdan başlayarak sayılarla indekslenir. Bu nedenle, bu parametrenin türünü tam sayı olarak belirtilmelidir. Ancak, `messages/hello` gibi bir URL yazıldığında bir hata alınır çünkü array indeksleri sayısal olmalıdır. Bu durumu önceden ele alınması gerekmektedir.
-+ Bu tür sorunları ele almak için rota tanımına `requirements` adı verilen bir ek parametre eklenebilir. Böylece, her rota parametresi için beklenen türü belirleyen bir düzenli ifade (regex) tanımlanmasına olanak tanır. Bu, örneğin şu şekilde yapılabilir:
++ ID parametresi bir sayısal değer olmalıdır. PHP'de array'ler varsayılan olarak sıfırdan başlayarak sayılarla indekslenir. Bu nedenle, bu parametrenin türünü tam sayı olarak belirtilmelidir. Ancak, `messages/hello` gibi bir URL yazıldığında bir hata alınır çünkü array indeksleri sayısal olmalıdır. `Bu durumu önceden ele alınması gerekmektedir.`
++ Bu tür sorunları ele almak için rota tanımına `requirements` adı verilen bir ek parametre eklenebilir. Böylece, her rota parametresi için beklenen türü belirleyen bir düzenli ifade (regex) tanımlanmasına olanak tanır. Örneğin şu şekilde yapılabilir:
 ~~~~~~~
 #[Route('/messages/{id}', name: 'app_show_one', requirements: ['id' => '\d+'])]
 public function show(int $id): Response
@@ -158,10 +158,10 @@ public function show(int $id): Response
     return new Response($this->messages[$id]);
 }
 ~~~~~~~
-> `requirements` ile `id` parametresinin yalnızca sayısal değerleri kabul eder. Dolayısıyla `messages/hello` gibi bir istek yapıldığında `404 hatası` döner, çünkü belirtilen rota bulunamaz.
+> `requirements` ile `id` parametresi yalnızca sayısal değerleri kabul eder. Dolayısıyla `messages/hello` gibi bir istek yapıldığında `404 hatası` döner, çünkü belirtilen rota bulunamaz.
 
 #### İsteğe Bağlı Parametreler
-+ Bir isteğe bağlı parametre eklemek de mümkündür. Örneğin, index aksiyonuna kaç mesajın gösterileceğini belirleyen bir `limit` parametresi eklenebilir. Bu parametre varsayılan olarak 3 olabilir.
++ Bir isteğe bağlı parametre eklemek de mümkündür. Örneğin, index aksiyonuna kaç mesajın gösterileceğini belirleyen bir `limit` parametresi eklenebilir. Bu parametre varsayılan olarak 3 alınabilir.
 ~~~~~~~
 #[Route('/{limit?3}', name: 'app_index', requirements: ['limit' => '\d+'])]
 #[Route('/{limit<\d+>?3}', name: 'app_index')] şeklinde de yazılabilir.
@@ -174,7 +174,7 @@ public function index(int $limit = 3): Response
 > URL'de bir `limit` parametresi belirtilmezse varsayılan olarak 3 mesaj döndürülecektir. Aksi halde, belirtilen sayı kadar mesaj döndürülür.
 
 ##### Rotaların Sırası ve Öncelik
-+ Bazı durumlarda, rotaların yolları çok benzer olabilir. Örneğin, aşağıdaki iki rotayı ele alınsın:
++ Bazı durumlarda, rotaların yolları çok benzer olabilir. Örneğin, aşağıdaki iki rota ele alınsın:
 ~~~~~~~
 #[Route('/blog/{slug}', name: 'blog_show')]
 public function show(string $slug): Response
@@ -207,7 +207,7 @@ public function show(string $slug): Response
 ***
 ### Twig Templates | Twig Şablonları
 + Symfony'de controller eylemlerinden direkt olarak string olarak yanıt döndürmek basit olabilir ama karmaşık HTML çıktısı için sürdürülebilir değildir.
-+ HTML veya diğer çıktı formatlarını daha uygun bir şekilde oluşturmak için şablonları kullanılmalıdır. Symfony, şablon motoru olarak Twig kullanır.
++ HTML veya diğer çıktı formatlarını daha uygun bir şekilde oluşturmak için şablonlar kullanılmalıdır. Symfony, şablon motoru olarak Twig kullanır.
 
 #### Twig'in Kurulumu
 + Aşağıdaki komut, Twig'i kurar ve gerekli ayar dosyalarını ekleyerek Symfony uygulamasını Twig kullanımı için yapılandırır.
@@ -219,7 +219,7 @@ composer require twig
 + Şablonlar varsayılan olarak templates dizininde saklanır. Her controller genellikle templates içinde kendi dizinine sahiptir ve her eylemin ilgili bir şablon dosyası vardır.
 
 ##### 1. AbstractController'ı Genişletmek
-+ Controller, AbstractController'ı genişletecek şekilde güncellenmelidir, bu da Twig şablonlarını render etmek için render method'unu sağlar.
++ Controller, Twig şablonlarını işlemek için render yöntemini sağlayan AbstractController'ı genişletecek şekilde güncellenmelidir.
 ~~~~~~~
 namespace App\Controller;
 
@@ -277,8 +277,8 @@ class HelloController extends AbstractController
 
 #### Render Yönteminin Kullanımı
 + `render` method'u, belirtilen Twig şablonunu render ederek bir `Response` nesnesi oluşturur. İki parametre alır:
-    1. Twig şablon dosyasının yolu
-    2. Şablona geçilecek veri dizisi
+ 1. Twig şablon dosyasının yolu
+ 2. Şablona geçilecek veri dizisi
 ~~~~~~~
 return $this->render('hello/show_one.html.twig', [
     'message' => $this->messages[$id]
@@ -287,10 +287,10 @@ return $this->render('hello/show_one.html.twig', [
 
 ***
 ### Twig Template Inheritance | Twig Şablonları Kalıtımı
-+ Twig şablon motoru, Symfony'de HTML çıktısı oluştururken tekrar eden kodlardan kaçınılmasını sağlayan güçlü bir araçtır. Şablon mirası ve layout kullanarak, sayfanın genel yapısını merkezi bir yerden yönetebilir ve her şablonda tekrar eden kod yazmaktan kaçınılmasına yardımcı olur.
++ Twig şablon motoru, Symfony'de HTML çıktısı oluştururken tekrar eden kodlardan kaçınılmasını sağlayan güçlü bir araçtır. Şablon mirası ve layout kullanarak, sayfanın genel yapısını merkezi bir yerden yönetilebilir ve her şablonda tekrar eden kod yazmaktan kaçınılmasına yardımcı olur.
 
 ##### Temel Şablon (Base Template)
-+ Öncelikle, her sayfada ortak olan HTML yapısını içeren bir temel şablon oluşturulması gerekmektedir. Symfony, kurulum sırasında bir `base.html.twig` dosyası sağlar. Bu dosya genellikle şablonların ana yapısını içerir. Örneğin:
++ Öncelikle, her sayfada ortak olan HTML yapısını içeren bir temel şablon oluşturulması gerekmektedir. Symfony, kurulum sırasında bir `base.html.twig` dosyası oluşturulur. Bu dosya genellikle şablonların ana yapısını içerir. Örneğin:
 ~~~~~~~
 <!DOCTYPE html>
 <html>
@@ -324,7 +324,7 @@ return $this->render('hello/show_one.html.twig', [
 {% block title %}All Messages{% endblock %}
 
 {% block body %}
-    <h1>Mesajlar</h1>
+    <h1>Messages</h1>
     <ul>
         {% for message in messages %}
             <li>{{ message }}</li>
@@ -387,9 +387,9 @@ class HelloController extends AbstractController
 ### Twig Control Structure (if/for) | Twig Kontrol Yapıları
 
 #### Mevcut Problemin İncelenmesi
-+ Controller'daki index fonksiyonu içinde bulunan index şablonunu render etmeye çalışırken bu şablona bir array veri geçirilir. Bu array'i direkt olarak render edilemez çünkü bu bir hata oluşturur. Bu nedenle, array'i bir dizeye dönüştürmek için PHP `implode` fonksiyonunu kullanılır.
-+ Ancak, bu tür işlemler sunum katmanının (Twig şablonları) işi olup, controller'ların işi olmamalıdır. Controller'ın yapması gereken tek şey verileri almak, gerekirse değiştirmek ve ardından bu verileri şablon motoruna (Twig) geçirmektir. Sunumun nasıl yapılacağını Twig şablonları belirlemelidir.
-+ Dolayısıyla controller sadece verileri geçirmelidir ve Twig şablonları içinde bu verilerin nasıl render edileceğine karar verilmelidir. Yani `implode` fonksiyonunu kullanmak yerine, array verisini olduğu gibi geçirilmelidir.
++ Controller'daki index fonksiyonu içinde bulunan index şablonunu render etmeye çalışırken bu şablona bir array veriyi geçirilir. Bu dizi direkt olarak render edilemez çünkü bu bir hata oluşturur. Bu nedenle, array'i bir dizeye dönüştürmek için PHP `implode` fonksiyonunu kullanılır.
++ Ancak, bu tür işlemler sunum katmanının (Twig şablonları) işi olup, controller'ların işi olmamalıdır. `Controller'ın yapması gereken tek şey verileri almak, gerekirse değiştirmek ve ardından bu verileri şablon motoruna (Twig) geçirmektir.` Sunumun nasıl yapılacağını Twig şablonları belirlemelidir.
++ Dolayısıyla controller sadece verileri geçirmelidir ve Twig şablonları içinde bu verilerin nasıl render edileceğine karar verilmelidir. Yani `implode` fonksiyonunu kullanmak yerine, array verisi olduğu gibi geçirilmelidir.
 ~~~~~~~
 public function index()
 {
@@ -410,7 +410,7 @@ public function index()
     <div>{{ message }}</div>
 {% endfor %}
 ~~~~~~~
-> `messages` array'inde her elemanı iterasyona alır ve her bir `message` elemanını bir `<div>` içinde render eder. Döngüyü kapatmayı unutulmamalıdır, aksi takdirde hata alınır.
+> `messages` array'inde her elemanı iterasyona alır ve her bir `message` elemanını bir `<div>` içinde render eder. Döngünün kapatılması unutulmamalıdır, aksi takdirde hata alınır.
 
 #### Koşullu Render
 + Boş bir array durumunda, sayfanın tamamen boş olmaması için bazı mesajlar göstermek istenebilir. Bu durumları `if` yapısı ile kontrol edilebilir.
@@ -440,8 +440,8 @@ public function index()
     <div>There's nothing here yet!</div>
 {% endif %}
 ~~~~~~~
-> + Burada `message` array'inin uzunluğunu kontrol edilir. `length` filtresi, array'inin uzunluğunu döndürerek yeni bir sayısal değer oluşturur.
-> + Filtreler genellikle argüman kabul ederler, ancak bazıları argümansız çalışır. Tüm filtrelerin bir listesi Twig dokümantasyonunda bulunabilir.
+> + Burada `message` array'inin uzunluğunu kontrol edilir. `length` filtresi, array'in uzunluğunu döndürerek yeni bir sayısal değer oluşturur.
+> + Filtreler genellikle argüman kabul ederler, ancak bazıları argümansız çalışır. [Tüm filtrelerin bir listesi Twig dokümantasyonunda bulunabilir.](https://twig.symfony.com/doc/3.x/filters/index.html#filters)
 
 ##### `slice` Filtresi Kullanımı
 + Controller içinde veri işleme işlemlerinden kaçınmak ve bunun yerine şablon içinde veri işlemi yapmak istediğinde, `array_slice` fonksiyonunu controller'da kullanmak yerine, Twig'in `slice` filtresini kullanılabilir.
@@ -461,14 +461,14 @@ public function index()
     }
     ~~~~~~~
 
-    - Sonrasında, Twig şablonunda `slice` filtresini kullanarak veriyi dilimlenir:
+    - Sonrasında, Twig şablonunda `slice` filtresini kullanarak veri dilimlenir:
     ###### index.html.twig
     ~~~~~~~
     {% for message in messages|slice(0, limit) %}
         <div>{{ message }}</div>
     {% endfor %}
     ~~~~~~~
-    > Bu örnekte `messages` array'inin `slice` filtresi ile işlenir. `slice` filtresi, array'in  belirtilen başlangıç noktası ve limit kadar elemanını alır. `limit` değeri de controller'dan şablona geçirilen bir değişkendir.
+    > Bu örnekte `messages` array'i `slice` filtresi ile işlenir. `slice` filtresi, array'in  belirtilen başlangıç noktası ve limit kadar elemanını alır. `limit` değeri de controller'dan şablona geçirilen bir değişkendir.
 
 #### Twig Fonksiyonları
 + Twig içinde fonksiyonlar da kullanabilir. Örneğin, tarih işlemleri için `date` fonksiyonu kullanışlıdır. Twig fonksiyonları ile verileri farklı formatlara dönüştürebilir, tarih işlemleri yapabilir ve diğer faydalı işlemleri gerçekleştirebilir.
@@ -507,7 +507,7 @@ $messages = [
 ~~~~~~~
 
 #### Twig Şablonunu Güncellemek
-+ Güncellenmiş ``message` array'i ile şablon bozulacak çünkü artık iç içe array'ler alıyor. Bu yeni yapıyı işlemek için Twig şablonun güncellenmesi gerekiyor.
++ Güncellenmiş `message` array'i ile şablon bozulur çünkü artık iç içe array'ler alınır. Bu yeni yapıyı işlemek için Twig şablonun güncellenmesi gerekir.
 
 ##### 1. Array Elemanlarına Erişmek
 + Twig’de array elemanlarına erişmek için nokta notasyonunu kullanabilir, bu da PHP kare parantez sözdiziminden daha kullanışlıdır.
@@ -532,15 +532,16 @@ $messages = [
     </div>
 {% endfor %}
 ~~~~~~~
-> Bir mesajın oluşturulma tarihinin bir yıldan eski olup olmadığını kontrol eder. Eğer öyleyse, `Older than 1 year` ifadesini görüntüler; aksi halde tarihi `gün-ay-yıl` formatında gösterir.
+> Bir mesajın oluşturulma tarihinin bir yıldan eski olup olmadığını kontrol edilir. Eğer öyleyse, `Older than 1 year` ifadesini görüntüler; aksi halde tarihi `gün-ay-yıl` formatında gösterir.
 
 #### `include` Fonksiyonunu Kullanmak
-+ Mantığı (örneğin tarih formatlama) birden fazla şablonda tekrarlamamak için `include` fonksiyonunu kullanılabilir.
++ Mantığı (örneğin tarih formatlama) birden fazla şablonda tekrarlamamak için `include` fonksiyonu kullanılabilir.
 
 ##### 1. Kısmi Şablon Oluşturmak
 + Aynı dizinde `_message.html.twig` adında yeni bir dosya oluşturulur.
+
+###### _message.html.twig
 ~~~~~~~
-<!-- _message.html.twig -->
 <div style="color:gray;">
     {% if message.created|date("Y-m-d") < "now"|date_modify("-1 year") %}
         Older than 1 year
@@ -552,6 +553,8 @@ $messages = [
 
 ##### 2. Kısmi Şablonu Dahil Etmek
 + Ana şablonda `include` fonksiyonunu kullanarak kısmi şablon dahil edilir.
+
+###### base.html.twig
 ~~~~~~~
 {% for message in messages %}
     <div>
@@ -560,18 +563,18 @@ $messages = [
     </div>
 {% endfor %}
 ~~~~~~~
-> Bu kurulum, tarih formatlama mantığını farklı şablonlarda tekrar kullanmanıza olanak tanır, tutarlılık sağlar ve kod tekrarını azaltır.
+> Bu kurulum, tarih formatlama mantığını farklı şablonlarda tekrar kullanılmasına olanak tanır, tutarlılık sağlar ve kod tekrarını azaltır.
 
 ##### 3. Kısmi Şablona Veri Geçmek
 + Bir şablonu dahil ederken, ona veri geçirilebilir. Bu, kısmi şablonun daha esnek ve yeniden kullanılabilir olmasını sağlar.
 ~~~~~~~
 {{ include('hello/_message.html.twig', { message: message }) }}
 ~~~~~~~
-> Bu satır, `message` değişkenini `_message.html.twig` şablonuna geçirir.
+> Bu satır, `message` değişkenini `_message.html.twig` şablonuna aktarır.
 
 ***
 ### Generating Links to Routes | Rotalara Bağlantı Oluşturma
-+ rota (route) isimlerini kullanarak daha sürdürülebilir ve esnek kodlar yazılmasını sağlayacaktır.
++ rota (route) isimlerini kullanarak daha sürdürülebilir ve esnek kodlar yazılmasını sağlar.
 
 #### Basit Link Oluşturma
 + Mesajların listesini görüntülerken, her mesaj için ayrı bir sayfa oluşturmak istenebilir. İlk olarak, doğrudan bir `a` elementi eklenip yol belirtilsin.
@@ -582,15 +585,15 @@ $messages = [
     </div>
 {% endfor %}
 ~~~~~~~
-> Bu yöntemle, her mesaj için doğru yolu oluşturabilir. Ancak, bu yöntem doğrudan yolları (URLs) kullanır ve bu da uygulamanın ölçeklenebilirliği ve bakımı açısından zorluklara yol açabilir.
+> Bu yöntemle, her mesaj için doğru yolu oluşturabilir ancak bu yöntem doğrudan yolları (URLs) kullanır ve bu da uygulamanın ölçeklenebilirliği ve bakımı açısından zorluklara yol açabilir.
 
 #### Symfony Console Kullanarak Rotaları İncelemek
-+ Terminalden mevcut rotaları incelenir ve bu mevcut rotaların isimlerini ve yollarını öğrenmenilmeisini sağlar.
++ Terminalden aşağıdaki komut ile mevcut rotalar incelenir ve bu mevcut rotaların isimlerini ve yolların öğrenmenilmesini sağlar.
 ~~~~~~~
 symfony console debug:router
 ~~~~~~~
 
-+ Bu komut, uygulamadaki tüm rotaları ve onların isimlerini listeler.
++ Uygulamadaki tüm rotalar ve onların isim listesi:
 ~~~~~~~
  -------------------------- -------- -------- ------ -----------------------------------
   Name                       Method   Scheme   Host   Path
@@ -616,11 +619,11 @@ symfony console debug:router
 
 #### Daha Esnek ve Bakımı Kolay Kodlar
 + Uygulamanın ölçeklenebilirliği ve bakımı açısından büyük avantajlar sağlar. Rota yolları değiştiğinde, sadece rota tanımını güncellemek yeterli olacaktır, tüm şablon dosyalarda URL'leri tek tek değiştirmeye gerek kalmayacaktır.
-+ `Symfony'de link oluştururken doğrudan URL'ler kullanmak yerine rota isimlerini ve Twig path fonksiyonunu kullanmak, daha esnek ve sürdürülebilir bir yaklaşım sağlar. Bu yöntemle, uygulamanın gelecekteki değişikliklere daha kolay uyum sağlamasını garantilemiş olunur.`
++ `Symfony'de link oluştururken doğrudan URL'ler kullanmak yerine rota isimlerini ve Twig path fonksiyonunu kullanmak, daha esnek ve sürdürülebilir bir yaklaşım sağlar. Bu yöntemle, uygulamanın gelecekteki değişikliklere daha kolay uyum sağlamasını garantilenmiş olunur.`
 
 ***
 ### Symfony Maker (Generating Boring Code)
-+ Symfony framework'ü, belirli kalıplara dayalı olarak geliştirme yapılmasını sağlar. Örneğin, bir denetleyici (controller) oluştururken her seferinde aynı adımları izlenir: class oluşturulur, AbstractController class genişletirilir, rotaları tanımlanır vb.
++ Symfony framework'ü, belirli kalıplara dayalı olarak geliştirme yapılmasını sağlar. Örneğin, bir denetleyici (controller) oluştururken her seferinde aynı adımları izlenir; class oluşturulur, abstractController class genişletirilir, rotaları tanımlanır vb.
 + Bu süreçler bazen zaman alıcı olabilir ve tekrarlayan işler haline gelebilir. Neyse ki Symfony, bu tür işleri otomatikleştirmek için kullanabilecek bir araç sunar: `Maker Bundle.`
 
 ##### Maker Bundle'ı Kurma
@@ -634,24 +637,24 @@ composer require symfony/maker-bundle --dev
 ~~~~~~~
 symfony console list make
 ~~~~~~~
-> `make` ile başlayan tüm komutları listeleyecektir. Bu komutlar arasında denetleyiciler, varlıklar (entities), formlar ve daha fazlasını oluşturmak için kullanılabilecek komutlar bulunur.
+> `make` ile başlayan tüm komutları listeleyecektir. Bu komutlar arasında controllers, varlıklar (entities), formlar ve daha fazlasını oluşturmak için kullanılabilecek komutlar bulunur.
 
 ##### Bir Denetleyici (Controller) Oluşturma
-+ Örneğin, yeni bir denetleyici oluşturmak için aşağıdaki komutu kullanabilir.
++ Örneğin, yeni bir controller oluşturmak için aşağıdaki komut kullanabilir.
 ~~~~~~~
 symfony console make:controller
 ~~~~~~~
 
-+ Bu komutu çalıştırdıktan sonra, komut bazı sorular sorar ve verilen cevaplara göre istenilen denetleyiciyi oluşturur. Örneğin bir `MicroPost` uygulaması oluşturulsun, yani bir tür Twitter klonu. Bu yüzden yeni controller `MicroPostController` olarak adlandırılmalıdır.
++ Bu komutu çalıştırdıktan sonra, komut bazı sorular sorar ve verilen cevaplara göre istenilen denetleyiciyi oluşturulur. Örneğin bir `MicroPost` uygulaması oluşturulsun, yani bir tür Twitter klonu gibi. Bu yüzden yeni controller `MicroPostController` olarak adlandırılmalıdır.
 + `Symfony'de denetleyici adları tekil olarak adlandırılmalıdır (örneğin, PizzasController yerine PizzaController).`
-+ Komutu çalıştırıldıktan sonra gelen soruya `MicroPostController` yanıtı verilsin.
++ Komut çalıştırıldıktan sonra gelen soruya `MicroPostController` yanıtı verilsin.
 ~~~~~~~
 symfony console make:controller MicroPostController
 ~~~~~~~
-> Bu işlem, `MicroPostController` adında bir denetleyici class'ı ve ona bağlı bir şablon dosyası oluşturur.
+> Bu işlem, `MicroPostController` adında bir controller class'ı ve ona bağlı bir şablon dosyası oluşturur.
 
 ##### Oluşturulan Kodları İnceleme
-+ Terminali kapatıp oluşturulan dosyalara bakaldığında
++ Terminali kapatıp oluşturulan dosyalara bakaldığında:
 
 ###### MicroPostController.php
 ~~~~~~~
@@ -674,7 +677,6 @@ class MicroPostController extends AbstractController
     }
 }
 ~~~~~~~
->
 
 ###### micro_post/index.html.twig:
 ~~~~~~~
@@ -686,11 +688,11 @@ class MicroPostController extends AbstractController
     <h1>Welcome to the MicroPost page!</h1>
 {% endblock %}
 ~~~~~~~
-> Symfony, denetleyicinin doğru namespace ve gerekli bileşenleri içerecek şekilde oluşturur. Ayrıca, bir rota (route) tanımlar ve ilgili şablon dosyasını oluşturur.
+> Symfony, controller'ın doğru namespace ve gerekli bileşenleri içerecek şekilde oluşturur. Ayrıca, bir rota (route) tanımlar ve ilgili şablon dosyasını oluşturur.
 
-##### URL'yi Test Etme
-+ Oluşturulan URL'yi ziyaret ederek sonucu kontrol edilir. Tarayıcınızda `http://localhost/micro/post` adresini ziyaret edilerek sayfanın düzgün bir şekilde görüntülendiğini doğrulanır.
-+ Ardından, URL'yi daha okunabilir hale getirmek için `/micro/post` yolunu `/micro-post` olarak değiştirilir.
+##### URL'i Test Etme
++ Oluşturulan URL'i ziyaret ederek sonucu kontrol edilir. Tarayıcıda `http://localhost/micro/post` adresini ziyaret edilerek sayfanın düzgün bir şekilde görüntülendiği doğrulanır.
++ Ardından, URL'i daha okunabilir hale getirmek için `/micro/post` yolu `/micro-post` olarak değiştirilir.
 
 ###### MicroPostController.php
 ~~~~~~~
@@ -701,10 +703,10 @@ class MicroPostController extends AbstractController
 ***
 ### Symfony Profiler (Debugging Project)
 + Symfony Profiler, Symfony geliştirme sürecinde vazgeçilmez bir araçtır.
-+ Profiler, uygulamanın performansı ve davranışı hakkında detaylı bilgi toplar. `Ancak, bu aracı hiçbir zaman canlı ortamlarda kullanılmamlıdır.` Bu, ciddi güvenlik açıklarına yol açabilir ve uygulamayı yavaşlatabilir. Bu nedenle, Profiler'ı sadece geliştirme ortamında kurulmalıdır.
++ Profiler, uygulamanın performansı ve davranışı hakkında detaylı bilgi toplar. `Ancak bu araç hiçbir zaman canlı ortamlarda kullanılmamalıdır.` Bu, ciddi güvenlik açıklarına yol açabilir ve uygulamayı yavaşlatabilir. Bu nedenle, Profiler sadece geliştirme ortamında kurulmalıdır.
 
 ##### Profiler Kurulumu
-+ Profiler'ı Symfony uygulamada eklemek için terminali açıp aşağıdaki komutu çalıştırılmalıdır.
++ Profiler'ı Symfony uygulamada eklemek için terminali açıp aşağıdaki komut çalıştırılmalıdır.
 ~~~~~~~
 composer require symfony/profiler-pack --dev
 ~~~~~~~
@@ -725,11 +727,11 @@ composer require symfony/profiler-pack --dev
 
 ##### Profiler Detaylarına Bakma
 + Profiler bar'ındaki herhangi bir öğeye tıklayarak detaylı bilgiye ulaşabilir. Örneğin:
-    - `Request/Response Bilgileri:` GET ve POST parametreleri, yüklenen dosyalar, başlıklar vb. bilgileri içerir.
-    - `Performans Bilgileri:` Hangi işlemlerin ne kadar süre aldığını zaman çizelgesiyle gösterir.
-    - `Rota Bilgileri:` Hangi rotanın eşleştiğini ve diğer rotaların nasıl değerlendirildiğini gösterir.
-    - `Twig Şablonları:` Hangi şablonların kullanıldığını, kaç kez kullanıldığını gösterir.
-    - `Konfigürasyon Bilgileri:` Symfony uygulamanın konfigürasyon bilgilerini gösterir.
+  - `Request/Response Bilgileri:` GET ve POST parametreleri, yüklenen dosyalar, başlıklar vb. bilgileri içerir.
+  - `Performans Bilgileri:` Hangi işlemlerin ne kadar süre aldığını zaman çizelgesiyle gösterir.
+  - `Rota Bilgileri:` Hangi rotanın eşleştiğini ve diğer rotaların nasıl değerlendirildiğini gösterir.
+  - `Twig Şablonları:` Hangi şablonların kullanıldığını, kaç kez kullanıldığını gösterir.
+  - `Konfigürasyon Bilgileri:` Symfony uygulamanın konfigürasyon bilgilerini gösterir.
 
 ##### Geçmiş İstekleri İnceleme
 + Profiler, önceki isteklerin bilgilerini de saklar. Sağ üst köşedeki "Last 10" bölümüne tıklayarak son yapılan isteklerin listesini görebilir ve her bir isteğin detaylarına bakılabilir.
