@@ -50,7 +50,7 @@ public function showByTitle(
     // return $this->render('micropost/show.html.twig', ['microPost' => $microPost]);
 }
 ~~~~~~~
-> + `dd(#microPosts)`, `MicroPost` varlığını ekrana döker ve ardından betiği durdurur. Bu, genellikle hata ayıklama (debugging) amacıyla kullanılır.
+> + `dd(#microPost)`, `MicroPost` varlığını ekrana döker ve ardından betiği durdurur. Bu, genellikle hata ayıklama (debugging) amacıyla kullanılır.
 > + Yoruma alınmış `return $this->render('micropost/show.html.twig', ['microPost' => $microPost]);` ifadesi, `microPost` varlığını bir Twig şablonuna göndererek HTML çıktısı üretmek için kullanılır. Bu ifade yoruma alındığından, şu anda şablon render edilmez.
 
 ###### Özet
