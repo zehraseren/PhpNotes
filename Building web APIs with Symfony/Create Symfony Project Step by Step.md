@@ -104,7 +104,8 @@ docker-compose up -d --build
 
 ***
 ### Adım 6: Varlıklar (Entities) Oluşturma
-  1. Composer varlığını oluşturmak için Symfony Maker Bundle kullanılır:
++ Composer ve Symphony varlıkları oluşturulsun.
+  1. Composer varlığını oluşturmak için `Symfony Maker Bundle` kullanılır:
   ~~~~~~~
   php bin/console make:entity Composer
   ~~~~~~~
@@ -142,9 +143,9 @@ php bin/console doctrine:migrations:migrate
 
   2. SymfonyController'ı oluşturulur:
   ~~~~~~~
-  php bin/console make:controller SymfonyController
+  php bin/console make:controller SymphonyController
   ~~~~~~~
-  > `src/Controller/SymfonyController.php` dosyası CRUD işlemlerini içerecek şekilde güncellenmelidir.
+  > `src/Controller/SymphonyController.php` dosyası CRUD işlemlerini içerecek şekilde güncellenmelidir.
 
 ***
 ### Adım 9: Endpoint'leri Test Etme
