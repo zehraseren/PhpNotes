@@ -112,8 +112,8 @@ curl -X DELETE http://localhost:8000/composer/1
 + `curl` ile manuel test yapmanın yanı sıra, endpoint'lerin çalıştığından emin olmak için otomatik testler oluşturmak daha verimlidir.
 + Symfony'nin test araçları, API'ın beklendiği gibi çalışmasını sağlamak için yardımcı olabilir.
 ###### Index endpoint'i için basit bir test örneği:
+###### ComposerControllerTest.php
 ~~~~~~~
-// tests/Controller/ComposerControllerTest.php
 namespace App\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -138,11 +138,11 @@ php bin/phpunit
 ~~~~~~~
 
 ***
-### Symphony endpoints and tests
-+ 
+### Symphony endpoints and tests 
++ Symfony uygulaması için yeni bir controller oluşturmak için aşağıdaki komut kullanılır.
 ~~~~~~~
+php bin/console make:controller SymphonyController
 ~~~~~~~
->
 
 ***
 ### Validator
