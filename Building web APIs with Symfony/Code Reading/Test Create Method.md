@@ -30,7 +30,7 @@ public function testCreate(): void
 
 ###### 2. POST İsteği Gönderme
 + `$this->client->request()` method'uyla Symfony uygulamasına `POST` isteği gönderilir.
-+ 'POST': HTTP metodu olarak `POST` seçilmiştir.
++ `'POST'`: HTTP metodu olarak `POST` seçilmiştir.
 + `'/symphonies'`: Endpoint olarak `/symphonies` adresi belirlenmiştir.
 + `['CONTENT_TYPE' => 'application/json']`: İsteğin başlığında içeriğin JSON formatında olduğu belirtilmiştir.
 + `json_encode($data)`: `$data` array'i JSON formatına çevrilerek isteğin içeriği olarak gönderilmiştir.
