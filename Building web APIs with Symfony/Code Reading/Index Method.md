@@ -17,14 +17,14 @@
 $symphonies = $this->symphonyRepository->findAll();
 ~~~~~~~
 > + `$this->symphonyRepository->findAll()`: Symphony repository'sini kullanarak tüm `Symphony` nesnelerini database'den alır. Bu method, tüm Symphony nesnelerini döndürür.
-> + `$this->symphonyRepository`: Bu repository, `Symphony` nesneleriyle ilgili veritabanı işlemlerini gerçekleştirir.
+>   - `$this->symphonyRepository`: Bu repository, `Symphony` nesneleriyle ilgili veritabanı işlemlerini gerçekleştirir.
 
 ##### 2. Serialization
 ~~~~~~~
 $data = $this->serializer->serialize($symphonies, 'json');
 ~~~~~~~
 > + `$this->serializer->serialize()`: Symphony nesnelerini JSON formatına dönüştürür. Bu işlem, `Symphony` nesnelerinin bir array'ini JSON string'ine dönüştürür.
-> + `$this->serializer`: Bu serializer, nesneleri JSON (veya başka formatlara) dönüştürmek için kullanılır.
+>   - `$this->serializer`: Bu serializer, nesneleri JSON (veya başka formatlara) dönüştürmek için kullanılır.
 
 ##### 3. JsonResponse Döndürme
 ~~~~~~~
