@@ -139,10 +139,258 @@ php bin/phpunit
 
 ***
 ### Symphony endpoints and tests 
+#### Symphony Controller ve Test Oluşturma
+##### 1. Symphony Controller Oluşturma
 + Symfony uygulaması için yeni bir controller oluşturmak için aşağıdaki komut kullanılır.
 ~~~~~~~
 php bin/console make:controller SymphonyController
 ~~~~~~~
+
+##### 2. Symphony Test Oluşturma
++ Symphony controller için bir test class oluşturulur.
+~~~~~~~
+php bin/console make:test SymphonyControllerTest
+~~~~~~~
+
+#### Symphony Controller'ın Uygulanması
+##### 1. Dependencies and Constructor
++ Gerekli bağımlılıklar enjekte edilir (SymphonyRepository, SerializerInterface ve ValidatorInterface).
+~~~~~~~
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+
+class SymphonyController extends AbstractController
+{
+    private $symphonyRepository;
+    private $serializer;
+    private $validator;
+
+    public function __construct(SymphonyRepository $symphonyRepository, SerializerInterface $serializer, ValidatorInterface $validator)
+    {
+        $this->symphonyRepository = $symphonyRepository;
+        $this->serializer = $serializer;
+        $this->validator = $validator;
+    }
+~~~~~~~
+> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Dependencies%20and%20Constructor.md)
+
+##### 2. Index Method
++ Bütün symphony'ler alınır ve döndürülür.
+~~~~~~~
+/**
+ * @Route("/symphonies", name="symphony_index", methods={"GET"})
+ */
+public function index(): JsonResponse
+{
+    $symphonies = $this->symphonyRepository->findAll();
+    $data = $this->serializer->serialize($symphonies, 'json');
+
+    return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
+}
+~~~~~~~
+> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Index%20Method.md)
+
+##### 3. Create Method
++ Request yeniden serileştirilir, symphony doğrulanır ve database'e kaydedilir.
+~~~~~~~
+/**
+ * @Route("/symphonies", name="symphony_create", methods={"POST"})
+ */
+public function create(Request $request): JsonResponse
+{
+    $data = $request->getContent();
+    $symphony = $this->serializer->deserialize($data, Symphony::class, 'json');
+
+    $errors = $this->validator->validate($symphony);
+    if (count($errors) > 0) {
+        $errorsString = (string) $errors;
+
+        return new JsonResponse($errorsString, JsonResponse::HTTP_BAD_REQUEST);
+    }
+
+    $this->symphonyRepository->save($symphony);
+
+    $response = $this->serializer->serialize($symphony, 'json');
+
+    return new JsonResponse($response, JsonResponse::HTTP_CREATED, [], true);
+}
+~~~~~~~
+> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Create%20Method.md)
+
+##### 4. Show Method
++ ID'ye göre belirli bir symphony alınır ve döndürülür.
+~~~~~~~
+/**
+ * @Route("/symphonies/{id}", name="symphony_show", methods={"GET"})
+ */
+public function show(int $id): JsonResponse
+{
+    $symphony = $this->symphonyRepository->find($id);
+
+    if (!$symphony) {
+        return new JsonResponse("Symphony not found", JsonResponse::HTTP_NOT_FOUND);
+    }
+
+    $data = $this->serializer->serialize($symphony, 'json');
+
+    return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
+}
+~~~~~~~
+> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Show%20Method.md)
+
+##### 5. Update Method
++ Request yeniden serileştirilir, symphony güncellenir ve bütün değişiklikler kaydedilir.
+~~~~~~~
+/**
+ * @Route("/symphonies/{id}", name="symphony_update", methods={"PUT"})
+ */
+public function update(Request $request, int $id): JsonResponse
+{
+    $data = $request->getContent();
+    $symphony = $this->symphonyRepository->find($id);
+
+    if (!$symphony) {
+        return new JsonResponse("Symphony not found", JsonResponse::HTTP_NOT_FOUND);
+    }
+
+    $this->serializer->deserialize($data, Symphony::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $symphony]);
+
+    $errors = $this->validator->validate($symphony);
+    if (count($errors) > 0) {
+        $errorsString = (string) $errors;
+
+        return new JsonResponse($errorsString, JsonResponse::HTTP_BAD_REQUEST);
+    }
+
+    $this->symphonyRepository->save($symphony);
+
+    $response = $this->serializer->serialize($symphony, 'json');
+
+    return new JsonResponse($response, JsonResponse::HTTP_OK, [], true);
+}
+~~~~~~~
+> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Update%20Method.md)
+
+##### 6. Delete Method
++ ID'ye göre belirli bir symphony silinir.
+~~~~~~~
+/**
+ * @Route("/symphonies/{id}", name="symphony_delete", methods={"DELETE"})
+ */
+public function delete(int $id): JsonResponse
+{
+    $symphony = $this->symphonyRepository->find($id);
+
+    if (!$symphony) {
+        return new JsonResponse("Symphony not found", JsonResponse::HTTP_NOT_FOUND);
+    }
+
+    $this->symphonyRepository->delete($symphony);
+
+    return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
+}
+~~~~~~~
+> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Delete%20Method.md)
+
+#### SymphonyControllerTest'in Uygulanması
+##### 1. Dependencies and Setup
++ Gerekli bağımlılıklar ve kurulum method'ları başlatılır.
+~~~~~~~
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+
+class SymphonyControllerTest extends WebTestCase
+{
+    private $client;
+
+    protected function setUp(): void
+    {
+        $this->client = static::createClient();
+    }
+~~~~~~~
+> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Dependencies%20and%20Setup.md)
+
+##### 2. Test Index Method
++ Index'deki tüm symphony'lerin döndürüldüğünden emin olunmalıdır.
+~~~~~~~
+public function testIndex(): void
+{
+    $this->client->request('GET', '/symphonies');
+    $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+}
+~~~~~~~
+> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Test%20Index%20Method.md)
+
+##### 3. Test Create Method
++ Oluşturulan smyphony'nin beklendiği gibi çalıştığından emin olunmalıdır.
+~~~~~~~
+public function testCreate(): void
+{
+    $data = [
+        'name' => 'Symphony No. 1',
+        'composer' => 'Beethoven',
+        'createdAt' => (new \DateTime())->format('Y-m-d H:i:s')
+    ];
+
+    $this->client->request(
+        'POST',
+        '/symphonies',
+        [],
+        [],
+        ['CONTENT_TYPE' => 'application/json'],
+        json_encode($data)
+    );
+
+    $this->assertEquals(201, $this->client->getResponse()->getStatusCode());
+}
+~~~~~~~
+> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Test%20Create%20Method.md)
+
+##### 4. Test Show Method
++ Belirli bir symphony'nin beklendiği gibi çalıştığından emin olunmalıdır.
+~~~~~~~
+public function testShow(): void
+{
+    $this->client->request('GET', '/symphonies/1');
+    $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+}
+~~~~~~~
+> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Test%20Show%20Method.md)
+
+##### 5. Test Update Method
++ Güncellenen symphony'nin beklendiği gibi çalıştığından emin olunmalıdır.
+~~~~~~~
+public function testUpdate(): void
+{
+    $data = ['name' => 'Updated Symphony'];
+
+    $this->client->request(
+        'PUT',
+        '/symphonies/1',
+        [],
+        [],
+        ['CONTENT_TYPE' => 'application/json'],
+        json_encode($data)
+    );
+
+    $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+}
+~~~~~~~
+> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Test%20Update%20Method.md)
+
+##### 6. Test Delete Method
++ Bir symphony'i silmenin beklendiği gibi çalıştığından emin olunmalıdır.
+~~~~~~~
+public function testDelete(): void
+{
+    $this->client->request('DELETE', '/symphonies/1');
+    $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
+}
+~~~~~~~
+> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Test%20Delete%20Method.md)
 
 ***
 ### Validator
