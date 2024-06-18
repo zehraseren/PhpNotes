@@ -692,7 +692,7 @@ class MicroPostController extends AbstractController
 > Sonuç olarak, Symfony'nin en son sürümlerinde repository class'larındaki `add` ve `save` method'ları kaldırılmıştır. Bunun yerine, veri eklemek ve güncellemek için doğrudan `EntityManager` kullanması gerekmektedir.
 
 ***
-### Doctrine Repostories (Fetching, Storing, Updating ½ Deleting Data)
+### Doctrine Repostories (Fetching, Storing, Updating & Deleting Data)
 + Symfony framework'ünde her bir entity için bir repository class'ı bulunur. Bu repository class'ları, veritabanı tablosundaki verilerin yönetilmesine yardımcı olur ve SQL sorgularını elle yazma zorunluluğunu ortadan kaldırarak veri katmanına erişimi soyutlar.
 + Repository'ler, Doctrine ORM tarafından sağlanan hazır method'lar içerir. Bu method'lar sayesinde veri ekleme, silme, güncelleme ve sorgulama işlemleri kolaylıkla yapılabilir.
 
