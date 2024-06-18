@@ -18,9 +18,8 @@ public function testShow(): void
 + `$this->assertEquals(200, $this->client->getResponse()->getStatusCode());` satırıyla, Symfony'nin `getResponse()` method'uyla alınan HTTP yanıtının durum kodunun `200` (`OK`) olup olmadığını kontrol edilir.
 + `200` durum kodu, belirtilen `id`'ye sahip `Symphony` kaydının başarıyla bulunduğunu ve istemcinin doğru bir şekilde yanıt aldığını gösterir.
 
-###### Testin İşlevi
+##### Testin İşlevi
 + Bu test method'unun amacı, `SymphonyController` class'ındaki `show` method'unu doğru şekilde test etmektir. Yani:
   - `/symphonies/1` endpoint'ine `GET` isteği yaparak belirtilen `id`'ye sahip bir `Symphony` kaydı bulunabilir mi?
   - Görüntüleme işlemi başarılı olduysa, HTTP durum kodu `200` (`OK`) dönüyor mu?
 > Bu test method'unu çalıştırılarak, Symfony uygulamasının `SymphonyController` class'ındaki `show` method'unun doğru çalışıp çalışmadığını ve olası hataların tespit edilmesini sağlar. Testler, uygulamanın farklı bölümlerinin doğru işlediğini doğrulamak için önemli bir araçtır ve sürekli entegrasyon (`CI`) süreçlerinde de sıkça kullanılır.
-
