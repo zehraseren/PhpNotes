@@ -394,7 +394,162 @@ public function testDelete(): void
 
 ***
 ### Validator
-+
+#### Symfony Validator Entegrasyon Adımları
+##### 1. Symfony Validator Bileşeninin Yüklenmesi
++ İlk olarak, Composer aracılığıyla Symfony validator bileşeni yüklenmelidir. Bu, Symfony'nin güçlü doğrulama özelliklerini kullanılmasına olanak tanır.
 ~~~~~~~
+composer require symfony/validator
 ~~~~~~~
-> 
+
+##### 2. Entity Class'larını Validator Anotasyonları ile Güncelleme
++ Entity class'larına PHP öznitelikleri kullanılarak validator kısıtlamaları eklenir. Bunun için `Symfony\Component\Validator\Constraints` ad alanından gerekli kısıtlamaları içe aktarılıp ilgili özelliklere uygulanır.
+
+###### Composer Entity
+~~~~~~~
+use Symfony\Component\Validator\Constraints as Assert;
+
+class Composer
+{
+    #[Assert\NotBlank]
+    private $firstName;
+
+    #[Assert\NotBlank]
+    private $lastName;
+
+    #[Assert\NotBlank]
+    private $dateOfBirth;
+
+    #[Assert\NotBlank]
+    #[Assert\Country]
+    private $countryCode;
+
+    // ... other properties and methods
+}
+~~~~~~~
+> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Validator%20Composer%20Entity.md)
+
+###### Symphony Entity
+~~~~~~~
+use Symfony\Component\Validator\Constraints as Assert;
+
+class Symphony
+{
+    #[Assert\NotBlank]
+    private $name;
+
+    #[Assert\NotBlank]
+    #[Assert\DateTime(format: 'Y-m-d')]
+    private $finishedAt;
+
+    #[Assert\DateTime(format: 'Y-m-d')]
+    private $createdAt;
+
+    // ... other properties and methods
+}
+~~~~~~~
+> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Validator%20Symphony%20Entity.md)
+
+##### 3. Validator'u Gerçekleştirmek İçin Controller Güncellemesi
++ Controller'da validator servisinin enjeksiyonunu yaparak doğrulama gerçekleştirilir ve verileri kaydetmeden önce doğrulama hataları olup olmadığını kontrol edilir. `Doğrulama başarısız olursa, 422 İşlenemeyen Varlık durumu ve doğrulama hataları ile birlikte bir yanıt döndürülür.`
+
+###### ComposerController
+~~~~~~~
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\HttpFoundation\Response;
+
+class ComposerController
+{
+    public function create(Request $request, SerializerInterface $serializer, ValidatorInterface $validator): Response
+    {
+        $composer = $serializer->deserialize($request->getContent(), Composer::class, 'json');
+
+        $errors = $validator->validate($composer);
+        if (count($errors) > 0) {
+            $errorsString = (string) $errors;
+
+            return new Response($errorsString, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        // ... save to database
+    }
+
+    public function update(Request $request, SerializerInterface $serializer, ValidatorInterface $validator, int $id): Response
+    {
+        // ... fetch existing composer entity
+        $composer = $serializer->deserialize($request->getContent(), Composer::class, 'json', ['object_to_populate' => $existingComposer]);
+
+        $errors = $validator->validate($composer);
+        if (count($errors) > 0) {
+            $errorsString = (string) $errors;
+
+            return new Response($errorsString, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        // ... update to database
+    }
+}
+~~~~~~~
+> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Validator%20ComposerController.md)
+
+###### SymphonyController
+~~~~~~~
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\HttpFoundation\Response;
+
+class SymphonyController
+{
+    public function create(Request $request, SerializerInterface $serializer, ValidatorInterface $validator): Response
+    {
+        $symphony = $serializer->deserialize($request->getContent(), Symphony::class, 'json');
+
+        $errors = $validator->validate($symphony);
+        if (count($errors) > 0) {
+            $errorsString = (string) $errors;
+
+            return new Response($errorsString, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        // ... save to database
+    }
+
+    public function update(Request $request, SerializerInterface $serializer, ValidatorInterface $validator, int $id): Response
+    {
+        // ... fetch existing composer entity
+        $symphony = $serializer->deserialize($request->getContent(), Symphony::class, 'json', ['object_to_populate' => $existingSymphony]);
+
+        $errors = $validator->validate($symphony);
+        if (count($errors) > 0) {
+            $errorsString = (string) $errors;
+
+            return new Response($errorsString, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        // ... update to databae
+    }
+}
+~~~~~~~
+> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Validator%20SymphonyController.md)
+
+##### 4. Test Durumlarının Güncellenmesi
++ Doğrulamanın beklenildiği gibi çalıştığını doğrulamak ve doğrulama başarısız olduğunda doğru HTTP durum kodlarını ve hata mesajlarını alındığından emin olmak için test durumları güncellenmelidir.
+
+###### Composer için Test
+~~~~~~~
+public function testCreateInvalidComposer()
+{
+    $invalidComposer = [
+        'firstName' => 'Wolfgang',
+        'dateOfBirth' => '1756-01-27',
+        'countryCode' => 'XX' // Geçersiz ülke kodu
+    ];
+
+    $response = $this->client->post('/composers', [
+        'json' => $invalidComposer,
+    ]);
+
+    $this->assertEquals(422, $response->getStatusCode());
+    $this->assertStringContainsString('This value is not a valid country.', $response->getContent());
+}
+~~~~~~~
+> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Validator%20Test%20for%20Composer.md)
++ Bu adımlar takip edilerek, uygulamanın geçersiz girdileri zarif bir şekilde ele alınmasını, kullanıcılara anlamlı geri bildirimler sağlanmasını ve database'deki veri bütünlüğünü korumasını sağlar.
