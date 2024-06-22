@@ -16,7 +16,7 @@ $lastName;
 ~~~~~~~
 
 ##### 3. `$dateOfBirth`
-+ #[Assert\NotBlank]: Bu kural, `dateOfBirth` (doğum günü) alanının boş olmaması gerektiğini belirtir. Bu alanın boş bırakılmaması zorunludur.
++ `#[Assert\NotBlank]:` Bu kural, `dateOfBirth` (doğum günü) alanının boş olmaması gerektiğini belirtir. Bu alanın boş bırakılmaması zorunludur.
 ~~~~~~~
 #[Assert\NotBlank]
 $dateOfBirth;
