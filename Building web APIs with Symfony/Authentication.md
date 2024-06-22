@@ -264,10 +264,154 @@ php bin/console app:user-list
 
 ***
 ### Authentication Controller
-+ 
++ Kullanıcıları doğrulamak ve uygulama endpoint'lerine erişim sağlamak için bir `JWT (JSON Web Token)` tabanlı kimlik doğrulama mekanizması uygulansın.
++ JWT kullanarak, kullanıcılar yalnızca bir kez oturum açacak ve daha sonra belirli bir süre geçerli olacak bir erişim jetonu alacaklar. Bu yöntem, kullanıcı adı ve şifreyi her istekte göndermek zorunda kalmadan güvenli bir şekilde kimlik doğrulama yapmayı sağlar.
+
+##### Adım 1: Gereksinimleri Yükleme
++ JWT tabanlı kimlik doğrulama için `lexik/jwt-authentication-bundle` paketini kullanılır. Bu paket Composer ile yüklenir:
 ~~~~~~~
+composer require lexik/jwt-authentication-bundle
 ~~~~~~~
->
+
+##### Adım 2: Paket Yapılandırması
++ JWT yapılandırmasını yapmak için aşağıdaki komut kullanılarak gerekli dosyaları oluşturulur.
+~~~~~~~
+php bin/console lexik:jwt:generate-keypair
+~~~~~~~
+> Bu komut, `config/packages/lexik_jwt_authentication.yaml` dosyasını ve RSA anahtar çiftlerini (private ve public key) oluşturur.
+
+##### Adım 3: JWT Sağlayıcı Yapılandırması
++ `config/packages/security.yaml` dosyasında JWT sağlayıcısı yapılandırılmalıdır:
+###### config/packages/security.yaml
+~~~~~~~
+security:
+    encoders:
+        App\Entity\User:
+            algorithm: auto
+
+    providers:
+        users_in_database:
+            entity:
+                class: App\Entity\User
+                property: username
+
+    firewalls:
+        login:
+            pattern:  ^/api/login
+            stateless: true
+            anonymous: true
+            json_login:
+                check_path:               /api/login_check
+                username_path:            username
+                password_path:            password
+                success_handler:          lexik_jwt_authentication.handler.authentication_success
+                failure_handler:          lexik_jwt_authentication.handler.authentication_failure
+
+        api:
+            pattern:   ^/api
+            stateless: true
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
+
+    access_control:
+        - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+~~~~~~~
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/lexik_jwt_authentication.yaml.md)
+
+##### Adım 4: AuthController Oluşturma
++ Bir `AuthController` oluşturulur ve login endpoint'i tanımlanır.
+~~~~~~~
+php bin/console make:controller AuthController
+~~~~~~~
+
++ `src/Controller/AuthController.php` dosyasını açılır ve aşağıdaki gibi düzenlenir:
+~~~~~~~
+<?php
+
+namespace App\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+
+class AuthController extends AbstractController
+{
+    #[Route('/api/login', name: 'api_login', methods: ['POST'])]
+    public function login()
+    {
+        $user = $this->getUser();
+
+        if (!$user) {
+            return new JsonResponse(['message' => 'Invalid credentials'], JsonResponse::HTTP_UNAUTHORIZED);
+        }
+
+        return new JsonResponse(['token' => 'dummy-token-for-now']); // This part is updated with real tokens
+    }
+}
+~~~~~~~
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Create%20AuthControllerClass.md)
+
+##### Adım 5: JWT Token Üretimi
++ Yukarıdaki controller'daki `dummy-token-for-now` kısmını gerçek bir token ile değiştirmek için, `LexikJWTAuthenticationBundle`'ın sağladığı `JWTTokenManagerInterface` ve `EventDispatcherInterface` class'ları kullanılır.
++ `src/Controller/AuthController.php` dosyası aşağıdaki gibi güncellenmelidir:
+~~~~~~~
+<?php
+
+namespace App\Controller;
+
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+
+class AuthController extends AbstractController
+{
+    private $jwtManager;
+    private $dispatcher;
+
+    public function __construct(JWTTokenManagerInterface $jwtManager, EventDispatcherInterface $dispatcher)
+    {
+        $this->jwtManager = $jwtManager;
+        $this->dispatcher = $dispatcher;
+    }
+
+    #[Route('/api/login', name: 'api_login', methods: ['POST'])]
+    public function login()
+    {
+        $user = $this->getUser();
+
+        if (!$user) {
+            return new JsonResponse(['message' => 'Invalid credentials'], JsonResponse::HTTP_UNAUTHORIZED);
+        }
+
+        $token = $this->jwtManager->create($user);
+
+        return new JsonResponse(['token' => $token]);
+    }
+}
+~~~~~~~
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Update%20AuthControllerClass.md)
+
+##### Adım 6: Korunan Endpoint'leri Test Etme
++ JWT tabanlı kimlik doğrulamayı test etmek için öncelikle kullanıcı adı ve şifre ile oturum açılır ve ardından alınan token ile korunan bir endpoint'e erişim sağlanır.
+  1. Oturum Açma
+  ~~~~~~~
+  curl -X POST http://localhost:8000/api/login -H "Content-Type: application/json" -d '{"username":"admin","password":"1234"}'
+  ~~~~~~~
+
+  2. Korumalı Uç Noktaya Erişim:
+  ~~~~~~~
+  curl -X GET http://localhost:8000/api/some-protected-endpoint -H "Authorization: Bearer YOUR_JWT_TOKEN"
+  ~~~~~~~
+
+> JWT tabanlı kimlik doğrulama ile kullanıcıların kimlik bilgilerini yalnızca bir kez kullanarak oturum açmalarını ve daha sonra bir token ile uygulamanın korunan endpoint'lerine erişim sağlandı. Bu yöntem, güvenliği artırır ve kullanıcı deneyimini iyileştirir.
 
 ***
 ### Access Tokens and Redis Storage
