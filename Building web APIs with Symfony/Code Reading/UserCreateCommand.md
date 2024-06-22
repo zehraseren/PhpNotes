@@ -91,4 +91,5 @@ class UserCreateCommand extends Command
 + Kullanıcı database'e kaydedilir.
 + Başarılı işlem mesajı gösterilir ve komut `SUCCESS` kodu ile sonlandırılır.
 
-> Bu komut class'ı, kullanıcı oluşturma işlemini kolaylaştırır ve CLI üzerinden çalıştırılabilir. Kullanıcı bilgilerini alır, doğrular, şifreyi hashler ve yeni kullanıcıyı database'e kaydeder. Bu tür komutlar, özellikle büyük uygulamalarda yönetici işlemlerini otomatikleştirmek için çok faydalıdır.
+###### Özet
++ Bu komut class'ı, kullanıcı oluşturma işlemini kolaylaştırır ve CLI üzerinden çalıştırılabilir. Kullanıcı bilgilerini alır, doğrular, şifreyi hashler ve yeni kullanıcıyı database'e kaydeder. Bu tür komutlar, özellikle büyük uygulamalarda yönetici işlemlerini otomatikleştirmek için çok faydalıdır.
