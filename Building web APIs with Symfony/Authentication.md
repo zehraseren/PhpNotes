@@ -326,7 +326,7 @@ security:
 php bin/console make:controller AuthController
 ~~~~~~~
 
-+ `src/Controller/AuthController.php` dosyasını açılır ve aşağıdaki gibi düzenlenir:
++ `src/Controller/AuthController.php` dosyası açılır ve aşağıdaki gibi düzenlenir:
 ~~~~~~~
 <?php
 
