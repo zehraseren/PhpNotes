@@ -415,10 +415,159 @@ class AuthController extends AbstractController
 
 ***
 ### Access Tokens and Redis Storage
-+ 
++ Symfony uygulamasında Redis kullanılarak token tabanlı kimlik doğrulama sistemi uygulanır.
+
+#### Yapılacak Adımlar
+##### 1. Docker Compose ile Redis Kurulumu
++ Docker Compose yapılandırmamıza bir Redis container'ı eklenir.
++ Redis PHP uzantısının kurulu ve etkin olduğundan emin olunmalıdır.
+
+##### 2. Redis Bağlantısının Yapılandırılması
++ Symfony’nin `services.yaml` dosyasında bir Redis servisi oluşturulur.
++ Bağlantı çevresel değişkenler ve Symfony’nin bağımlılık enjeksiyon container'ı kullanılarak yapılandırılır.
+
+##### 3. Erişim Tokenlarının Oluşturulması ve Saklanması
++ Token oluşturma ve saklama işlevlerini yönetmek için yeni bir `AccessTokenHandler` class'ı oluşturulur.
++ PHP’nin `session_create_id()` fonksiyonunu kullanarak token oluşturulur.
++ Oluşturulan token belirli bir süre için Redis'e kaydedilir.
+
+##### 4. Giriş Noktasını Oluşturma
++ `AuthController` içerisinde bir giriş (login) noktası tanımlanır.
++ Kullanıcıları database üzerinden kimlik doğrulaması yapılır ve başarılı girişlerde bir erişim token'ı oluşturulur.
++ Oluşturulan token istemciye döndürülür.
+
+##### 5. Token ile Gelen İstekleri Yönetme
++ `security.yaml` dosyasında bir token handler (işleyici) yapılandırılır.
++ Gelen isteklerdeki token'ları doğrulamak için `AccessTokenHandler` class'ındaki `getUserBadgeFrom` method'unu uygulanır.
++ Redis'ten token ile ilişkilendirilen kullanıcıyı bulmak için sorgu yapılır.
+
+##### 6. Test Etme
++ Giriş yapma ve korunan endpoint'lere erişim işlemlerini `curl` komutları ile doğrulanır.
++ Geçerli giriş, geçersiz giriş, token doğrulama ve geçerli/geçersiz token ile endpoint erişimini test edilir.
+
+#### Uygulama
+##### 1. Docker Compose Yapılandırması
 ~~~~~~~
+services:
+  redis:
+    image: "redis:latest"
+    ports:
+      - "6379:6379"
 ~~~~~~~
->
+
+##### 2. Redis Servis Yapılandırması
++ `services.yaml` dosyasında:
+~~~~~~~
+parameters:
+  redis_host: '%env(REDIS_URL)%'
+  redis_port: '%env(int:REDIS_PORT)%'
+
+services:
+  Redis:
+    class: Redis
+    calls:
+      - method: connect
+        arguments:
+          - '%redis_host%'
+          - '%redis_port%'
+~~~~~~~
+
+##### 3. AccessTokenHandler Class
++ `src/Security/AccessTokenHandler.php` dosyasında:
+~~~~~~~
+namespace App\Security;
+
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+
+class AccessTokenHandler
+{
+    private $redis;
+
+    public function __construct(\Redis $redis)
+    {
+        $this->redis = $redis;
+    }
+
+    public function createForUser($user)
+    {
+        $accessToken = session_create_id();
+        $this->redis->setex('sessions/' . $accessToken, 10800, $user->getUserIdentifier());
+        return $accessToken;
+    }
+
+    public function getUserBadgeFrom($accessToken)
+    {
+        $userId = $this->redis->get('sessions/' . $accessToken);
+        if (!$userId) {
+            throw new BadCredentialsException('Invalid token');
+        }
+        return new UserBadge($userId);
+    }
+}
+~~~~~~~
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/AccessTokenHandler%20Class.md)
+
+##### 4. AuthController
++ `src/Controller/AuthController.php` dosyasında:
+~~~~~~~
+namespace App\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Annotation\Route;
+use App\Security\AccessTokenHandler;
+
+class AuthController extends AbstractController
+{
+    private $accessTokenHandler;
+
+    public function __construct(AccessTokenHandler $accessTokenHandler)
+    {
+        $this->accessTokenHandler = $accessTokenHandler;
+    }
+
+    #[Route('/app/auth/login', name: 'auth_login', methods: ['POST'])]
+    public function login(Request $request)
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            return new JsonResponse(['message' => 'Invalid credentials'], JsonResponse::HTTP_UNAUTHORIZED);
+        }
+        $token = $this->accessTokenHandler->createForUser($user);
+        return new JsonResponse(['token' => $token]);
+    }
+}
+~~~~~~~
+> > [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/AuthController.md)
+
+##### 5. Güvenlik Yapılandırması
++ `config/packages/security.yaml` dosyasında:
+~~~~~~~
+security:
+  firewalls:
+    main:
+      custom_authenticators:
+        - App\Security\AccessTokenHandler
+~~~~~~~
+
+#### Test Komutları
+##### 1. Giriş Yap ve Token Al
+~~~~~~~
+curl -X POST -H "Content-Type: application/json" -d '{"username":"admin", "password":"1234"}' http://localhost:8000/app/auth/login
+~~~~~~~
+
+##### 2. Korunan Endpoint'e Erişim
+~~~~~~~
+curl -H "Authorization: Bearer <token>" http://localhost:8000/composer
+~~~~~~~
+
+##### 3. Geçersiz Token
+~~~~~~~
+curl -H "Authorization: Bearer invalid_token" http://localhost:8000/composer
+~~~~~~~
+
+> Bu adımlar takip edilere, Symfony ve Redis kullanarak güvenli bir token tabanlı kimlik doğrulama sistemi kurulur. Bu, uygulamanın kullanıcı kimlik doğrulamasını verimli bir şekilde yönetmesini sağlar ve token oluşturma ve doğrulama işlemlerinin güvenli bir şekilde yönetilmesini sağlar.
 
 ***
 ### Stateless Firewall
@@ -428,7 +577,7 @@ class AuthController extends AbstractController
 >
 
 ***
-### Authrization tests
+### Authrization Tests
 + 
 ~~~~~~~
 ~~~~~~~
