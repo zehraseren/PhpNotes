@@ -138,7 +138,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'app:user-create',
-    description: 'Şifre ve rollerle yeni bir kullanıcı oluşturun.',
+    description: 'Create a new user with password and roles.',
 )]
 class UserCreateCommand extends Command
 {
@@ -155,9 +155,9 @@ class UserCreateCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('username', InputArgument::REQUIRED, 'Kullanıcı adı')
-            ->addArgument('password', InputArgument::REQUIRED, 'Şifre (düz metin)')
-            ->addArgument('roles', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'Roller (birden fazla rol için boşlukla ayırın)');
+            ->addArgument('username', InputArgument::REQUIRED, 'Username')
+            ->addArgument('password', InputArgument::REQUIRED, 'Password (plain text)')
+            ->addArgument('roles', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'Roles (separate with space for multiple roles)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -169,7 +169,7 @@ class UserCreateCommand extends Command
         $roles = $input->getArgument('roles');
 
         if ($this->userRepository->findOneBy(['username' => $username])) {
-            $io->error('Bu kullanıcı adıyla zaten bir kullanıcı var.');
+            $io->error('There is already a user with this username.');
             return Command::FAILURE;
         }
 
@@ -181,7 +181,7 @@ class UserCreateCommand extends Command
 
         $this->userRepository->save($user, true);
 
-        $io->success('Kullanıcı ' . $user->getId() . ' ID ile oluşturuldu.');
+        $io->success('User created with ' . $user->getId() . ' ID');
 
         return Command::SUCCESS;
     }
@@ -207,7 +207,7 @@ use Symfony\Component\Console\Helper\Table;
 
 #[AsCommand(
     name: 'app:user-list',
-    description: 'Veritabanındaki tüm mevcut kullanıcıları listeleyin.',
+    description: 'List all existing users in the database.',
 )]
 class UserListCommand extends Command
 {
@@ -225,7 +225,7 @@ class UserListCommand extends Command
 
         $table = new Table($output);
         $table
-            ->setHeaders(['ID', 'Kullanıcı Adı', 'Roller'])
+            ->setHeaders(['ID', 'Username', 'Roles'])
             ->setRows(array_map(function ($user) {
                 return [
                     $user->getId(),
