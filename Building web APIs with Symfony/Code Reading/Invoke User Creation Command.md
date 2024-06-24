@@ -50,7 +50,7 @@ class SomeControllerTest extends WebTestCase
 + `app:user-create` komutunu çalıştırarak bir test kullanıcısı oluşturur.
 + Bu kullanıcı ile giriş yaparak bir JWT token'ı alır ve bu token'ı statik bir değişkene (`self::$testUserToken`) kaydeder.
 
-##### 2.Test Metotları:
+##### 2. Test Method'ları
 + `testSomeEndpoint`: Token ile korunan bir endpoint'e istek gönderir ve başarılı yanıt alınıp alınmadığını kontrol eder.
 + `testInvalidToken`: Geçersiz bir token ile istek gönderir ve `401 Unauthorized` yanıtını doğrular.
 + `testSomeOtherEndpoint`: Token ile korunan bir endpoint'e `POST` isteği gönderir ve başarılı (`201 Created`) yanıt alınıp alınmadığını kontrol eder.
