@@ -126,13 +126,13 @@ class SomeControllerTest extends WebTestCase
 + `app:user-create` komutu ile kullanıcıları oluşturur.
 + `loginAndGetToken` method'u ile kullanıcılar için token alır.
 
-##### loginAndGetToken Method'u
+##### 2. loginAndGetToken Method'u
 + Verilen kullanıcı adı ve şifre ile giriş yapar ve token'ı döner.
 
-##### Test Method'ları
+##### 3. Test Method'ları
 + `testIndexSymphony`: Kullanıcının symphony listesini görebildiğini doğrular.
 + `testCreateSymphony`: Admin kullanıcının yeni bir symphony oluşturabildiğini doğrular.
-+ `testCreateSymphonyAsUser`: Normal bir kullanıcının symphony oluşturamadığını (403 Forbidden) doğrular.
++ `testCreateSymphonyAsUser`: Normal bir kullanıcının symphony oluşturamadığını (`403 Forbidden`) doğrular.
 + `testUpdateSymphony`: Admin kullanıcının var olan bir symphony'yi güncelleyebildiğini doğrular.
 + `testDeleteSymphony`: Admin kullanıcının var olan bir symphony'yi silebildiğini doğrular.
 
