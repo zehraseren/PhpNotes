@@ -43,7 +43,7 @@ class SomeControllerTest extends WebTestCase
 + Bu class, `WebTestCase` class'ından türetilmiştir ve Symfony uygulamalarında web testi yapmak için kullanılır.
 
 ##### 3. Özellikler
-+ $accessToken: Testlerde kullanılacak erişim token'ını tutar.
++ `$accessToken`: Testlerde kullanılacak erişim token'ını tutar.
 
 ##### 4. setUp Method
 + `public function setUp(): void`: Testlerin başlamasından önce her seferinde çalıştırılan yapılandırma method'udur.
