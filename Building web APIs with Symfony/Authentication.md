@@ -836,7 +836,7 @@ class ComposerController extends AbstractController
 
 ###### SymphonyController
 ~~~~~~~
-// ... (diğer use ifadeleri)
+// ... (other use statements)
 
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
