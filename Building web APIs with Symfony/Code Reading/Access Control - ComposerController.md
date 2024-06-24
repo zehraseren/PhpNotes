@@ -104,7 +104,7 @@ class ComposerController extends AbstractController
   - `index` method'u tüm composer'ları döner.
   - `show` method'u belirli bir composer'ı döner.
 
-##### 2. create, update ve delete Method'ları:
+##### 2. create, update ve delete Method'ları
 + Bu method'lar `ROLE_ADMIN` rolüne sahip kullanıcılar tarafından erişilebilir.
   - `create` method'u yeni bir composer oluşturur.
   - `update` method'u mevcut bir composer'ı günceller.
