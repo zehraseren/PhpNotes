@@ -788,7 +788,192 @@ public function testIndexComposer()
 
 ***
 ### Granular Access
-+ 
++ Testler granular erişim kontrolüyle güncellendiği ve doğru rollerle çalıştıklarına emin olunduktan sonra, aşağıdaki adımlar özetlenerek ve yeni bir test eklenerek 403 durum kodu doğrulaması yapılabilir.
+
+#### 1. Erişim Kontrolü
+###### ComposerController
 ~~~~~~~
+// ... (other use statements)
+
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+
+class ComposerController extends AbstractController
+{
+    // ...
+
+    #[IsGranted('ROLE_USER')]
+    public function index(): Response
+    {
+        // ...
+    }
+
+    #[IsGranted('ROLE_USER')]
+    public function show(int $id): Response
+    {
+        // ...
+    }
+
+    #[IsGranted('ROLE_ADMIN')]
+    public function create(Request $request): Response
+    {
+        // ...
+    }
+
+    #[IsGranted('ROLE_ADMIN')]
+    public function update(int $id, Request $request): Response
+    {
+        // ...
+    }
+
+    #[IsGranted('ROLE_ADMIN')]
+    public function delete(int $id): Response
+    {
+        // ...
+    }
+}
 ~~~~~~~
->
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Access%20Control%20-%20ComposerController.md)
+
+###### SymphonyController
+~~~~~~~
+// ... (diğer use ifadeleri)
+
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+
+class SymphonyController extends AbstractController
+{
+    // ...
+
+    #[IsGranted('ROLE_USER')]
+    public function index(): Response
+    {
+        // ...
+    }
+
+    #[IsGranted('ROLE_USER')]
+    public function show(int $id): Response
+    {
+        // ...
+    }
+
+    #[IsGranted('ROLE_ADMIN')]
+    public function create(Request $request): Response
+    {
+        // ...
+    }
+
+    #[IsGranted('ROLE_ADMIN')]
+    public function update(int $id, Request $request): Response
+    {
+        // ...
+    }
+
+    #[IsGranted('ROLE_ADMIN')]
+    public function delete(int $id): Response
+    {
+        // ...
+    }
+}
+~~~~~~~
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Access%20Control%20-%20SymphonyController.md)
+
+#### 2. Yeni Test Kullanıcıları ve Tokenları
++ Test kullanıcıları ve admin kullanıcıları tanımlanır ve ilgili tokenlar alınır.
+~~~~~~~
+class SomeControllerTest extends WebTestCase
+{
+    private static $testUserToken;
+    private static $testAdminToken;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $kernel = self::bootKernel();
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        $command = $application->find('app:user-create');
+
+        $inputUser = new ArrayInput([
+            'username' => 'testuser',
+            'password' => 'Test1234',
+            'roles' => ['ROLE_USER']
+        ]);
+
+        $inputAdmin = new ArrayInput([
+            'username' => 'testadmin',
+            'password' => 'Test1234',
+            'roles' => ['ROLE_ADMIN']
+        ]);
+
+        $output = new BufferedOutput();
+        $command->run($inputUser, $output);
+        $command->run($inputAdmin, $output);
+
+        $client = static::createClient();
+        
+        $client->request('POST', '/login', [], [], [
+            'CONTENT_TYPE' => 'application/json'
+        ], json_encode([
+            'username' => 'testuser',
+            'password' => 'Test1234'
+        ]));
+
+        $response = $client->getResponse();
+        $data = json_decode($response->getContent(), true);
+        self::$testUserToken = $data['token'];
+
+        $client->request('POST', '/login', [], [], [
+            'CONTENT_TYPE' => 'application/json'
+        ], json_encode([
+            'username' => 'testadmin',
+            'password' => 'Test1234'
+        ]));
+
+        $response = $client->getResponse();
+        $data = json_decode($response->getContent(), true);
+        self::$testAdminToken = $data['token'];
+    }
+}
+~~~~~~~
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/New%20Test%20Users%20and%20Tokens.md)
+
+#### 3. Güncellenmiş Testler
++ Yeni test kullanıcıları ve admin tokenlarıyla birlikte testler güncellenir.
+~~~~~~~
+public function testCreateComposer()
+{
+    $response = $this->post('/composer', [
+        'name' => 'Test Composer'
+    ], self::$testAdminToken);
+
+    $this->assertEquals(201, $response->getStatusCode());
+}
+
+public function testCreateComposerWithUserRole()
+{
+    $response = $this->post('/composer', [
+        'name' => 'Test Composer'
+    ], self::$testUserToken);
+
+    $this->assertEquals(403, $response->getStatusCode());
+}
+~~~~~~~
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Updated%20Tests.md)
+
+#### 4. Yeni Test: 403 Durum Kodunu Doğrulama
++ 403 durum kodunu doğrulayan yeni bir test eklenir.
+~~~~~~~
+public function testCreateComposerWithUserRole()
+{
+    $response = $this->post('/composer', [
+        'name' => 'Test Composer'
+    ], self::$testUserToken);
+
+    $this->assertEquals(403, $response->getStatusCode());
+}
+~~~~~~~
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/New%20Test%3A%20Validate%20403%20Status%20Code.md)
+
+> Bu adımlar sayesinde, rol bazlı erişim kontrolüm granular hale getirilir ve testler bu yeni yapıya uygun hale getirilir. Tüm testler doğru rollerle çalıştıklarından emin olunur ve yeni bir test eklenerek 403 durum kodunu doğrulanır. Bu yaklaşım, gelecekte eklenecek yeni roller ve yetkilendirmeler için de sağlam bir temel oluşturur.
