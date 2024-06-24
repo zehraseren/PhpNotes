@@ -665,11 +665,126 @@ public function testSomeOtherEndpoint()
 > Yukarıdaki adımlar izlenerek, Symfony uygulaması stateless hale getirilip, erişim tokenları ile kimlik doğrulamasını yöneten bir yapı kuruldu. Ayrıca, mevcut testler yeni yapıya uyacak şekilde güncellendi. Bu sayede API daha esnek ve genişletilebilir bir yapıya sahip olacaktır ve farklı türdeki istemcilerle daha uyumlu çalışacaktır.
 
 ***
-### Authrization Tests
-+ 
+### Authrization Tests  
+#### 1. Kullanıcı Oluşturma Komutunu Çağırma
++ Testler çalıştırılmadan önce bir test kullanıcısı oluşturulur ve bu kullanıcıya ait bir erişim tokenı alınır. Bunu yapmak için Symfony uygulaması başlatılır ve `user-create` komutu çalıştırılır.
 ~~~~~~~
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+
+class SomeControllerTest extends WebTestCase
+{
+    private static $testUserToken;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $kernel = self::bootKernel();
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        $command = $application->find('app:user-create');
+
+        $input = new ArrayInput([
+            'username' => 'testuser',
+            'password' => 'Test1234',
+            'roles' => ['ROLE_USER']
+        ]);
+
+        $output = new BufferedOutput();
+        $command->run($input, $output);
+
+        // Login to get the access token
+        $client = static::createClient();
+        $client->request('POST', '/login', [], [], [
+            'CONTENT_TYPE' => 'application/json'
+        ], json_encode([
+            'username' => 'testuser',
+            'password' => 'Test1234'
+        ]));
+
+        $response = $client->getResponse();
+        $data = json_decode($response->getContent(), true);
+        self::$testUserToken = $data['token'];
+    }
+}
 ~~~~~~~
->
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Invoke%20User%20Creation%20Command.md)
+
+#### 2. Testlerde Token Kullanımı
++ Oluşturulan erişim tokenı testlerde kullanılarak tüm isteklerde bu token gönderilir. Bu sayede tüm endpoint'lere erişim sağlanabilir.
+
+##### 2.1. Yardımcı Method'larda Token Kullanımı
+~~~~~~~
+protected function post(string $uri, array $data = [], ?string $token = null)
+{
+    $headers = ['CONTENT_TYPE' => 'application/json'];
+    if ($token) {
+        $headers['HTTP_AUTHORIZATION'] = 'Bearer ' . $token;
+    }
+
+    return $this->client->request('POST', $uri, [], [], $headers, json_encode($data));
+}
+
+protected function get(string $uri, ?string $token = null)
+{
+    $headers = [];
+    if ($token) {
+        $headers['HTTP_AUTHORIZATION'] = 'Bearer ' . $token;
+    }
+
+    return $this->client->request('GET', $uri, [], [], $headers);
+}
+
+protected function put(string $uri, array $data = [], ?string $token = null)
+{
+    $headers = ['CONTENT_TYPE' => 'application/json'];
+    if ($token) {
+        $headers['HTTP_AUTHORIZATION'] = 'Bearer ' . $token;
+    }
+
+    return $this->client->request('PUT', $uri, [], [], $headers, json_encode($data));
+}
+
+protected function delete(string $uri, ?string $token = null)
+{
+    $headers = [];
+    if ($token) {
+        $headers['HTTP_AUTHORIZATION'] = 'Bearer ' . $token;
+    }
+
+    return $this->client->request('DELETE', $uri, [], [], $headers);
+}
+~~~~~~~
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Token%20Usage%20in%20Helper%20Methods.md)
+
+##### 2.2. Testlerde Token Kullanarak İstek Gönderme
+~~~~~~~
+public function testCreateComposer()
+{
+    $response = $this->post('/composer', [
+        'name' => 'Test Composer'
+    ], self::$testUserToken);
+
+    $this->assertEquals(201, $response->getStatusCode());
+    // Other test validations...
+}
+
+public function testIndexComposer()
+{
+    $response = $this->get('/composer', self::$testUserToken);
+
+    $this->assertEquals(200, $response->getStatusCode());
+    // Other test validations...
+}
+~~~~~~~
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Sending%20Requests%20Using%20Token%20in%20Tests.md)
+
+> Bu adımlarla birlikte, tüm testlerde kimlik doğrulama gereksinimleri karşılanır ve testlerin başarılı bir şekilde geçilmesini sağlar. API stateless ve güvenli bir şekilde çalışır halde ve testler de bu yeni yapıya uygun olarak güncellenmiştir.
 
 ***
 ### Granular Access
