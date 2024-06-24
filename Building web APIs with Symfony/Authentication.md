@@ -627,7 +627,7 @@ class SomeControllerTest extends WebTestCase
 > [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Configuration%20for%20Tests.md)
 
 ##### 2.2. Yeni Test Senaryoları Eklemek
-+ Yeni token tabanlı kimlik doğrulama mekanizmasını test etmek için birkaç farklı senaryo eklenmelidir. Örneğin, geçersiz bir token ile istek yapıldığında doğru hata mesajının döndüğünden emin olunmalıdır.
++ Yeni token tabanlı kimlik doğrulama mekanizmasını test etmek için birkaç farklı senaryo eklenmelidir. Örneğin, geçersiz bir token ile istek yapıldığında doğru hata mesajının döndüğünden emin olunulmalıdır.
 ~~~~~~~
 public function testInvalidToken()
 {
