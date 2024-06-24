@@ -1,6 +1,6 @@
 ### User Entity
 + Bir symphony uygulamasının güvence altına almak ve belirli rotaların yalnızca yetkili kullanıcılar tarafından erişilebilir olmasını sağlamak için kullanıcı kimlik doğrulamasını ve yetkilendirmesini eklenir.
-+ Bu, kullanıcıların geçerli kimlik bilgilerini sağlamalarını gerektirecek ve başarılı bir kimlik doğrulama sonrası onlara erişim tokeni sağlanır. Bu adımlar izlenerek `Symfony Security Bundle` kullanılarak bu süreç uygulanır.
++ Bu, kullanıcıların geçerli kimlik bilgilerini sağlamalarını gerektirecek ve başarılı bir kimlik doğrulama sonrası onlara erişim token'ı sağlanır. Bu adımlar izlenerek `Symfony Security Bundle` kullanılarak bu süreç uygulanır.
 
 ##### 1. Symfony Security Bundle Kurulumu
 + İlk olarak, `Symfony Security Bundle` yüklenmelidir.
@@ -571,7 +571,7 @@ curl -H "Authorization: Bearer invalid_token" http://localhost:8000/composer
 
 ***
 ### Stateless Firewall
-+ API'yı stateless hale getirmek ve Symfony'nin her sorguda oturum başlatmasını engellemek için `security.yaml` dosyasında gerekli değişikliklerin yapılması gerekmektedir. Bu değişiklikler, `oturumların yalnızca Redis'te saklanan erişim tokenları ile yönetilmesini sağlar ve API'yı daha esnek hale getirir.`
++ API'yı stateless hale getirmek ve Symfony'nin her sorguda oturum başlatmasını engellemek için `security.yaml` dosyasında gerekli değişikliklerin yapılması gerekmektedir. Bu değişiklikler, `oturumların yalnızca Redis'te saklanan erişim token'ları ile yönetilmesini sağlar ve API'yı daha esnek hale getirir.`
 
 ##### 1. security.yaml Dosyasını Güncelleme
 + Öncelikle, main firewall'ının stateless olarak ayarlandığından emin olunmalıdır:
@@ -583,12 +583,12 @@ security:
       custom_authenticators:
         - App\Security\AccessTokenHandler
 ~~~~~~~
-> Bu ayar, Symfony'nin oturumları başlatmasını engeller ve böylece API'mizin stateless olmasını sağlar.
+> Bu ayar, Symfony'nin oturumları başlatmasını engeller ve böylece API'ın stateless olmasını sağlar.
 
 ##### Testleri Güncelleme
 + Yeni kimlik doğrulama mekanizması ile mevcut testlerin çoğunun başarısız olması muhtemeldir. Testlerin yeni yapıya uyacak şekilde güncellenmesi gerekmektedir.
 ##### 2.1. Testler İçin Yapılandırma
-+ Testlerde kullanılacak olan erişim tokenlarını oluşturmak için test kullanıcıları ve tokenları ayarlanmalıdır. Örneğin, `AccessTokenHandler`'ı mock'lamak yerine gerçek tokenları kullanılabilir.
++ Testlerde kullanılacak olan erişim token'larını oluşturmak için test kullanıcıları ve token'ları ayarlanmalıdır. Örneğin, `AccessTokenHandler`'ı mock'lamak yerine gerçek token'ları kullanılabilir.
 ~~~~~~~
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -662,12 +662,12 @@ public function testSomeOtherEndpoint()
 ~~~~~~~
 > [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Update%20Existing%20Tests.md)
 
-> Yukarıdaki adımlar izlenerek, Symfony uygulaması stateless hale getirilip, erişim tokenları ile kimlik doğrulamasını yöneten bir yapı kuruldu. Ayrıca, mevcut testler yeni yapıya uyacak şekilde güncellendi. Bu sayede API daha esnek ve genişletilebilir bir yapıya sahip olacaktır ve farklı türdeki istemcilerle daha uyumlu çalışacaktır.
+> Yukarıdaki adımlar izlenerek, Symfony uygulaması stateless hale getirilip, erişim token'ları ile kimlik doğrulamasını yöneten bir yapı kuruldu. Ayrıca, mevcut testler yeni yapıya uyacak şekilde güncellendi. Bu sayede API daha esnek ve genişletilebilir bir yapıya sahip olacaktır ve farklı türdeki istemcilerle daha uyumlu çalışacaktır.
 
 ***
 ### Authrization Tests  
 #### 1. Kullanıcı Oluşturma Komutunu Çağırma
-+ Testler çalıştırılmadan önce bir test kullanıcısı oluşturulur ve bu kullanıcıya ait bir erişim tokenı alınır. Bunu yapmak için Symfony uygulaması başlatılır ve `user-create` komutu çalıştırılır.
++ Testler çalıştırılmadan önce bir test kullanıcısı oluşturulur ve bu kullanıcıya ait bir erişim token'ı alınır. Bunu yapmak için Symfony uygulaması başlatılır ve `user-create` komutu çalıştırılır.
 ~~~~~~~
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -716,7 +716,7 @@ class SomeControllerTest extends WebTestCase
 > [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Invoke%20User%20Creation%20Command.md)
 
 #### 2. Testlerde Token Kullanımı
-+ Oluşturulan erişim tokenı testlerde kullanılarak tüm isteklerde bu token gönderilir. Bu sayede tüm endpoint'lere erişim sağlanabilir.
++ Oluşturulan erişim token'ı testlerde kullanılarak tüm isteklerde bu token gönderilir. Bu sayede tüm endpoint'lere erişim sağlanabilir.
 
 ##### 2.1. Yardımcı Method'larda Token Kullanımı
 ~~~~~~~
@@ -877,8 +877,8 @@ class SymphonyController extends AbstractController
 ~~~~~~~
 > [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Access%20Control%20-%20SymphonyController.md)
 
-#### 2. Yeni Test Kullanıcıları ve Tokenları
-+ Test kullanıcıları ve admin kullanıcıları tanımlanır ve ilgili tokenlar alınır.
+#### 2. Yeni Test Kullanıcıları ve Token'ları
++ Test kullanıcıları ve admin kullanıcıları tanımlanır ve ilgili token'lar alınır.
 ~~~~~~~
 class SomeControllerTest extends WebTestCase
 {
@@ -940,7 +940,7 @@ class SomeControllerTest extends WebTestCase
 > [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/New%20Test%20Users%20and%20Tokens.md)
 
 #### 3. Güncellenmiş Testler
-+ Yeni test kullanıcıları ve admin tokenlarıyla birlikte testler güncellenir.
++ Yeni test kullanıcıları ve admin token'larıyla birlikte testler güncellenir.
 ~~~~~~~
 public function testCreateComposer()
 {
