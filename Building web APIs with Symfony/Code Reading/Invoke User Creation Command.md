@@ -46,9 +46,9 @@ class SomeControllerTest extends WebTestCase
 ~~~~~~~
 
 ##### 1. setUp Method
-+ Symfony kernelini başlatır ve `Application` nesnesi oluşturur.
++ Symfony kernel'ini başlatır ve `Application` nesnesi oluşturur.
 + `app:user-create` komutunu çalıştırarak bir test kullanıcısı oluşturur.
-+ Bu kullanıcı ile giriş yaparak bir JWT tokenı alır ve bu tokenı statik bir değişkene (`self::$testUserToken`) kaydeder.
++ Bu kullanıcı ile giriş yaparak bir JWT token'ı alır ve bu token'ı statik bir değişkene (`self::$testUserToken`) kaydeder.
 
 ##### 2.Test Metotları:
 + `testSomeEndpoint`: Token ile korunan bir endpoint'e istek gönderir ve başarılı yanıt alınıp alınmadığını kontrol eder.
