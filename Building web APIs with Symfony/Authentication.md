@@ -539,7 +539,7 @@ class AuthController extends AbstractController
     }
 }
 ~~~~~~~
-> > [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/AuthController.md)
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/AuthController.md)
 
 ##### 5. Güvenlik Yapılandırması
 + `config/packages/security.yaml` dosyasında:
@@ -567,14 +567,102 @@ curl -H "Authorization: Bearer <token>" http://localhost:8000/composer
 curl -H "Authorization: Bearer invalid_token" http://localhost:8000/composer
 ~~~~~~~
 
-> Bu adımlar takip edilere, Symfony ve Redis kullanarak güvenli bir token tabanlı kimlik doğrulama sistemi kurulur. Bu, uygulamanın kullanıcı kimlik doğrulamasını verimli bir şekilde yönetmesini sağlar ve token oluşturma ve doğrulama işlemlerinin güvenli bir şekilde yönetilmesini sağlar.
+> Bu adımlar takip edilerek, Symfony ve Redis kullanarak güvenli bir token tabanlı kimlik doğrulama sistemi kurulur. Bu, uygulamanın kullanıcı kimlik doğrulamasını verimli bir şekilde yönetmesini sağlar ve token oluşturma ve doğrulama işlemlerinin güvenli bir şekilde yönetilmesini sağlar.
 
 ***
 ### Stateless Firewall
-+ 
++ API'yı stateless hale getirmek ve Symfony'nin her sorguda oturum başlatmasını engellemek için `security.yaml` dosyasında gerekli değişikliklerin yapılması gerekmektedir. Bu değişiklikler, `oturumların yalnızca Redis'te saklanan erişim tokenları ile yönetilmesini sağlar ve API'yı daha esnek hale getirir.`
+
+##### 1. security.yaml Dosyasını Güncelleme
++ Öncelikle, main firewall'ının stateless olarak ayarlandığından emin olunmalıdır:
 ~~~~~~~
+security:
+  firewalls:
+    main:
+      stateless: true
+      custom_authenticators:
+        - App\Security\AccessTokenHandler
 ~~~~~~~
->
+> Bu ayar, Symfony'nin oturumları başlatmasını engeller ve böylece API'mizin stateless olmasını sağlar.
+
+##### Testleri Güncelleme
++ Yeni kimlik doğrulama mekanizması ile mevcut testlerin çoğunun başarısız olması muhtemeldir. Testlerin yeni yapıya uyacak şekilde güncellenmesi gerekmektedir.
+##### 2.1. Testler İçin Yapılandırma
++ Testlerde kullanılacak olan erişim tokenlarını oluşturmak için test kullanıcıları ve tokenları ayarlanmalıdır. Örneğin, `AccessTokenHandler`'ı mock'lamak yerine gerçek tokenları kullanılabilir.
+~~~~~~~
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+
+class SomeControllerTest extends WebTestCase
+{
+    private $accessToken;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        //Steps to create test users and access tokens
+        $client = static::createClient();
+        $userRepository = $client->getContainer()->get(UserRepository::class);
+        $user = $userRepository->findOneByEmail('test@example.com');
+        
+        // Mock the AccessTokenHandler or use the real one to generate a token
+        $accessTokenHandler = $client->getContainer()->get(AccessTokenHandler::class);
+        $this->accessToken = $accessTokenHandler->createForUser($user);
+    }
+
+    public function testSomeEndpoint()
+    {
+        $client = static::createClient();
+
+        // Send request with authorization header
+        $client->request('GET', '/some-endpoint', [], [], [
+            'HTTP_AUTHORIZATION' => 'Bearer ' . $this->accessToken,
+        ]);
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        // Other test validations...
+    }
+}
+~~~~~~~
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Configuration%20for%20Tests.md)
+
+##### 2.2. Yeni Test Senaryoları Eklemek
++ Yeni token tabanlı kimlik doğrulama mekanizmasını test etmek için birkaç farklı senaryo eklenmelidir. Örneğin, geçersiz bir token ile istek yapıldığında doğru hata mesajının döndüğünden emin olunmalıdır.
+~~~~~~~
+public function testInvalidToken()
+{
+    $client = static::createClient();
+
+    // Sending request with invalid token
+    $client->request('GET', '/some-endpoint', [], [], [
+        'HTTP_AUTHORIZATION' => 'Bearer invalid_token',
+    ]);
+
+    $this->assertEquals(401, $client->getResponse()->getStatusCode());
+    // Other test validations...
+}
+~~~~~~~
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Add%20New%20Test%20Scenarios.md)
+
+##### 2.3. Mevcut Testleri Güncelleme
++ Tüm testleri yeni kimlik doğrulama yapısına uygun hale getirmek için, her testin başında yetkili bir kullanıcı ve geçerli bir token oluşturulmalıdır.
+~~~~~~~
+public function testSomeOtherEndpoint()
+{
+    $client = static::createClient();
+
+    // Send request with authorization header
+    $client->request('POST', '/some-other-endpoint', [], [], [
+        'HTTP_AUTHORIZATION' => 'Bearer ' . $this->accessToken,
+    ], json_encode(['data' => 'test']));
+
+    $this->assertEquals(201, $client->getResponse()->getStatusCode());
+    // Other test validations...
+}
+~~~~~~~
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Update%20Existing%20Tests.md)
+
+> Yukarıdaki adımlar izlenerek, Symfony uygulaması stateless hale getirilip, erişim tokenları ile kimlik doğrulamasını yöneten bir yapı kuruldu. Ayrıca, mevcut testler yeni yapıya uyacak şekilde güncellendi. Bu sayede API daha esnek ve genişletilebilir bir yapıya sahip olacaktır ve farklı türdeki istemcilerle daha uyumlu çalışacaktır.
 
 ***
 ### Authrization Tests
