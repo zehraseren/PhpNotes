@@ -1,4 +1,4 @@
-+ `AccessTokenHandler` class, Redis ile etkileşerek kullanıcılar için erişim token'ları oluşturup bu tokenları doğrulayan bir güvenlik bileşeni sağlar.
++ `AccessTokenHandler` class, Redis ile etkileşerek kullanıcılar için erişim token'ları oluşturup bu token'ları doğrulayan bir güvenlik bileşeni sağlar.
 + Bu class, bir kullanıcı için erişim token'ı oluşturmak ve bu token'ı kullanarak kullanıcı bilgilerini elde etmek için gerekli işlemleri gerçekleştirebilir.
 ~~~~~~~
 namespace App\Security;
@@ -58,8 +58,8 @@ class AccessTokenHandler
 ##### 6. Token Doğrulama | getUserBadgeFrom Method
 + `public function getUserBadgeFrom($accessToken)`: Bu method, verilen erişim token'ından bir `UserBadge` oluşturur.
 + `$userId = $this->redis->get('sessions/' . $accessToken);`: Redis'ten `sessions/<accessToken>` key ile kullanıcı ID'sini alır.
-+ `if (!$userId) { throw new BadCredentialsException('Geçersiz token'); }`: Eğer token geçersizse veya bulunamazsa, `BadCredentialsException` fırlatır.
++ `if (!$userId) { throw new BadCredentialsException('Invalid token'); }`: Eğer token geçersizse veya bulunamazsa, `BadCredentialsException` fırlatır.
 + `return new UserBadge($userId);`: Geçerli bir kullanıcı ID'si ile yeni bir `UserBadge` nesnesi döndürür.
 
 ###### Özet
-+ Bu class', bir kullanıcı için erişim token'ları oluşturmak ve bu token'ları doğrulamak için Redis kullanır. Bu token'lar, kullanıcı oturumlarını izlemek ve doğrulamak için kullanılır. `createForUser` method'u, yeni bir erişim token'ı oluşturur ve bunu Redis'e kaydederken, `getUserBadgeFrom` method'u, verilen token'ı doğrular ve geçerli bir kullanıcı ID'si ile bir `UserBadge` döndürür. Bu yapı, kullanıcıların oturumlarını güvenli ve verimli bir şekilde yönetmek için kullanılabilir.
++ Bu class, bir kullanıcı için erişim token'ları oluşturmak ve bu token'ları doğrulamak için Redis kullanır. Bu token'lar, kullanıcı oturumlarını izlemek ve doğrulamak için kullanılır. `createForUser` method'u, yeni bir erişim token'ı oluşturur ve bunu Redis'e kaydederken, `getUserBadgeFrom` method'u, verilen token'ı doğrular ve geçerli bir kullanıcı ID'si ile bir `UserBadge` döndürür. Bu yapı, kullanıcıların oturumlarını güvenli ve verimli bir şekilde yönetmek için kullanılabilir.
