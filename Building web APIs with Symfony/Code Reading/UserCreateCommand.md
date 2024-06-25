@@ -1,4 +1,4 @@
-+ Bu PHP kodu, Symfony framework'ü ile bir console komutu oluşturarak yeni bir kullanıcı yaratmayı sağlar. Komut, kullanıcı adı, şifre ve roller gibi bilgileri alarak yeni bir kullanıcı oluşturur ve database'e kaydeder.
++ Bu PHP kodu, Symfony framework'ü ile bir console komutu oluşturarak yeni bir kullanıcı oluşturmayı sağlar. Bu komut kullanıcı adı, şifre ve roller gibi bilgileri alarak yeni bir kullanıcı oluşturur ve database'e kaydeder.
 
 ##### Namespace ve Kullanılan Kütüphaneler
 ~~~~~~~
@@ -36,18 +36,19 @@ class UserCreateCommand extends Command
     }
 ~~~~~~~
 + `UserCreateCommand` class, Symfony'nin Command class'ından türetilmiştir.
-+ `AsCommand` attribute'u ile komutun adı (`app:user-create`) ve açıklaması (`Create a new user with password and roles.`) tanımlanmıştır.
++ `AsCommand` anotasyou ile komutun adı (`app:user-create`) ve açıklaması (`Create a new user with password and roles.`) tanımlanmıştır.
+  - Bu anotasyon, Symfony Console komutlarını tanımlamak ve yapılandırmak için kullanılır. `AsCommand` anotasyonu, class'ın bir konsol komutu olarak tanımlanmasını sağlar ve komutun adını, açıklamasını ve diğer yapılandırma bilgilerini belirtir. `Bu anotasyon sayesinde, komut class'ı Symfony'nin komut sistemi tarafından tanınır ve kullanılabilir hale gelir.`
 + `UserRepository` ve `UserPasswordHasherInterface` bağımlılıkları constructor aracılığıyla class'a enjekte edilir.
 
 ##### `configure` Method
 ~~~~~~~
-    protected function configure(): void
-    {
-        $this
-            ->addArgument('username', InputArgument::REQUIRED, 'Username')
-            ->addArgument('password', InputArgument::REQUIRED, 'Password (plain text)')
-            ->addArgument('roles', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'Roles (separate with space for multiple roles)');
-    }
+protected function configure(): void
+{
+    $this
+        ->addArgument('username', InputArgument::REQUIRED, 'Username')
+        ->addArgument('password', InputArgument::REQUIRED, 'Password (plain text)')
+        ->addArgument('roles', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'Roles (separate with space for multiple roles)');
+}
 ~~~~~~~
 + Bu method, komut için gerekli olan argümanları tanımlar:
   - `username:` Kullanıcının adı (zorunlu).
@@ -56,30 +57,30 @@ class UserCreateCommand extends Command
 
 ##### `execute` Method
 ~~~~~~~
-    protected function execute(InputInterface $input, OutputInterface $output): int
-    {
-        $io = new SymfonyStyle($input, $output);
+protected function execute(InputInterface $input, OutputInterface $output): int
+{
+    $io = new SymfonyStyle($input, $output);
 
-        $username = $input->getArgument('username');
-        $password = $input->getArgument('password');
-        $roles = $input->getArgument('roles');
+    $username = $input->getArgument('username');
+    $password = $input->getArgument('password');
+    $roles = $input->getArgument('roles');
 
-        if ($this->userRepository->findOneBy(['username' => $username])) {
-            $io->error('There is already a user with this username.');
-            return Command::FAILURE;
-        }
+    if ($this->userRepository->findOneBy(['username' => $username])) {
+        $io->error('There is already a user with this username.');
+        return Command::FAILURE;
+    }
 
-        $user = new User();
-        $user->setUsername($username);
-        $user->setRoles($roles);
-        $hashedPassword = $this->passwordHasher->hashPassword($user, $password);
-        $user->setPassword($hashedPassword);
+    $user = new User();
+    $user->setUsername($username);
+    $user->setRoles($roles);
+    $hashedPassword = $this->passwordHasher->hashPassword($user, $password);
+    $user->setPassword($hashedPassword);
 
-        $this->userRepository->save($user, true);
+    $this->userRepository->save($user, true);
 
-        $io->success('User created with ' . $user->getId() . ' ID');
+    $io->success('User created with ' . $user->getId() . ' ID');
 
-        return Command::SUCCESS;
+    return Command::SUCCESS;
     }
 }
 ~~~~~~~
@@ -92,4 +93,4 @@ class UserCreateCommand extends Command
 + Başarılı işlem mesajı gösterilir ve komut `SUCCESS` kodu ile sonlandırılır.
 
 ###### Özet
-+ Bu komut class'ı, kullanıcı oluşturma işlemini kolaylaştırır ve CLI üzerinden çalıştırılabilir. Kullanıcı bilgilerini alır, doğrular, şifreyi hashler ve yeni kullanıcıyı database'e kaydeder. Bu tür komutlar, özellikle büyük uygulamalarda yönetici işlemlerini otomatikleştirmek için çok faydalıdır.
++ Bu komut class'ı, kullanıcı oluşturma işlemini kolaylaştırır ve CLI üzerinden çalıştırılabilir. Kullanıcı bilgilerini alır, doğrular, şifreyi hash'ler ve yeni kullanıcıyı database'e kaydeder. Bu tür komutlar, özellikle büyük uygulamalarda yönetici işlemlerini otomatikleştirmek için çok faydalıdır.
