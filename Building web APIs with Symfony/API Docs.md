@@ -7,7 +7,9 @@ composer require nelmio/api-doc-bundle
 > Bu komut, NelmioApiDocBundle ve gerekli diğer bağımlılıkları projeye ekler.
 
 ##### 2. NelmioApiDocBundle'ın Yapılandırılması
-+ Kurulumdan sonra Symfony, NelmioApiDocBundle'ın `recipe`'sini uygulamasını ister. Bu recipe, projeye gerekli yapılandırma dosyalarını ekleyecektir. `recipe` uygulamayı kabul edilmelidir. Sonrasında, yeni yapılandırma dosyaları ve rotalar eklenecektir.
++ Kurulumdan sonra Symfony, NelmioApiDocBundle'ın `recipe`'sini uygulanmasını ister. Bu recipe, projeye gerekli yapılandırma dosyalarını ekleyecektir.
++ `recipe` uygulanması kabul edilmelidir. Sonrasında, yeni yapılandırma dosyaları ve rotalar eklenecektir.
+
 ###### `config/packages/nelmio_api_doc.yaml` dosyasında gerekli ayarlamaları aşağıdaki gibidir:
 ~~~~~~~
 nelmio_api_doc:
@@ -33,8 +35,8 @@ nelmio_api_doc:
 > Yukarıdaki yapılandırmada, tüm rotalar için dokümantasyon oluşturulmasını sağlanır (`path_patterns'da ^/` ile belirtilmiştir). Ayrıca `exclude` kısmında dokümantasyon oluşturulması istenmeyen yollar belirtilmiştir.
 > + [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/nelmio_api_doc.yaml.md)
 
-##### 3. Dokümantasyon URL'sinin Yapılandırılması
-+ Dokümantasyon JSON çıktısı alınacak URL'i yapılandırılmalıdır.
+##### 3. Dokümantasyon URL'inin Yapılandırılması
++ Dokümantasyon JSON çıktısı alınacak URL yapılandırılmalıdır.
 ~~~~~~~
 # config/routes/nelmio_api_doc.yaml
 nelmio_api_doc:
@@ -43,8 +45,8 @@ nelmio_api_doc:
 ~~~~~~~
 > Bu yapılandırma ile API dokümantasyonu `/docs.json` URL'i üzerinden erişilebilir hale getirilir. Bu URL, OpenAPI uyumlu JSON döndürecektir.
 
-##### 4. Rota ve Method Yapılandırmalarının Düzeltilmesi
-+ Dokümantasyonun doğru çalışması için, rotaların ve method'ların doğru yapılandırılması gerekmektedir.
+##### 4. Route ve Method Yapılandırmalarının Düzeltilmesi
++ Dokümantasyonun doğru çalışması için, route'ların ve method'ların doğru yapılandırılması gerekmektedir.
 ###### Login rotası örneğinde olduğu gibi:
 ~~~~~~~
 // src/Controller/SecurityController.php
@@ -64,14 +66,14 @@ class SecurityController extends AbstractController
     }
 }
 ~~~~~~~
-> Aynı şekilde diğer controller'larda da rotaların method'ları belirtildiğinden emin olunulmalıdır.
+> Aynı şekilde diğer controller'larda da route'ların method'ları belirtildiğinden emin olunulmalıdır.
 
 ##### 5. Dokümantasyonun Test Edilmesi
 + Yapılandırmalar tamamladıktan sonra, `/docs.json` URL'i tarayıcıda veya bir API istemcisi ile kontrol edilmelidir.
 ~~~~~~~
 curl http://localhost:8000/docs.json
 ~~~~~~~
-> Bu URL'e erişerek, API dokümantasyonunun JSON çıktısı grülebilir. JSON çıktısı, tüm rotaları ve method'lar için dokümantasyon bilgilerini içerecektir.
+> Bu URL'e erişilerek, API dokümantasyonunun JSON çıktısı görülebilir. JSON çıktısı, tüm route'ları ve method'lar için dokümantasyon bilgilerini içermektedir.
 
 ##### 6. Post ve Diğer HTTP Method'lar için Ek Bilgi Ekleme
 + Son olarak, özellikle POST method'ları için istenen veri formatını ve örnek cevapları belirtilmesi gerekmektedir. Bu bilgiler NelmioApiDocBundle ile aşağıdaki gibi eklenebilir:
@@ -110,7 +112,7 @@ class ComposerController extends AbstractController
 > Bu şekilde, POST method'u için gerekli veri formatını ve olası cevaplar detaylandırılmış olunur.
 > + [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/NelmioBundle%20Post%20and%20Other%20Methods.md)
 
-> Bu adımlar takip edilerek, API dokümantasyonu oluşturuldu ve yapılandırıldı. Dokümantasyonun doğru çalıştığından ve tüm gerekli bilgileri içerdiğinden emin olmak için NelmioApiDocBundle ve OpenAPI'yi doğru şekilde yapılandırılmalıdır. Bu sayede, geliştiriciler API'yi kolayca kullanabilir ve entegrasyonlarını yapabilirler.
+> Bu adımlar takip edilerek, API dokümantasyonu oluşturulur ve yapılandırılır. Dokümantasyonun doğru çalıştığından ve tüm gerekli bilgileri içerdiğinden emin olmak için NelmioApiDocBundle ve OpenAPI'yi doğru şekilde yapılandırılmalıdır. Bu sayede, geliştiriciler API'ı kolayca kullanabilir ve entegrasyonlarını yapabilirler.
 
 ***
 ### OpenApi Attributes and Local UI
@@ -124,9 +126,9 @@ class ComposerController extends AbstractController
 ##### 3. Twig ve Asset Bileşenlerini Yükleme
 + Swagger UI'nin HTML render etmesi gerektiğinden, Twig ve Asset bileşenlerini yüklenmelidir: `composer require twig asset`.
 
-##### 4. Swagger UI'yi Ayarlama
-+ Swagger UI'ye erişim için varsayılan yolu `/docs` olarak değiştirilmelidir. Bu yol, `config/routes/nelmio_api_doc.yaml` dosyasında güncellenerek yapılmalıdır.
-+ Tarayıcı açılarak ve `http://localhost/docs` adresine gidilerek ayarların doğru olup olmadığını kontrol edilir.
+##### 4. Swagger UI'yı Ayarlama
++ Swagger UI'ya erişim için varsayılan yolu `/docs` olarak değiştirilmelidir. Bu yol, `config/routes/nelmio_api_doc.yaml` dosyasında güncellenerek yapılmalıdır.
++ Tarayıcı açılarak `http://localhost/docs` adresine gidilir ve ayarların doğru olup olmadığını kontrol edilir.
 
 ##### 5. Controller için Etiketler Tanımlama
 + OpenAPI etiketlerini kullanarak endpoint'ler mantıksal olarak gruplanmalıdır. OpenAPI öznitelikleri içe aktarılır ve controller'larda kullanılır.
@@ -163,13 +165,13 @@ use OpenApi\Annotations as OA;
  */
 public function index(): JsonResponse
 {
-    // Enpoint logic
+    // Endpoint logic
 }
 ~~~~~~~
 > POST, PUT ve DELETE endpoint'leri için response ve request gövdeleri benzer şekilde tanımlanmalıdır.
 
 ##### 7. Güvenliği Ayarlama
-+ `nelmio_api_doc.yaml` dosyasında `bearer` kimlik doğrulamasını yapılandırılmalıdır.
++ `nelmio_api_doc.yaml` dosyasında `bearer` kimlik doğrulaması yapılandırılmalıdır.
 ~~~~~~~
 nelmio_api_doc:
     documentation:
@@ -212,9 +214,9 @@ public function login(Request $request): JsonResponse
 + Swagger UI'daki `Try it out` düğmesi kullanılarak endpoint'ler test edilir. Yetkilendirme düğmesini kullanılarak kimlik doğrulaması yapılabilir ve doğrulanmış endpoint'ler test edilebilir.
 
 ##### 9. Güncel Dokümantasyon Sağlama
-+ Endpoint'ler değiştirildikçe açıklamalar güncel tutulmalıdır. Bu, dokümantasyonun doğru ve kullanışlı kalmasını sağlar.
++ Endpoint'ler değiştirildikçe açıklamalar güncel tutulmalıdır. Böylece dokümantasyonun doğru ve kullanışlı kalması sağlanır.
   
-> Bu adımlar izlenerek Symfony uygulamasına Nelmio API dokümantasyonu Swagger UI ile entegre etmiş olunur. Bu, API endpoint'lerin belgelenmesi ve test edilmesi için güçlü bir araç sağlar.
+> Bu adımlar izlenerek Symfony uygulamasına Nelmio API dokümantasyonu Swagger UI ile entegre edilmiş olunur. Böylece API endpoint'lerin belgelenmesi ve test edilmesi için güçlü bir araç sağlanır.
 
 ***
 ### Serializer Groups 
@@ -223,7 +225,7 @@ public function login(Request $request): JsonResponse
 ##### 1. Grupları Tanımlama
 + Öncelikle, entity class'larında Serializer grupları tanımlanmalıdır. Daha sonra oluşturma ve güncelleme işlemleri için ayrı gruplar tanımlanır.
 
-##### 2. API Controller'larını Güncelleme:
+##### 2. API Controller'larını Güncelleme
 + Her bir endpoint için uygun gruplar belirtilir. Oluşturma (create) işlemi için `create` grubu, güncelleme (update) işlemi için `update` grubu kullanılır.
 
 ##### 1. Entity Class'larını Güncelleme
@@ -479,6 +481,6 @@ class SymphonyController extends AbstractController
 > [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Serialiazer%20Groups%20-%20SymphonyController.md)
 
 ##### 3. Dokümantasyonu Güncelleme ve Kontrol Etme
-+ Tüm bu değişikliklerden sonra Swagger UI yenilenerek dokümantasyonun güncel ve doğru olduğunu kontrol edilebilir. Artık `create` ve `update` isteklerinde ID dahil edilmemiş olacak, ancak `read` grubu sayesinde yanıtların içinde yer alacaktır.
++ Tüm bu değişikliklerden sonra Swagger UI yenilenerek dokümantasyonun güncel ve doğru olduğunu kontrol edilebilir. Böylece `create` ve `update` isteklerinde ID dahil edilmemiş olacak ancak `read` grubu sayesinde yanıtların içinde yer alacaktır.
 
 > Bu adımlar takip edilerek Symfony projesinde API endpoint'ler daha net ve kullanıcı dostu hale getirilir. Dokümantasyon, tüketicilerin doğru ve net bir şekilde API kullanmalarına yardımcı olacaktır.
