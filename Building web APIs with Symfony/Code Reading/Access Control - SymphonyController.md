@@ -1,5 +1,5 @@
 + Symfony uygulamasında `IsGranted` özniteliğini kullanarak `SymphonyController` için erişim kontrolü eklemek, belirli rollere sahip kullanıcıların belirli işlemleri gerçekleştirebilmesini sağlar.
-+ İşte `SymphonyController` class'ınızın tamamlanmış ve düzenlenmiş hali:
++ Aşağıda, `SymphonyController` class'ına eklenecek kodun tamamlanmış ve düzenlenmiş hali verilmiştir:
 ~~~~~~~
 <?php
 
