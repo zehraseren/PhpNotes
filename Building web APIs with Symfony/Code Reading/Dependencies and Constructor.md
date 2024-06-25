@@ -11,12 +11,12 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 ~~~~~~~
-> + `AbstractController`: Symfony'de bir controller class'ını genişletir, böylece birçok kullanışlı method ve property kullanılabilir.
-> + `JsonResponse`: JSON formatında HTTP yanıtı döndürmek için kullanılır.
-> + `Request`: HTTP isteklerini temsil eder.
-> + `Route`: Rota tanımlamalarını yapmak için kullanılır.
-> + `SerializerInterface`: JSON (veya diğer formatlar) ile nesne dönüşümleri yapar.
-> + `ValidatorInterface`: Nesne validasyonu yapmak için kullanılır.
++ `AbstractController`: Symfony'de bir controller class'ını genişletir, böylece birçok kullanışlı method ve property kullanılabilir.
++ `JsonResponse`: JSON formatında HTTP yanıtı döndürmek için kullanılır.
++ `Request`: HTTP isteklerini temsil eder.
++ `Route`: Rota tanımlamalarını yapmak için kullanılır.
++ `SerializerInterface`: JSON (veya diğer formatlar) ile nesne dönüşümleri yapar.
++ `ValidatorInterface`: Nesne validasyonu yapmak için kullanılır.
 
 ##### Properties
 ~~~~~~~
