@@ -1,4 +1,4 @@
-+ Bu test metodu, Symfony uygulamasında bulunan `SymphonyController` class'ının index method'unu test etmek için kullanılan bir PHPUnit testidir.
++ Bu test method'u, Symfony uygulamasında bulunan `SymphonyController` class'ının index method'unu test etmek için kullanılan bir PHPUnit testidir.
 ~~~~~~~
 public function testIndex(): void
 {
@@ -17,4 +17,4 @@ public function testIndex(): void
 + Bu test method'unun amacı, `/symphonies` endpoint'inin `GET` isteğine nasıl yanıt verdiğini doğrulamaktır. Başka bir deyişle, Symfony uygulamasının `SymphonyController` class'ındaki `index method`'u ile ilgili olarak şu kontrolleri sağlar:
   - `/symphonies` endpoint'i var mı?
   - `GET` isteği yapıldığında HTTP durum kodu `200` (`OK`) mü dönüyor?
-> Bu test method'unu çalıştırılarak, `/symphonies` endpoint'inin istenen şekilde çalışıp çalışmadığı doğrulanabilir ve gerekirse olası hataları tespit edilme olanağı sağlar.
+> Bu test method'u çalıştırılarak, `/symphonies` endpoint'inin istenen şekilde çalışıp çalışmadığı doğrulanabilir ve olası hataları tespit etme olanağı sağlar.
