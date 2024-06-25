@@ -1,5 +1,5 @@
 + Symfony uygulamasında `IsGranted` özniteliğini kullanılarak erişim kontrolü eklemek, kullanıcıların belirli rollere sahip olmalarını gerektiren işlemler için oldukça etkili bir yöntemdir.
-+ Aşağıda, `ComposerController` class'ıa eklenecek kodun tamamlanmış ve düzenlenmiş hali verilmiştir:
++ Aşağıda, `ComposerController` class'ına eklenecek kodun tamamlanmış ve düzenlenmiş hali verilmiştir:
 ~~~~~~~
 <?php
 
