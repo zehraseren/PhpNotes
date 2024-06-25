@@ -1,4 +1,4 @@
-+ Bu testDelete() metodu, Symfony uygulamasında bulunan SymphonyController sınıfının delete metodunu test etmek için kullanılan bir PHPUnit testidir. 
++ Bu `testDelete()` method'u, Symfony uygulamasında bulunan `SymphonyController` class'ının delete method'unu test etmek için kullanılan bir PHPUnit testidir. 
 ~~~~~~~
 public function testDelete(): void
 {
@@ -22,4 +22,4 @@ public function testDelete(): void
 + Bu test method'unun amacı, `SymphonyController` class'ındaki `delete` method'unu doğru şekilde test etmektir. Yani:
   - `/symphonies/1` endpoint'ine `DELETE` isteği yaparak belirtilen `id`'ye sahip bir `Symphony` kaydı silinebilir mi?
   - Silme işlemi başarılı olduysa, HTTP durum kodu `204` (`No Content`) dönüyor mu?
-> Bu test method'unu çalıştırılarak, Symfony uygulamasının `SymphonyController` class'ındaki `delete` method'unun doğru çalışıp çalışmadığını ve olası hataların tespit edilmesini sağlar. Testler, uygulamanın farklı bölümlerinin doğru işlediğini doğrulamak için önemli bir araçtır ve sürekli entegrasyon (`CI`) süreçlerinde de sıkça kullanılır.
+> Bu test method'u çalıştırılarak, Symfony uygulamasının `SymphonyController` class'ındaki `delete` method'unun doğru çalışıp çalışılmadığını ve olası hataların tespit edilmesini sağlar. Testler, uygulamanın farklı bölümlerinin doğru işlediğini doğrulamak için önemli bir araçtır ve sürekli entegrasyon (`CI`) süreçlerinde de sıkça kullanılır.
