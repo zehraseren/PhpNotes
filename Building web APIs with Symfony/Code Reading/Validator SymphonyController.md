@@ -64,7 +64,7 @@ public function update(Request $request, SerializerInterface $serializer, Valida
 ~~~~~~~
 
 ##### 1. Mevcut Varlığın Getirilmesi
-+ `symphonyRepository->find($id)` ile belirtilen ID'ye sahip mevcut symphony entity'si databse'den alınır.
++ `symphonyRepository->find($id)` ile belirtilen ID'ye sahip mevcut symphony entity'si database'den alınır.
 
 ##### 2. Varlığın Güncellenmesi
 + `$serializer->deserialize` method'u, gelen JSON verisini mevcut symphony nesnesine dönüştürür ve mevcut nesneyi günceller.
