@@ -1,6 +1,6 @@
 ### User Entity
 + Bir symphony uygulamasının güvence altına almak ve belirli rotaların yalnızca yetkili kullanıcılar tarafından erişilebilir olmasını sağlamak için kullanıcı kimlik doğrulamasını ve yetkilendirmesini eklenir.
-+ Bu, kullanıcıların geçerli kimlik bilgilerini sağlamalarını gerektirecek ve başarılı bir kimlik doğrulama sonrası onlara erişim token'ı sağlanır. Bu adımlar izlenerek `Symfony Security Bundle` kullanılarak bu süreç uygulanır.
++ Bu, kullanıcıların geçerli kimlik bilgilerini sağlamalarını gerektirecek ve başarılı bir kimlik doğrulama sonrası onlara erişim token'ı sağlanır. Aşağıdaki adımlar izlenerek `Symfony Security Bundle` kullanılarak bu süreç uygulanır.
 
 ##### 1. Symfony Security Bundle Kurulumu
 + İlk olarak, `Symfony Security Bundle` yüklenmelidir.
@@ -50,6 +50,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 }
 ~~~~~~~
 > User class'ı gerekli interface'leri uygulayıp, güvenlik paketiyle uyumlu çalışır hale getirilir.
+> + [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/tree/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading)
 
 ##### 4. Security.yaml Dosyasını Güncelleme
 + `security.yaml` dosyası `make:user` komutuyla otomatik olarak güncellenir.
@@ -94,11 +95,11 @@ php bin/console doctrine:migrations:migrate
 ~~~~~~~
 
 ##### Sonraki Adımlar
-1. `Giriş İşlemi:` Kullanıcıların giriş yapabilmesi ve token alabilmesi için bir giriş uç noktası oluşturulur.
-2. `JWT veya OAuth:` Kimlik doğrulama için JWT veya OAuth gibi bir mekanizma kullanarak token oluşturma ve doğrulama işlemleri yapılır.
+1. `Giriş İşlemi:` Kullanıcıların giriş yapabilmesi ve token alabilmesi için bir giriş endpoint'i oluşturulur.
+2. `JWT veya OAuth:` Kimlik doğrulama için JWT veya OAuth gibi bir mekanizma kullanılarak token oluşturma ve doğrulama işlemleri yapılır.
 3. `Testler:` Güvenlik ve kimlik doğrulama işlemleri test edilmelidir.
 
-> Bu adımlarla, kullanıcı kimlik doğrulama ve yetkilendirme işlemlerini gerçekleştirebilmek için gerekli altyapıyı kurmuş olacağız. Artık kullanıcılar veritabanında saklanabilir ve belirli rotalara erişimleri yetkilendirilebilir.
+> Bu adımlarla, kullanıcı kimlik doğrulama ve yetkilendirme işlemlerini gerçekleştirebilmek için gerekli altyapı kurulur. Böylece kullanıcılar database'de saklanabilir ve belirli rotalara erişimleri yetkilendirilebilir.
 
 ***
 ### User CLI Commands
@@ -107,8 +108,9 @@ php bin/console doctrine:migrations:migrate
 #### Symfony ile Özel Komutlar Oluşturma
 ##### Adım 1. Komut İskeleleri Oluşturma
 + Symfony Maker Bundle kullanarak iki özel komut oluşturulur.
-  - `Kullanıcı Oluşturma Komutu:` Yeni kullanıcılar oluşturmak için.
-  - `Kullanıcı Listeleme Komutu:` Tüm kullanıcıları listelemek için.
+  - Kullanıcı Oluşturma Komutu
+  - Kullanıcı Listeleme Komutu
+    
 ###### Bu komutlar aşağıdaki gibi oluşturulmalıdır:
 ~~~~~~~
 php bin/console make:command app:user-create
@@ -419,7 +421,7 @@ class AuthController extends AbstractController
 
 #### Yapılacak Adımlar
 ##### 1. Docker Compose ile Redis Kurulumu
-+ Docker Compose yapılandırmamıza bir Redis container'ı eklenir.
++ Docker Compose yapılandırmasına bir Redis container'ı eklenir.
 + Redis PHP uzantısının kurulu ve etkin olduğundan emin olunmalıdır.
 
 ##### 2. Redis Bağlantısının Yapılandırılması
@@ -432,7 +434,7 @@ class AuthController extends AbstractController
 + Oluşturulan token belirli bir süre için Redis'e kaydedilir.
 
 ##### 4. Giriş Noktasını Oluşturma
-+ `AuthController` içerisinde bir giriş (login) noktası tanımlanır.
++ `AuthController` içerisinde bir login noktası tanımlanır.
 + Kullanıcıları database üzerinden kimlik doğrulaması yapılır ve başarılı girişlerde bir erişim token'ı oluşturulur.
 + Oluşturulan token istemciye döndürülür.
 
@@ -653,6 +655,7 @@ public function testSomeOtherEndpoint()
 
     // Send request with authorization header
     $client->request('POST', '/some-other-endpoint', [], [], [
+        'CONTENT_TYPE' => 'application/json',
         'HTTP_AUTHORIZATION' => 'Bearer ' . $this->accessToken,
     ], json_encode(['data' => 'test']));
 
@@ -665,7 +668,7 @@ public function testSomeOtherEndpoint()
 > Yukarıdaki adımlar izlenerek, Symfony uygulaması stateless hale getirilip, erişim token'ları ile kimlik doğrulamasını yöneten bir yapı kuruldu. Ayrıca, mevcut testler yeni yapıya uyacak şekilde güncellendi. Bu sayede API daha esnek ve genişletilebilir bir yapıya sahip olacaktır ve farklı türdeki istemcilerle daha uyumlu çalışacaktır.
 
 ***
-### Authrization Tests  
+### Authorization Tests  
 #### 1. Kullanıcı Oluşturma Komutunu Çağırma
 + Testler çalıştırılmadan önce bir test kullanıcısı oluşturulur ve bu kullanıcıya ait bir erişim token'ı alınır. Bunu yapmak için Symfony uygulaması başlatılır ve `user-create` komutu çalıştırılır.
 ~~~~~~~
@@ -788,7 +791,7 @@ public function testIndexComposer()
 
 ***
 ### Granular Access
-+ Testler granular erişim kontrolüyle güncellendiği ve doğru rollerle çalıştıklarına emin olunduktan sonra, aşağıdaki adımlar özetlenerek ve yeni bir test eklenerek 403 durum kodu doğrulaması yapılabilir.
++ Testler granular erişim kontrolüyle güncellendiği ve doğru rollerle çalıştıklarına emin olunduktan sonra, aşağıdaki adımlar özetlenerek ve yeni bir test eklenerek `403` durum kodu doğrulaması yapılabilir.
 
 #### 1. Erişim Kontrolü
 ###### ComposerController
