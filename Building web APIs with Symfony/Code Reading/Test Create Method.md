@@ -43,4 +43,4 @@ public function testCreate(): void
 + Bu test method'unun amacı, `SymphonyController` class'ındaki `create` method'unu doğru şekilde test etmektir. Yani:
   - `/symphonies` endpoint'ine `POST` isteği yaparak yeni bir `Symphony` oluşturulabilir mi?
   - Oluşturma işlemi başarılı olduysa, HTTP durum kodu `201` (`Created`) dönüyor mu?
-> Bu test method'unu çalıştırılarak, Symfony uygulamasının `SymphonyController` class'ındaki `create` method'unun doğru çalışıp çalışmadığını ve olası hataların tespit edilmesini sağlar. Testler, uygulamanın farklı bölümlerinin doğru işlediğini doğrulamak için önemli bir araçtır ve sürekli entegrasyon (`CI`) süreçlerinde de sıkça kullanılır.
+> Bu test method'u çalıştırılarak, Symfony uygulamasının `SymphonyController` class'ındaki `create` method'unun doğru çalışıp çalışılmadığını ve olası hataların tespit edilmesini sağlar. Testler, uygulamanın farklı bölümlerinin doğru işlediğini doğrulamak için önemli bir araçtır ve sürekli entegrasyon (`CI`) süreçlerinde de sıkça kullanılır.
