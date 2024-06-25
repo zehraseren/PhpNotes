@@ -26,6 +26,9 @@ public function create(Request $request, SerializerInterface $serializer, Valida
 
 ##### 1. Veri Dönüştürme
 + `$serializer->deserialize` method'u, gelen JSON verisini `Symphony` nesnesine dönüştürür.
+  - `$request->getContent()`: `$request` Symfony'nin `Request` nesnesidir ve gelen HTTP isteğini temsil eder. `getContent()`, isteğin gövdesindeki ham veriyi döndürür. Bu veriler genellikle JSON formatında gelir.
+  - `Symphony::class`: Bu parametre, JSON verisinin dönüştürülmesi gereken class'ı belirtir. Bu durumda, JSON verisi Symphony class'ına dönüştürülecektir.
+  - `json`: Bu parametre, verinin formatını belirtir. Burada verinin JSON formatında olduğu belirtilmiştir.
 
 ##### 2. Doğrulama
 + `$validator->validate` method'u ile `Symphony` nesnesinin doğrulanması sağlanır.
