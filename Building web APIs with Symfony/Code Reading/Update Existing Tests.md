@@ -25,6 +25,7 @@ public function testSomeOtherEndpoint()
   - `'/some-other-endpoint'`: İstek URL'i.
   - `[]`: İstek parametreleri.
   - `[]`: İstek dosyaları.
+  - `['CONTENT_TYPE' => 'application/json']`: İstek başlıklarına `CONTENT_TYPE` eklenir. Bu, sunucuya JSON veri gönderdiğini belirtir.
   - `['HTTP_AUTHORIZATION' => 'Bearer ' . $this->accessToken]`: İstek başlıkları (Authorization header).
   - `json_encode(['data' => 'test'])`: İstek gövdesi, JSON formatında veri içeriyor.
 + `$this->assertEquals(201, $client->getResponse()->getStatusCode());`: Yanıt durum kodunun `201` (`Created`) olduğunu doğrular.
