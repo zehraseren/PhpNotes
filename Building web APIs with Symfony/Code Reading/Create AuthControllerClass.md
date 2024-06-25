@@ -38,7 +38,7 @@ class AuthController extends AbstractController
 ##### 3. Login Yöntemi | `login()` Method
 + `#[Route('/api/login', name: 'api_login', methods: ['POST'])]`: `api_login` adıyla POST isteklerini işleyen bir rota tanımlanmıştır. Bu rota, kullanıcıların giriş yapabileceği bir endpoint'i temsil eder.
 + `public function login()`: Bu method, giriş işlemini yönetir.
-+ `$user = $this->getUser();`: `getUser()` method'u, mevcut kimlik doğrulama durumundaki kullanıcı nesnesini döndürür. Eğer kimlik doğrulaması başarısızsa veya kimlik doğrulaması yapılmamışsa, `$user` değişkeni null olacaktır.
++ `$user = $this->getUser();`: `getUser()` method'u, mevcut kimlik doğrulama durumundaki kullanıcı nesnesini döndürür. Eğer kimlik doğrulaması başarısızsa veya kimlik doğrulaması yapılmamışsa, `$user` değişkeni `null` olacaktır.
 + `if (!$user) { ... }`: Kullanıcı doğrulama başarısız olursa, `HTTP_UNAUTHORIZED (401)` durum kodu ile birlikte `Invalid credentials` mesajını içeren bir `JsonResponse` döner. Bu, kullanıcının doğrulanamadığını ve giriş işleminin başarısız olduğunu belirtir.
 + `return new JsonResponse(['token' => 'dummy-token-for-now']);`: Kullanıcı doğrulanırsa, bu kısımda gerçek bir JWT (JSON Web Token) üretilip döndürülmelidir. Yukarıdaki kodda sadece geçici olarak `dummy-token-for-now` metni döndürülmektedir.
 
