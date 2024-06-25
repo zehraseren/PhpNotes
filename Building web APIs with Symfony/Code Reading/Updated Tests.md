@@ -1,5 +1,5 @@
 + Bu iki test method'u, `Composer` oluşturma işlemi için gerekli yetki kontrollerini doğrulamaktadır.
-+ Aşağıda bu test methodlarının yer aldığı class'ı ve gerekli diğer method'ları içeren örnek kod bulunmaktadır.
++ Aşağıda bu test method'larının yer aldığı class'ı ve gerekli diğer method'ları içeren örnek kod bulunmaktadır.
 ~~~~~~~
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
