@@ -38,7 +38,7 @@ class Symphony
      */
     private $finishedAt;
 
-    // Getter ve Setter metodları burada olacak
+    // Getter/setter methods
 
     // ID
     public function getId(): ?int
