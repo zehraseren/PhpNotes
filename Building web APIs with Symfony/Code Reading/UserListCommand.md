@@ -1,4 +1,4 @@
-+ Bu PHP kodu, Symfony framework'ü ile bir konsol komutu oluşturur ve database'deki tüm kullanıcıları listelemek için kullanılır. Komut, kullanıcıların ID, kullanıcı adı ve rollerini bir tablo şeklinde konsola yazdırır.
++ Bu PHP kodu, Symfony framework'ü ile bir console komutu oluşturur ve database'deki tüm kullanıcıları listelemek için kullanılır. Bu komut kullanıcıların ID, kullanıcı adı ve rollerini bir tablo şeklinde console'a yazdırır.
 
 ##### Namespace ve Kullanılan Kütüphaneler
 ~~~~~~~
@@ -32,6 +32,7 @@ class UserListCommand extends Command
 ~~~~~~~
 + `UserListCommand` class'ı, Symfony'nin `Command` class'ından türetilmiştir.
 + `AsCommand` attribute'u ile komutun adı (`app:user-list`) ve açıklaması (`'List all existing users in the database.`) tanımlanmıştır.
+  - Bu anotasyon, Symfony Console komutlarını tanımlamak ve yapılandırmak için kullanılır. `AsCommand` anotasyonu, class'ın bir konsol komutu olarak tanımlanmasını sağlar ve komutun adını, açıklamasını ve diğer yapılandırma bilgilerini belirtir. `Bu anotasyon sayesinde, komut class'ı Symfony'nin komut sistemi tarafından tanınır ve kullanılabilir hale gelir.`
 + `UserRepository` bağımlılığı constructor aracılığıyla class'a enjekte edilir.
 
 ##### `execute` Method
@@ -62,7 +63,7 @@ class UserListCommand extends Command
 + Symfony'nin `Table` class'ı kullanılarak bir tablo oluşturulur.
 + `setHeaders` method'u ile tablonun başlıkları ayarlanır.
 + `setRows` method'u ile kullanıcı verileri tabloya eklenir. Kullanıcıların `ID`, `username` ve `roles` bilgileri tabloya yerleştirilir.
-+ `render` method'u ile tablo konsola yazdırılır.
++ `render` method'u ile tablo console'a yazdırılır.
 + Komut başarılı bir şekilde tamamlandığında `Command::SUCCESS` kodu döndürülür.
 
 ###### Özet
