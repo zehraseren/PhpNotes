@@ -27,7 +27,7 @@ class ComposerController extends AbstractController
      */
     public function create(Request $request): Response
     {
-        // Composer oluşturma işlemleri burada gerçekleştirilecek
+        // Composer creation operations
     }
 }
 ~~~~~~~
