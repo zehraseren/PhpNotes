@@ -38,4 +38,4 @@ public function testUpdate(): void
 + Bu test method'unun amacı, `SymphonyController` class'ındaki `update` method'unu doğru şekilde test etmektir. Yani:
   - `/symphonies/1` endpoint'ine `PUT` isteği yaparak belirtilen `id`'ye sahip bir Symphony kaydı güncellenebilir mi?
   - Güncelleme işlemi başarılı olduysa, HTTP durum kodu `200` (`OK`) dönüyor mu?
-> Bu test method'unu çalıştırılarak, Symfony uygulamasının `SymphonyController` class'ındaki `update` method'unun doğru çalışıp çalışmadığını ve olası hataların tespit edilmesini sağlar. Testler, uygulamanın farklı bölümlerinin doğru işlediğini doğrulamak için önemli bir araçtır ve sürekli entegrasyon (`CI`) süreçlerinde de sıkça kullanılır.
+> Bu test method'u çalıştırılarak, Symfony uygulamasının `SymphonyController` class'ındaki `update` method'unun doğru çalışıp çalışılmadığını ve olası hataların tespit edilmesini sağlar. Testler, uygulamanın farklı bölümlerinin doğru işlediğini doğrulamak için önemli bir araçtır ve sürekli entegrasyon (`CI`) süreçlerinde de sıkça kullanılır.
