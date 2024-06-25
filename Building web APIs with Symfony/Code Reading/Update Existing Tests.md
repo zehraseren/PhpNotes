@@ -6,6 +6,7 @@ public function testSomeOtherEndpoint()
 
     // Send request with authorization header
     $client->request('POST', '/some-other-endpoint', [], [], [
+        'CONTENT_TYPE' => 'application/json',
         'HTTP_AUTHORIZATION' => 'Bearer ' . $this->accessToken,
     ], json_encode(['data' => 'test']));
 
@@ -17,7 +18,15 @@ public function testSomeOtherEndpoint()
 ##### testSomeOtherEndpoint Method
 + `public function testSomeOtherEndpoint()`: Bu method, yetkili bir kullanıcıyla `POST` isteği göndererek belirli bir endpoint'e veri gönderir ve yanıt durum kodunun `201 Created` olup olmadığını kontrol eder.
 + `static::createClient();`: Yeni bir test istemcisi oluşturur.
-+ `$client->request('POST', '/some-other-endpoint', [], [], ['HTTP_AUTHORIZATION' => 'Bearer ' . $this->accessToken], json_encode(['data' => 'test']));`: Bu satır, `POST` isteğini `/some-other-endpoint` URL'ine yapar ve istek başlığında geçerli bir erişim token'ı (yetkili kullanıcı için) kullanır. İstek gövdesine ise JSON formatında veri gönderir.
++ `$client->request('POST', '/some-other-endpoint', [], [], ['CONTENT_TYPE' => 'application/json', 'HTTP_AUTHORIZATION' => 'Bearer ' . $this->accessToken], json_encode(['data' => 'test']));`: Bu satır, `POST` isteğini `/some-other-endpoint` URL'ine yapar ve istek başlığında geçerli bir erişim token'ı (yetkili kullanıcı için) kullanır. İstek gövdesine ise JSON formatında veri gönderir.
+  - `$client`: Symfony'nin test client'ı.
+  - `request`: HTTP isteği yapar.
+  - `'POST'`: İstek tipi (POST).
+  - `'/some-other-endpoint'`: İstek URL'i.
+  - `[]`: İstek parametreleri.
+  - `[]`: İstek dosyaları.
+  - `['HTTP_AUTHORIZATION' => 'Bearer ' . $this->accessToken]`: İstek başlıkları (Authorization header).
+  - `json_encode(['data' => 'test'])`: İstek gövdesi, JSON formatında veri içeriyor.
 + `$this->assertEquals(201, $client->getResponse()->getStatusCode());`: Yanıt durum kodunun `201` (`Created`) olduğunu doğrular.
 
 #### Kullanım Senaryoları
