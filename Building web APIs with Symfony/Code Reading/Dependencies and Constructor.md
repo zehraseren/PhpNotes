@@ -24,9 +24,9 @@ private $symphonyRepository;
 private $serializer;
 private $validator;
 ~~~~~~~
-> + `$symphonyRepository`: Symphony entity'leri ile ilgili database işlemlerini gerçekleştiren repository'dir.
-> + `$serializer`: Nesneleri JSON formatına dönüştürmek ve tersine çevirmek için kullanılır.
-> + `$validator`: Nesneleri doğrulamak için kullanılır.
++ `$symphonyRepository`: Symphony entity'leri ile ilgili database işlemlerini gerçekleştiren repository'dir.
++ `$serializer`: Nesneleri JSON formatına dönüştürmek ve tersine çevirmek için kullanılır.
++ `$validator`: Nesneleri doğrulamak için kullanılır.
 
 ##### Constructor | Yapıcı Method
 ~~~~~~~
@@ -37,5 +37,5 @@ public function __construct(SymphonyRepository $symphonyRepository, SerializerIn
     $this->validator = $validator;
 }
 ~~~~~~~
-> + `__construct`: Bu yapıcı method, `SymphonyController` class'ının bir örneği oluşturulduğunda çağrılır.
-> + `Dependency Injection`: `SymphonyRepository`, `SerializerInterface` ve `ValidatorInterface` bağımlılıkları otomatik olarak enjekte edilir.
++ `__construct`: Bu yapıcı method, `SymphonyController` class'ının bir örneği oluşturulduğunda çağrılır.
++ `Dependency Injection`: `SymphonyRepository`, `SerializerInterface` ve `ValidatorInterface` bağımlılıkları otomatik olarak enjekte edilir.
