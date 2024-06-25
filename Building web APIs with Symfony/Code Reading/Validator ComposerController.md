@@ -1,4 +1,4 @@
-+ Bu kod parçaları, Symfony framework'ü kullanarak `Composer` entity'si oluşturan ve güncelleyen iki method içerir.
++ Bu kod parçaları, Symfony framework kullanılarak `Composer` entity'si oluşturan ve güncelleyen iki method içerir.
 + Her iki method da gelen HTTP isteğini deserializasyon yaparak `Composer` nesnesine dönüştürür, bu nesneyi doğrular ve ardından işlem sonucuna göre uygun bir HTTP yanıtı döner.
 
 ###### `create` Method
@@ -56,7 +56,7 @@ public function update(Request $request, SerializerInterface $serializer, Valida
 ~~~~~~~
 
 ##### 1. Mevcut Composer Nesnesini Getirme
-+ Repository kullanılarak mevcut `Composer` nesnesi veritabanından getirilir.
++ Repository kullanılarak mevcut `Composer` nesnesi database'den getirilir.
 
 ##### 2. Deserializasyon
 + `$composer = $serializer->deserialize($request->getContent(), Composer::class, 'json', ['object_to_populate' => $existingComposer]);`
@@ -71,4 +71,4 @@ public function update(Request $request, SerializerInterface $serializer, Valida
 + `return new Response($errorsString, Response::HTTP_UNPROCESSABLE_ENTITY);`
 
 ###### Özet
-+ Bu method'lar, Symfony framework'ü kullanılarak Composer varlığını oluşturma ve güncelleme işlemlerini gerçekleştirir. Deserializasyon ve doğrulama işlemleri, verilerin doğru ve güvenli bir şekilde işlendiğini garanti eder. Bu tür yapılandırmalar, özellikle API geliştirme süreçlerinde, veri doğrulama ve hata yönetimi açısından büyük önem taşır. Veritabanına kaydetme ve güncelleme işlemleri eksik bırakılmış olup, bu kısımlar ilgili repository sınıfının `save` veya `update` method'ları kullanılarak tamamlanmalıdır.
++ Bu method'lar, Symfony framework'ü kullanılarak Composer varlığını oluşturma ve güncelleme işlemlerini gerçekleştirir. Deserializasyon ve doğrulama işlemleri, verilerin doğru ve güvenli bir şekilde işlendiğini garanti eder. Bu tür yapılandırmalar, özellikle API geliştirme süreçlerinde, veri doğrulama ve hata yönetimi açısından büyük önem taşır.
