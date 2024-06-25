@@ -1,5 +1,5 @@
 + Bu test class'ı `ComposerController` için birim testi yapar ve bir `GET` isteği ile `/composer` endpoint'ini test eder.
-+ Symfony'nin `WebTestCase` class'ını kullanılarak, bu endpoint'in doğru çalışıp çalışılmadığı kontrol edilir.
++ Symfony'nin `WebTestCase` class'ı kullanılarak, bu endpoint'in doğru çalışıp çalışılmadığı kontrol edilir.
 
 ##### Namespace ve Kullanılan Bileşenler
 ~~~~~~~
@@ -36,13 +36,13 @@ $client = static::createClient();
 ~~~~~~~
 $client->request('GET', '/composer');
 ~~~~~~~
-> + `request('GET', '/composer')`: Test istemcisi, /composer endpoint'ine bir `GET` isteği gönderir.
+> + `request('GET', '/composer')`: Test istemcisi, `/composer` endpoint'ine bir `GET` isteği gönderir.
 
 ###### Durum Kodunu Kontrol Etme
 ~~~~~~~
 $this->assertEquals(200, $client->getResponse()->getStatusCode());
 ~~~~~~~
-> + `assertEquals(200, $client->getResponse()->getStatusCode())`: İsteğin başarılı olup olmadığını kontrol eder. HTTP 200 durum kodu, isteğin başarılı olduğunu gösterir.
+> + `assertEquals(200, $client->getResponse()->getStatusCode())`: İsteğin başarılı olup olmadığını kontrol eder. `HTTP 200` durum kodu, isteğin başarılı olduğunu gösterir.
 
 ###### JSON İçeriğini Kontrol Etme
 ~~~~~~~
@@ -52,6 +52,6 @@ $this->assertJson($client->getResponse()->getContent());
 
 ###### Özet
 + Bu test, `ComposerController`'ın index method'unu test eder ve iki kontrol yapar:
-  - HTTP durum kodunun 200 (başarılı) olup olmadığını.
+  - HTTP durum kodunun `200` (`başarılı`) olup olmadığını.
   - Dönen yanıtın geçerli bir JSON formatında olup olmadığını.
 + Bu test, `ComposerController`'ın doğru çalıştığını ve `/composer` endpoint'ine yapılan isteklerin başarılı bir şekilde yanıt döndüğünü doğrulamak için temel bir kontroldür. Daha kapsamlı testler, ek istek yöntemleri (POST, PUT, DELETE) ve hata durumlarını da içerebilir.
