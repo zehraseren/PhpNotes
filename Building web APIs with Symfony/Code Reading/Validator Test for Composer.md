@@ -1,11 +1,11 @@
 + Bu test, bir `ComposerController`'da geçersiz bir `Composer` oluşturma işleminin doğru şekilde ele alınıp alınmadığını kontrol etmek içindir.
 
 #### Testin Amacı
-+ Test, geçersiz bir `Composer` nesnesi oluşturulmaya çalışıldığında, API'ın beklenen hatayı döndürüp döndürmediğini kontrol eder. Bu durumda, geçersiz ülke kodu (`countryCode`) kullanılarak hata oluşturulmaya çalışılmaktadır.
++ Test, geçersiz bir `Composer` nesnesi oluşturulmaya çalışıldığında, API'ın beklenen hatayı döndürüp döndürmediğini kontrol eder. Bu kodda, geçersiz ülke kodu (`countryCode`) kullanılarak hata oluşturulmaya çalışılmaktadır.
 
 #### Test Adımları
 ##### 1. Geçersiz Verinin Tanımlanması
-+ `$invalidComposer` array'i, geçersiz bir `Composer` nesnesini temsil eder. Bu örnekte, `countryCode` olarak 'XX' kullanılmıştır ki bu geçersiz bir ülke kodudur.
++ `$invalidComposer` array'i, geçersiz bir `Composer` nesnesini temsil eder. Bu örnekte, `countryCode` olarak `XX` kullanılmıştır ki bu geçersiz bir ülke kodudur.
 
 ##### 2. İstek Gönderme
 + `$this->client->post('/composers', ['json' => $invalidComposer])` ifadesi, geçersiz veriyi JSON formatında `/composers` endpoint'ine `POST` isteği olarak gönderir.
@@ -20,9 +20,9 @@ public function testCreateInvalidComposer()
 {
     // Defining an array with invalid composer data
     $invalidComposer = [
-        'firstName' => 'Wolfgang', // Geçerli
-        'dateOfBirth' => '1756-01-27', // Geçerli
-        'countryCode' => 'XX' // Geçersiz ülke kodu
+        'firstName' => 'Wolfgang', // Valid
+        'dateOfBirth' => '1756-01-27', // Valid
+        'countryCode' => 'XX' // Invalid country code
     ];
 
     // Sending POST request with invalid data
