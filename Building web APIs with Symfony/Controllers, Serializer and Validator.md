@@ -66,10 +66,10 @@ class ComposerController extends AbstractController
     }
 }
 ~~~~~~~
-> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Composer%20Endpoints.md)
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Composer%20Endpoints.md)
 
 #### 3. Serializer Bileşini Kurma
-+ Symfony'nin serializer bileşeninin yüklü olduğundan emin olunmalıdır.
++ Symfony'nin serializer bileşeninin yüklü olduğundan emin olunulmalıdır.
 ~~~~~~~
 composer require symfony/serializer-pack
 ~~~~~~~
@@ -90,27 +90,27 @@ curl -X GET http://localhost:8000/composer \
      -H "Accept: application/json"
 ~~~~~~~
 
-##### Belirli Bir Composer'ı Gösterme (ID 1 varsayılsın):
+##### Belirli Bir Composer'ı Gösterme (Varsayılan ID: 1):
 ~~~~~~~
 curl -X GET http://localhost:8000/composer/1 \
      -H "Accept: application/json"
 ~~~~~~~
 
-##### Composer Güncelleme (ID 1 varsayılsın):
+##### Composer Güncelleme (Varsayılan ID: 1):
 ~~~~~~~
 curl -X PUT http://localhost:8000/composer/1 \
      -H "Content-Type: application/json" \
      -d '{"firstName": "Wolfgang Amadeus", "lastName": "Mozart", "dateOfBirth": "1756-01-27", "countryCode": "AT"}'
 ~~~~~~~
 
-##### Composer Silme (ID 1 varsayılsın):
+##### Composer Silme (Varsayılan ID: 1):
 ~~~~~~~
 curl -X DELETE http://localhost:8000/composer/1
 ~~~~~~~
 
 #### 5. Otomatik Testler
 + `curl` ile manuel test yapmanın yanı sıra, endpoint'lerin çalıştığından emin olmak için otomatik testler oluşturmak daha verimlidir.
-+ Symfony'nin test araçları, API'ın beklendiği gibi çalışmasını sağlamak için yardımcı olabilir.
++ Symfony'nin test araçları, API'ın beklenildiği gibi çalışmasını sağlamak için yardımcı olur.
 ###### Index endpoint'i için basit bir test örneği:
 ###### ComposerControllerTest.php
 ~~~~~~~
@@ -130,7 +130,7 @@ class ComposerControllerTest extends WebTestCase
     }
 }
 ~~~~~~~
-> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Index%20Endpoint%20Test%20%C3%96rne%C4%9Fi.md)
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Index%20Endpoint%20Test%20%C3%96rne%C4%9Fi.md)
 
 ###### Bu testi çalıştırmak için: 
 ~~~~~~~
@@ -138,7 +138,7 @@ php bin/phpunit
 ~~~~~~~
 
 ***
-### Symphony endpoints and tests 
+### Symphony Endpoints and Tests 
 #### Symphony Controller ve Test Oluşturma
 ##### 1. Symphony Controller Oluşturma
 + Symfony uygulaması için yeni bir controller oluşturmak için aşağıdaki komut kullanılır.
@@ -154,7 +154,7 @@ php bin/console make:test SymphonyControllerTest
 
 #### Symphony Controller'ın Uygulanması
 ##### 1. Dependencies and Constructor
-+ Gerekli bağımlılıklar enjekte edilir (SymphonyRepository, SerializerInterface ve ValidatorInterface).
++ Gerekli bağımlılıklar enjekte edilir (`SymphonyRepository`, `SerializerInterface` ve `ValidatorInterface`).
 ~~~~~~~
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -176,7 +176,7 @@ class SymphonyController extends AbstractController
         $this->validator = $validator;
     }
 ~~~~~~~
-> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Dependencies%20and%20Constructor.md)
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Dependencies%20and%20Constructor.md)
 
 ##### 2. Index Method
 + Bütün symphony'ler alınır ve döndürülür.
@@ -192,7 +192,7 @@ public function index(): JsonResponse
     return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
 }
 ~~~~~~~
-> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Index%20Method.md)
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Index%20Method.md)
 
 ##### 3. Create Method
 + Request yeniden serileştirilir, symphony doğrulanır ve database'e kaydedilir.
@@ -219,7 +219,7 @@ public function create(Request $request): JsonResponse
     return new JsonResponse($response, JsonResponse::HTTP_CREATED, [], true);
 }
 ~~~~~~~
-> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Create%20Method.md)
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Create%20Method.md)
 
 ##### 4. Show Method
 + ID'ye göre belirli bir symphony alınır ve döndürülür.
@@ -240,7 +240,7 @@ public function show(int $id): JsonResponse
     return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
 }
 ~~~~~~~
-> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Show%20Method.md)
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Show%20Method.md)
 
 ##### 5. Update Method
 + Request yeniden serileştirilir, symphony güncellenir ve bütün değişiklikler kaydedilir.
@@ -273,7 +273,7 @@ public function update(Request $request, int $id): JsonResponse
     return new JsonResponse($response, JsonResponse::HTTP_OK, [], true);
 }
 ~~~~~~~
-> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Update%20Method.md)
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Update%20Method.md)
 
 ##### 6. Delete Method
 + ID'ye göre belirli bir symphony silinir.
@@ -294,7 +294,7 @@ public function delete(int $id): JsonResponse
     return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
 }
 ~~~~~~~
-> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Delete%20Method.md)
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Delete%20Method.md)
 
 #### SymphonyControllerTest'in Uygulanması
 ##### 1. Dependencies and Setup
@@ -311,7 +311,7 @@ class SymphonyControllerTest extends WebTestCase
         $this->client = static::createClient();
     }
 ~~~~~~~
-> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Dependencies%20and%20Setup.md)
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Dependencies%20and%20Setup.md)
 
 ##### 2. Test Index Method
 + Index'deki tüm symphony'lerin döndürüldüğünden emin olunmalıdır.
@@ -322,10 +322,10 @@ public function testIndex(): void
     $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 }
 ~~~~~~~
-> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Test%20Index%20Method.md)
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Test%20Index%20Method.md)
 
 ##### 3. Test Create Method
-+ Oluşturulan smyphony'nin beklendiği gibi çalıştığından emin olunmalıdır.
++ Oluşturulan smyphony'nin beklenildiği gibi çalıştığından emin olunulmalıdır.
 ~~~~~~~
 public function testCreate(): void
 {
@@ -347,10 +347,10 @@ public function testCreate(): void
     $this->assertEquals(201, $this->client->getResponse()->getStatusCode());
 }
 ~~~~~~~
-> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Test%20Create%20Method.md)
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Test%20Create%20Method.md)
 
 ##### 4. Test Show Method
-+ Belirli bir symphony'nin beklendiği gibi çalıştığından emin olunmalıdır.
++ Belirli bir symphony'nin beklenildiği gibi çalıştığından emin olunulmalıdır.
 ~~~~~~~
 public function testShow(): void
 {
@@ -358,10 +358,10 @@ public function testShow(): void
     $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 }
 ~~~~~~~
-> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Test%20Show%20Method.md)
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Test%20Show%20Method.md)
 
 ##### 5. Test Update Method
-+ Güncellenen symphony'nin beklendiği gibi çalıştığından emin olunmalıdır.
++ Güncellenen symphony'nin beklenildiği gibi çalıştığından emin olunulmalıdır.
 ~~~~~~~
 public function testUpdate(): void
 {
@@ -379,10 +379,10 @@ public function testUpdate(): void
     $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 }
 ~~~~~~~
-> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Test%20Update%20Method.md)
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Test%20Update%20Method.md)
 
 ##### 6. Test Delete Method
-+ Bir symphony'i silmenin beklendiği gibi çalıştığından emin olunmalıdır.
++ Bir symphony'i silmenin beklenildiği gibi çalıştığından emin olunulmalıdır.
 ~~~~~~~
 public function testDelete(): void
 {
@@ -390,7 +390,7 @@ public function testDelete(): void
     $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
 }
 ~~~~~~~
-> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Test%20Delete%20Method.md)
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Test%20Delete%20Method.md)
 
 ***
 ### Validator
@@ -402,7 +402,7 @@ composer require symfony/validator
 ~~~~~~~
 
 ##### 2. Entity Class'larını Validator Anotasyonları ile Güncelleme
-+ Entity class'larına PHP öznitelikleri kullanılarak validator kısıtlamaları eklenir. Bunun için `Symfony\Component\Validator\Constraints` ad alanından gerekli kısıtlamaları içe aktarılıp ilgili özelliklere uygulanır.
++ Entity class'larına PHP öznitelikleri kullanılarak validator kısıtlamaları eklenir. Bunun için `Symfony\Component\Validator\Constraints` namespace'inden gerekli kısıtlamalar içe aktarılıp ilgili özelliklere uygulanır.
 
 ###### Composer Entity
 ~~~~~~~
@@ -426,7 +426,7 @@ class Composer
     // ... other properties and methods
 }
 ~~~~~~~
-> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Validator%20Composer%20Entity.md)
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Validator%20Composer%20Entity.md)
 
 ###### Symphony Entity
 ~~~~~~~
@@ -447,10 +447,10 @@ class Symphony
     // ... other properties and methods
 }
 ~~~~~~~
-> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Validator%20Symphony%20Entity.md)
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Validator%20Symphony%20Entity.md)
 
 ##### 3. Validator'u Gerçekleştirmek İçin Controller Güncellemesi
-+ Controller'da validator servisinin enjeksiyonunu yaparak doğrulama gerçekleştirilir ve verileri kaydetmeden önce doğrulama hataları olup olmadığını kontrol edilir. `Doğrulama başarısız olursa, 422 İşlenemeyen Varlık durumu ve doğrulama hataları ile birlikte bir yanıt döndürülür.`
++ Controller'da validator servisinin enjeksiyonunu yaparak doğrulama gerçekleştirilir ve verileri kaydetmeden önce doğrulama hataları olup olmadığı kontrol edilir. `Doğrulama başarısız olursa, 422 Unprocessabele Entity (İşlenemeyen Varlık) durumu ve doğrulama hataları ile birlikte bir yanıt döndürülür.`
 
 ###### ComposerController
 ~~~~~~~
@@ -489,7 +489,7 @@ class ComposerController
     }
 }
 ~~~~~~~
-> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Validator%20ComposerController.md)
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Validator%20ComposerController.md)
 
 ###### SymphonyController
 ~~~~~~~
@@ -528,7 +528,7 @@ class SymphonyController
     }
 }
 ~~~~~~~
-> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Validator%20SymphonyController.md)
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Validator%20SymphonyController.md)
 
 ##### 4. Test Durumlarının Güncellenmesi
 + Doğrulamanın beklenildiği gibi çalıştığını doğrulamak ve doğrulama başarısız olduğunda doğru HTTP durum kodlarını ve hata mesajlarını alındığından emin olmak için test durumları güncellenmelidir.
@@ -540,7 +540,7 @@ public function testCreateInvalidComposer()
     $invalidComposer = [
         'firstName' => 'Wolfgang',
         'dateOfBirth' => '1756-01-27',
-        'countryCode' => 'XX' // Geçersiz ülke kodu
+        'countryCode' => 'XX' // Invalid country code
     ];
 
     $response = $this->client->post('/composers', [
@@ -551,5 +551,5 @@ public function testCreateInvalidComposer()
     $this->assertStringContainsString('This value is not a valid country.', $response->getContent());
 }
 ~~~~~~~
-> [Yukarıdaki örneğin adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Validator%20Test%20for%20Composer.md)
-+ Bu adımlar takip edilerek, uygulamanın geçersiz girdileri zarif bir şekilde ele alınmasını, kullanıcılara anlamlı geri bildirimler sağlanmasını ve database'deki veri bütünlüğünü korumasını sağlar.
+> [Yukarıdaki kodun adım adım açıklaması](https://github.com/zehraseren/PhpNotes/blob/main/Building%20web%20APIs%20with%20Symfony/Code%20Reading/Validator%20Test%20for%20Composer.md)
++ Bu adımlar takip edilerek, uygulamanın geçersiz girdileri zarif bir şekilde ele alınmasını, kullanıcılara anlamlı geri bildirimler sağlanmasını ve database'deki veri bütünlüğünü koruması sağlanır.
