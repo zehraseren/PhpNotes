@@ -1,4 +1,4 @@
-+ `SomeControllerTest` class'ı, bir test kullanıcı oluşturmak ve bu kullanıcı için bir erişim token'ı almak amacıyla düzenlenmiştir. `setUp` method'unda, Symfony'nin konsol komutları kullanılarak test kullanıcı oluşturulmakta ve ardından bu kullanıcıyla giriş yapılarak erişim token'ı alınmaktadır.
++ `SomeControllerTest` class'ı, bir test kullanıcısı oluşturmak ve bu kullanıcı için bir erişim token'ı almak amacıyla düzenlenmiştir. `setUp` method'unda, Symfony'nin console komutları kullanılarak test kullanıcısı oluşturulmakta ve ardından bu kullanıcıyla giriş yapılarak erişim token'ı alınmaktadır.
 ~~~~~~~
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -47,6 +47,7 @@ class SomeControllerTest extends WebTestCase
 
 ##### 1. setUp Method
 + Symfony kernel'ini başlatır ve `Application` nesnesi oluşturur.
+  - `$kernel = self::bootKernel();` ifadesi, Symfony testlerinde uygulamanın kernel'ini başlatmak için kullanılır. `Symfony'de kernel, uygulamanın çekirdeğidir ve tüm hizmetleri, yapılandırmaları ve diğer uygulama bileşenlerini içerir.` Bu ifade, kernel'i başlatarak testlerinizin uygulamanın tam işlevselliğiyle çalışmasını sağlar.
 + `app:user-create` komutunu çalıştırarak bir test kullanıcısı oluşturur.
 + Bu kullanıcı ile giriş yaparak bir JWT token'ı alır ve bu token'ı statik bir değişkene (`self::$testUserToken`) kaydeder.
 
